@@ -161,10 +161,12 @@ export class UI {
   _tabOverview(el) {
     const s = this.app.state;
     let h = `<div class="side-section"><h4>👨‍🍳 スタッフ (${s.staff.length}人)</h4>`;
-    h += s.staff.map(st => `
+    h += s.staff.map(st => {
+      const abl = this.app.abilityMgr.getStaffAbility(st);
+      return `
       <div class="staff-card-mini">
         <div class="scm-top">
-          <span class="staff-name">${st.name}</span>
+          <span class="staff-name">${st.name}${abl ? ` ${abl.icon}` : ""}</span>
           <span class="staff-role-badge ${st.role}">${st.role==="cook"?"料理":"ホール"} Lv.${st.level}</span>
           <span class="shift-icon">${this.app.shiftMgr.getShiftIcon(st.shift||"full", st)}</span>
         </div>
@@ -172,7 +174,8 @@ export class UI {
           <div class="bar-row"><span class="bar-label">体力</span><div class="bar"><div class="bar-fill fatigue" style="width:${100-st.fatigue}%"></div></div></div>
           <div class="bar-row"><span class="bar-label">士気</span><div class="bar"><div class="bar-fill morale" style="width:${st.morale}%"></div></div></div>
         </div>
-      </div>`).join("");
+      </div>`;
+    }).join("");
     h += `</div>`;
 
     const active = this.app.menus.menus.filter(m => s.restaurant.activeMenuIds.includes(m.id));
@@ -233,11 +236,13 @@ export class UI {
     let h = `<div class="side-section"><h4>👨‍🍳 スタッフ詳細</h4>`;
     h += s.staff.map(st => {
       const sk = this.app.skillMgr.getStaffSkillSummary(st);
+      const ability = this.app.abilityMgr.getStaffAbility(st);
       return `<div class="staff-card-detail">
         <div class="scd-header">
           <span class="staff-name">${st.name}</span>
           <span class="staff-role-badge ${st.role}">${st.role==="cook"?"料理人":"ホール"} Lv.${st.level}</span>
         </div>
+        ${ability ? `<div class="ability-badge" style="border-color:${this.app.abilityMgr.getRarityColor(ability.rarity)};color:${this.app.abilityMgr.getRarityColor(ability.rarity)}">${ability.icon} ${ability.name} <span class="muted">${ability.description}</span></div>` : ""}
         <div class="stat-grid-6">
           ${Object.entries(st.stats).map(([k,v])=>`<div class="stat-mini"><div class="stat-mini-label">${this._sl(k)}</div><div class="stat-mini-val">${v}</div></div>`).join("")}
         </div>

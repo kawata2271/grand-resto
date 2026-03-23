@@ -15,6 +15,7 @@ import { AchievementManager } from "./systems/achievementManager.js";
 import { SeasonManager } from "./systems/seasonManager.js";
 import { FormatManager } from "./systems/formatManager.js";
 import { TutorialManager } from "./systems/tutorialManager.js";
+import { AbilityManager } from "./systems/abilityManager.js";
 import { EndingManager } from "./systems/endingManager.js";
 import { TownManager } from "./systems/townManager.js";
 import { EffectManager } from "./render/effects.js";
@@ -23,7 +24,7 @@ import { saveGame, loadGame, hasSave, deleteSave } from "./save/saveManager.js";
 
 class GameApp {
   async init() {
-    const [config, menus, staffTemplates, eventsData, upgrades, customersData, skillsData, rivalsData, recipesData, achievementsData, seasonsData, formatsData, townsData, helpData] = await Promise.all([
+    const [config, menus, staffTemplates, eventsData, upgrades, customersData, skillsData, rivalsData, recipesData, achievementsData, seasonsData, formatsData, townsData, helpData, abilitiesData] = await Promise.all([
       fetch("./src/data/config.json").then(r => r.json()),
       fetch("./src/data/menus.json").then(r => r.json()),
       fetch("./src/data/staff-templates.json").then(r => r.json()),
@@ -37,7 +38,8 @@ class GameApp {
       fetch("./src/data/seasons.json").then(r => r.json()),
       fetch("./src/data/formats.json").then(r => r.json()),
       fetch("./src/data/towns.json").then(r => r.json()),
-      fetch("./src/data/help.json").then(r => r.json())
+      fetch("./src/data/help.json").then(r => r.json()),
+      fetch("./src/data/abilities.json").then(r => r.json())
     ]);
 
     this.config = config;
@@ -68,6 +70,7 @@ class GameApp {
     this.seasonMgr = new SeasonManager(this.state, seasonsData);
     this.formatMgr = new FormatManager(this.state, formatsData);
     this.tutorialMgr = new TutorialManager(this.state);
+    this.abilityMgr = new AbilityManager(this.state, abilitiesData);
     this.endingMgr = new EndingManager(this.state, this.achievementMgr);
     this.townMgr = new TownManager(this.state, townsData, config);
     this.effects = new EffectManager();
@@ -95,9 +98,10 @@ class GameApp {
   }
 
   _syncBonuses() {
-    this.sim.skillFlowBonus = this.skillMgr.getCustomerFlowBonus();
-    this.sim.skillCostBonus = this.skillMgr.getIngredientCostBonus();
-    this.sim.rivalFlowImpact = this.rivalMgr.getTotalCustomerFlowImpact();
+    const abilityTeam = this.abilityMgr.getTeamEffects();
+    this.sim.skillFlowBonus = this.skillMgr.getCustomerFlowBonus() + (abilityTeam.customerFlow || 0);
+    this.sim.skillCostBonus = this.skillMgr.getIngredientCostBonus() - (abilityTeam.ingredientCost || 0);
+    this.sim.rivalFlowImpact = this.rivalMgr.getTotalCustomerFlowImpact() + (abilityTeam.rivalDefense || 0);
     this.sim.seasonFlowMult = this.seasonMgr.getCustomerFlowMult();
     this.sim.seasonCostMult = this.seasonMgr.getIngredientCostMult();
     this.sim.formatRateMult = this.formatMgr.getCustomerRateMult();
@@ -148,6 +152,22 @@ class GameApp {
         this.ui.addLog(`😢 ${result.name}が退職しました（理由: ${result.reason}）`);
         this.mentorMgr.onStaffRemoved(q.id);
         this.compatMgr.cleanupRemovedStaff();
+      }
+    }
+
+    // Ability accidents
+    const accidents = this.abilityMgr.checkDailyAccidents();
+    for (const a of accidents) this.ui.addLog(`💥 ${a}`);
+
+    // Ability team effects → reputation
+    const abilityTeam = this.abilityMgr.getTeamEffects();
+    if (abilityTeam.reputation) {
+      this.state.restaurant.reputation = Math.max(0, Math.min(100,
+        this.state.restaurant.reputation + Math.round(abilityTeam.reputation)));
+    }
+    if (abilityTeam.teamMorale) {
+      for (const s of this.state.staff) {
+        if (s.shift !== "off") s.morale = Math.min(100, Math.max(0, s.morale + Math.round(abilityTeam.teamMorale)));
       }
     }
 
@@ -206,7 +226,19 @@ class GameApp {
   refreshApplicants() { return this.staffMgr.generateApplicants(3); }
   hireStaff(i) {
     const r = this.staffMgr.hire(i);
-    if (r.success) { this.shiftMgr._ensureShiftData(); this.skillMgr._ensureSkillData(); this.mentorMgr._ensureData(); this.ui.addLog(`👤 ${r.staff.name}を採用`); }
+    if (r.success) {
+      this.shiftMgr._ensureShiftData(); this.skillMgr._ensureSkillData(); this.mentorMgr._ensureData();
+      // Roll for special ability
+      const ability = this.abilityMgr.rollAbility(r.staff.role);
+      if (ability) {
+        r.staff.abilityId = ability.id;
+        const color = this.abilityMgr.getRarityColor(ability.rarity);
+        this.ui.addLog(`👤 ${r.staff.name}を採用 — ${ability.icon}【${ability.name}】持ち！`);
+        this.effects.notify(ability.icon, `特殊能力！`, `${r.staff.name}: ${ability.name}\n${ability.description}`, 3000);
+      } else {
+        this.ui.addLog(`👤 ${r.staff.name}を採用`);
+      }
+    }
     else this.ui.addLog(`❌ ${r.reason}`);
     this.ui.render(); return r;
   }

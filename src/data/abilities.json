@@ -1,0 +1,1012 @@
+{
+  "abilities": [
+    {
+      "id": "abl_001",
+      "name": "早起き",
+      "description": "朝の準備が早く疲れにくい",
+      "icon": "🌅",
+      "rarity": "common",
+      "type": "positive",
+      "roleRestriction": null,
+      "effects": { "fatigueMult": 0.9 }
+    },
+    {
+      "id": "abl_002",
+      "name": "愛想良し",
+      "description": "お客様への対応が丁寧",
+      "icon": "😊",
+      "rarity": "common",
+      "type": "positive",
+      "roleRestriction": "hall",
+      "effects": { "satisfactionBonus": 3 }
+    },
+    {
+      "id": "abl_003",
+      "name": "手先器用",
+      "description": "調理の手際が良い",
+      "icon": "✋",
+      "rarity": "common",
+      "type": "positive",
+      "roleRestriction": "cook",
+      "effects": { "cookSpeed": 0.05 }
+    },
+    {
+      "id": "abl_004",
+      "name": "記憶力",
+      "description": "覚えが早く成長しやすい",
+      "icon": "🧠",
+      "rarity": "common",
+      "type": "positive",
+      "roleRestriction": null,
+      "effects": { "expMult": 1.1 }
+    },
+    {
+      "id": "abl_005",
+      "name": "節約家",
+      "description": "食材を無駄なく使う",
+      "icon": "💰",
+      "rarity": "common",
+      "type": "positive",
+      "roleRestriction": "cook",
+      "effects": { "ingredientCost": -0.03 }
+    },
+    {
+      "id": "abl_006",
+      "name": "体力自慢",
+      "description": "スタミナ抜群で疲れにくい",
+      "icon": "💪",
+      "rarity": "common",
+      "type": "positive",
+      "roleRestriction": null,
+      "effects": { "fatigueMult": 0.85 }
+    },
+    {
+      "id": "abl_007",
+      "name": "笑顔",
+      "description": "自然な笑顔で客を呼ぶ",
+      "icon": "😄",
+      "rarity": "common",
+      "type": "positive",
+      "roleRestriction": "hall",
+      "effects": { "customerFlow": 0.02 }
+    },
+    {
+      "id": "abl_008",
+      "name": "几帳面",
+      "description": "丁寧な仕事で品質向上",
+      "icon": "📐",
+      "rarity": "common",
+      "type": "positive",
+      "roleRestriction": "cook",
+      "effects": { "cookQuality": 0.03 }
+    },
+    {
+      "id": "abl_009",
+      "name": "聞き上手",
+      "description": "お客の要望をよく聞く",
+      "icon": "👂",
+      "rarity": "common",
+      "type": "positive",
+      "roleRestriction": "hall",
+      "effects": { "satisfactionBonus": 2, "tipChance": 0.02 }
+    },
+    {
+      "id": "abl_010",
+      "name": "忠誠心",
+      "description": "店への愛着が強い",
+      "icon": "🏠",
+      "rarity": "common",
+      "type": "positive",
+      "roleRestriction": null,
+      "effects": { "turnoverRisk": -8 }
+    },
+    {
+      "id": "abl_011",
+      "name": "清潔感",
+      "description": "衛生管理が行き届く",
+      "icon": "✨",
+      "rarity": "common",
+      "type": "positive",
+      "roleRestriction": null,
+      "effects": { "reputation": 0.5 }
+    },
+    {
+      "id": "abl_012",
+      "name": "気配り",
+      "description": "周囲の状況に敏感",
+      "icon": "👁️",
+      "rarity": "common",
+      "type": "positive",
+      "roleRestriction": "hall",
+      "effects": { "satisfactionBonus": 2 }
+    },
+    {
+      "id": "abl_013",
+      "name": "根性",
+      "description": "粘り強く働き続ける",
+      "icon": "🔥",
+      "rarity": "common",
+      "type": "positive",
+      "roleRestriction": null,
+      "effects": { "breakRecovery": 1.2 }
+    },
+    {
+      "id": "abl_014",
+      "name": "素直",
+      "description": "教えをすぐ吸収する",
+      "icon": "📖",
+      "rarity": "common",
+      "type": "positive",
+      "roleRestriction": null,
+      "effects": { "expMult": 1.05 }
+    },
+    {
+      "id": "abl_015",
+      "name": "声良し",
+      "description": "通る声で接客が映える",
+      "icon": "🎤",
+      "rarity": "common",
+      "type": "positive",
+      "roleRestriction": "hall",
+      "effects": { "customerFlow": 0.02, "satisfactionBonus": 1 }
+    },
+    {
+      "id": "abl_016",
+      "name": "味見上手",
+      "description": "味の微調整が巧み",
+      "icon": "👅",
+      "rarity": "common",
+      "type": "positive",
+      "roleRestriction": "cook",
+      "effects": { "cookQuality": 0.04 }
+    },
+    {
+      "id": "abl_017",
+      "name": "仲間思い",
+      "description": "チームの雰囲気を良くする",
+      "icon": "🤝",
+      "rarity": "common",
+      "type": "positive",
+      "roleRestriction": null,
+      "effects": { "teamMorale": 1 }
+    },
+    {
+      "id": "abl_018",
+      "name": "倹約術",
+      "description": "給与要求が控えめ",
+      "icon": "🪙",
+      "rarity": "common",
+      "type": "positive",
+      "roleRestriction": null,
+      "effects": { "salaryMult": 0.9 }
+    },
+    {
+      "id": "abl_019",
+      "name": "足速い",
+      "description": "ホール内の移動が素早い",
+      "icon": "🏃",
+      "rarity": "common",
+      "type": "positive",
+      "roleRestriction": "hall",
+      "effects": { "cookSpeed": 0.03 }
+    },
+    {
+      "id": "abl_020",
+      "name": "丁寧",
+      "description": "一つ一つの作業が確実",
+      "icon": "🎯",
+      "rarity": "common",
+      "type": "positive",
+      "roleRestriction": null,
+      "effects": { "accidentChance": -0.01 }
+    },
+    {
+      "id": "abl_021",
+      "name": "天才肌",
+      "description": "センスで料理の質を上げる",
+      "icon": "🌟",
+      "rarity": "uncommon",
+      "type": "positive",
+      "roleRestriction": "cook",
+      "effects": { "cookQuality": 0.08 }
+    },
+    {
+      "id": "abl_022",
+      "name": "ムードメーカー",
+      "description": "職場を明るくする存在",
+      "icon": "🎉",
+      "rarity": "uncommon",
+      "type": "positive",
+      "roleRestriction": null,
+      "effects": { "teamMorale": 2 }
+    },
+    {
+      "id": "abl_023",
+      "name": "営業上手",
+      "description": "巧みな話術で客を呼ぶ",
+      "icon": "📣",
+      "rarity": "uncommon",
+      "type": "positive",
+      "roleRestriction": "hall",
+      "effects": { "customerFlow": 0.05 }
+    },
+    {
+      "id": "abl_024",
+      "name": "仕込みの鬼",
+      "description": "下準備が異常に早い",
+      "icon": "🔪",
+      "rarity": "uncommon",
+      "type": "positive",
+      "roleRestriction": "cook",
+      "effects": { "cookSpeed": 0.1 }
+    },
+    {
+      "id": "abl_025",
+      "name": "味覚の達人",
+      "description": "味は極上だが少し遅い",
+      "icon": "👨‍🍳",
+      "rarity": "uncommon",
+      "type": "positive",
+      "roleRestriction": "cook",
+      "effects": { "cookQuality": 0.1, "cookSpeed": -0.05 }
+    },
+    {
+      "id": "abl_026",
+      "name": "回復力",
+      "description": "休憩の効果が大きい",
+      "icon": "💚",
+      "rarity": "uncommon",
+      "type": "positive",
+      "roleRestriction": null,
+      "effects": { "breakRecovery": 1.4 }
+    },
+    {
+      "id": "abl_027",
+      "name": "勉強家",
+      "description": "経験を多く得られる",
+      "icon": "📚",
+      "rarity": "uncommon",
+      "type": "positive",
+      "roleRestriction": null,
+      "effects": { "expMult": 1.2 }
+    },
+    {
+      "id": "abl_028",
+      "name": "目利き",
+      "description": "良い食材を安く仕入れる",
+      "icon": "🔍",
+      "rarity": "uncommon",
+      "type": "positive",
+      "roleRestriction": "cook",
+      "effects": { "ingredientCost": -0.06 }
+    },
+    {
+      "id": "abl_029",
+      "name": "人気者",
+      "description": "常連客がつきやすい",
+      "icon": "⭐",
+      "rarity": "uncommon",
+      "type": "positive",
+      "roleRestriction": "hall",
+      "effects": { "customerFlow": 0.04, "tipChance": 0.04 }
+    },
+    {
+      "id": "abl_030",
+      "name": "鉄壁",
+      "description": "ライバル店に客を奪われにくい",
+      "icon": "🛡️",
+      "rarity": "uncommon",
+      "type": "positive",
+      "roleRestriction": null,
+      "effects": { "rivalDefense": 0.08 }
+    },
+    {
+      "id": "abl_031",
+      "name": "求道者",
+      "description": "料理への探求心が深い",
+      "icon": "🧘",
+      "rarity": "uncommon",
+      "type": "positive",
+      "roleRestriction": "cook",
+      "effects": { "cookQuality": 0.06, "expMult": 1.1 }
+    },
+    {
+      "id": "abl_032",
+      "name": "盛付け師",
+      "description": "美しい盛り付けで満足度UP",
+      "icon": "🎨",
+      "rarity": "uncommon",
+      "type": "positive",
+      "roleRestriction": "cook",
+      "effects": { "satisfactionBonus": 5 }
+    },
+    {
+      "id": "abl_033",
+      "name": "番長",
+      "description": "チームをまとめ上げる",
+      "icon": "👊",
+      "rarity": "uncommon",
+      "type": "positive",
+      "roleRestriction": null,
+      "effects": { "teamMorale": 2, "turnoverRisk": -5 }
+    },
+    {
+      "id": "abl_034",
+      "name": "看板娘",
+      "description": "店の顔として客を惹きつける",
+      "icon": "💁",
+      "rarity": "uncommon",
+      "type": "positive",
+      "roleRestriction": "hall",
+      "effects": { "customerFlow": 0.06, "reputation": 0.5 }
+    },
+    {
+      "id": "abl_035",
+      "name": "包丁術",
+      "description": "包丁さばきが見事",
+      "icon": "🗡️",
+      "rarity": "uncommon",
+      "type": "positive",
+      "roleRestriction": "cook",
+      "effects": { "cookSpeed": 0.07, "cookQuality": 0.03 }
+    },
+    {
+      "id": "abl_036",
+      "name": "おもてなし",
+      "description": "心のこもった接客",
+      "icon": "🫶",
+      "rarity": "uncommon",
+      "type": "positive",
+      "roleRestriction": "hall",
+      "effects": { "satisfactionBonus": 6, "tipChance": 0.03 }
+    },
+    {
+      "id": "abl_037",
+      "name": "超回復",
+      "description": "休むと驚異的に回復する",
+      "icon": "♻️",
+      "rarity": "uncommon",
+      "type": "positive",
+      "roleRestriction": null,
+      "effects": { "breakRecovery": 1.5 }
+    },
+    {
+      "id": "abl_038",
+      "name": "献立師",
+      "description": "メニュー開発の才能あり",
+      "icon": "📋",
+      "rarity": "uncommon",
+      "type": "positive",
+      "roleRestriction": "cook",
+      "effects": { "menuPopularity": 0.08 }
+    },
+    {
+      "id": "abl_039",
+      "name": "カリスマ",
+      "description": "圧倒的な存在感で集客",
+      "icon": "👑",
+      "rarity": "rare",
+      "type": "positive",
+      "roleRestriction": null,
+      "effects": { "customerFlow": 0.1, "reputation": 1 }
+    },
+    {
+      "id": "abl_040",
+      "name": "鉄人",
+      "description": "驚異のスタミナで疲れ知らず",
+      "icon": "🦾",
+      "rarity": "rare",
+      "type": "positive",
+      "roleRestriction": null,
+      "effects": { "fatigueMult": 0.6 }
+    },
+    {
+      "id": "abl_041",
+      "name": "天性の舌",
+      "description": "生まれ持った味覚の才能",
+      "icon": "👄",
+      "rarity": "rare",
+      "type": "positive",
+      "roleRestriction": "cook",
+      "effects": { "cookQuality": 0.15 }
+    },
+    {
+      "id": "abl_042",
+      "name": "商売上手",
+      "description": "仕入れから集客まで万能",
+      "icon": "🏪",
+      "rarity": "rare",
+      "type": "positive",
+      "roleRestriction": null,
+      "effects": { "ingredientCost": -0.08, "customerFlow": 0.05 }
+    },
+    {
+      "id": "abl_043",
+      "name": "匠の技",
+      "description": "職人の域に達した技術",
+      "icon": "🏆",
+      "rarity": "rare",
+      "type": "positive",
+      "roleRestriction": "cook",
+      "effects": { "cookQuality": 0.12, "cookSpeed": 0.08 }
+    },
+    {
+      "id": "abl_044",
+      "name": "接客の星",
+      "description": "一流の接客で客を魅了",
+      "icon": "🌠",
+      "rarity": "rare",
+      "type": "positive",
+      "roleRestriction": "hall",
+      "effects": { "satisfactionBonus": 10, "tipChance": 0.06 }
+    },
+    {
+      "id": "abl_045",
+      "name": "大黒柱",
+      "description": "店の精神的支柱になる",
+      "icon": "🏛️",
+      "rarity": "rare",
+      "type": "positive",
+      "roleRestriction": null,
+      "effects": { "teamMorale": 3, "turnoverRisk": -12 }
+    },
+    {
+      "id": "abl_046",
+      "name": "秘伝の味",
+      "description": "独自の味が人気を呼ぶ",
+      "icon": "🍶",
+      "rarity": "rare",
+      "type": "positive",
+      "roleRestriction": "cook",
+      "effects": { "menuPopularity": 0.15, "reputation": 1 }
+    },
+    {
+      "id": "abl_047",
+      "name": "天才児",
+      "description": "あらゆる技術を即座に習得",
+      "icon": "🎓",
+      "rarity": "rare",
+      "type": "positive",
+      "roleRestriction": null,
+      "effects": { "expMult": 1.4 }
+    },
+    {
+      "id": "abl_048",
+      "name": "守護者",
+      "description": "ライバルの攻勢を跳ね返す",
+      "icon": "⚔️",
+      "rarity": "rare",
+      "type": "positive",
+      "roleRestriction": null,
+      "effects": { "rivalDefense": 0.15, "reputation": 0.5 }
+    },
+    {
+      "id": "abl_049",
+      "name": "黄金の手",
+      "description": "触れた料理が全て絶品に",
+      "icon": "🤲",
+      "rarity": "rare",
+      "type": "positive",
+      "roleRestriction": "cook",
+      "effects": { "cookQuality": 0.12, "menuPopularity": 0.1 }
+    },
+    {
+      "id": "abl_050",
+      "name": "太陽",
+      "description": "周囲を照らし活力を与える",
+      "icon": "☀️",
+      "rarity": "rare",
+      "type": "positive",
+      "roleRestriction": null,
+      "effects": { "teamMorale": 3, "moraleMult": 1.15 }
+    },
+    {
+      "id": "abl_051",
+      "name": "料理の神",
+      "description": "神がかった料理の腕前",
+      "icon": "🔱",
+      "rarity": "epic",
+      "type": "positive",
+      "roleRestriction": "cook",
+      "effects": { "cookQuality": 0.2, "cookSpeed": 0.15 }
+    },
+    {
+      "id": "abl_052",
+      "name": "接客の鬼",
+      "description": "極めし者の完璧な接客",
+      "icon": "👹",
+      "rarity": "epic",
+      "type": "positive",
+      "roleRestriction": "hall",
+      "effects": { "satisfactionBonus": 15, "customerFlow": 0.08 }
+    },
+    {
+      "id": "abl_053",
+      "name": "経営の才",
+      "description": "店全体の効率を底上げ",
+      "icon": "📊",
+      "rarity": "epic",
+      "type": "positive",
+      "roleRestriction": null,
+      "effects": { "ingredientCost": -0.1, "customerFlow": 0.06, "reputation": 1 }
+    },
+    {
+      "id": "abl_054",
+      "name": "不屈の魂",
+      "description": "疲れを知らぬ超人的体力",
+      "icon": "🌋",
+      "rarity": "epic",
+      "type": "positive",
+      "roleRestriction": null,
+      "effects": { "fatigueMult": 0.5, "breakRecovery": 1.8 }
+    },
+    {
+      "id": "abl_055",
+      "name": "食神",
+      "description": "料理に魂を宿す究極の技",
+      "icon": "🐉",
+      "rarity": "epic",
+      "type": "positive",
+      "roleRestriction": "cook",
+      "effects": { "cookQuality": 0.18, "menuPopularity": 0.15 }
+    },
+    {
+      "id": "abl_056",
+      "name": "求心力",
+      "description": "全員のやる気を引き上げる",
+      "icon": "🧲",
+      "rarity": "epic",
+      "type": "positive",
+      "roleRestriction": null,
+      "effects": { "teamMorale": 4, "moraleMult": 1.2, "turnoverRisk": -15 }
+    },
+    {
+      "id": "abl_057",
+      "name": "集客王",
+      "description": "噂を聞きつけ客が殺到",
+      "icon": "🎪",
+      "rarity": "epic",
+      "type": "positive",
+      "roleRestriction": "hall",
+      "effects": { "customerFlow": 0.12, "tipChance": 0.08, "reputation": 1.5 }
+    },
+    {
+      "id": "abl_058",
+      "name": "伝説のシェフ",
+      "description": "その名は世界に轟く",
+      "icon": "🌍",
+      "rarity": "legendary",
+      "type": "positive",
+      "roleRestriction": "cook",
+      "effects": { "cookQuality": 0.25, "menuPopularity": 0.2, "reputation": 2 }
+    },
+    {
+      "id": "abl_059",
+      "name": "人たらし",
+      "description": "誰もがこの人を好きになる",
+      "icon": "💖",
+      "rarity": "legendary",
+      "type": "positive",
+      "roleRestriction": null,
+      "effects": { "teamMorale": 5, "customerFlow": 0.1, "turnoverRisk": -20 }
+    },
+    {
+      "id": "abl_060",
+      "name": "至高の器",
+      "description": "全ての才能を兼ね備えた逸材",
+      "icon": "🏅",
+      "rarity": "legendary",
+      "type": "positive",
+      "roleRestriction": null,
+      "effects": { "cookQuality": 0.15, "cookSpeed": 0.1, "satisfactionBonus": 10, "expMult": 1.3, "reputation": 2 }
+    },
+    {
+      "id": "abl_061",
+      "name": "寝坊助",
+      "description": "朝が弱く疲れやすい",
+      "icon": "😴",
+      "rarity": "common",
+      "type": "negative",
+      "roleRestriction": null,
+      "effects": { "fatigueMult": 1.15 }
+    },
+    {
+      "id": "abl_062",
+      "name": "不器用",
+      "description": "作業が少しもたつく",
+      "icon": "🫠",
+      "rarity": "common",
+      "type": "negative",
+      "roleRestriction": "cook",
+      "effects": { "cookSpeed": -0.05 }
+    },
+    {
+      "id": "abl_063",
+      "name": "無口",
+      "description": "接客時の会話が苦手",
+      "icon": "🤐",
+      "rarity": "common",
+      "type": "negative",
+      "roleRestriction": "hall",
+      "effects": { "satisfactionBonus": -3 }
+    },
+    {
+      "id": "abl_064",
+      "name": "大食い",
+      "description": "つまみ食いで食材が減る",
+      "icon": "🍖",
+      "rarity": "common",
+      "type": "negative",
+      "roleRestriction": "cook",
+      "effects": { "ingredientCost": 0.03 }
+    },
+    {
+      "id": "abl_065",
+      "name": "忘れっぽい",
+      "description": "うっかりミスが多い",
+      "icon": "💭",
+      "rarity": "common",
+      "type": "negative",
+      "roleRestriction": null,
+      "effects": { "accidentChance": 0.01 }
+    },
+    {
+      "id": "abl_066",
+      "name": "人見知り",
+      "description": "お客様と目を合わせられない",
+      "icon": "😳",
+      "rarity": "common",
+      "type": "negative",
+      "roleRestriction": "hall",
+      "effects": { "satisfactionBonus": -2, "tipChance": -0.02 }
+    },
+    {
+      "id": "abl_067",
+      "name": "虚弱体質",
+      "description": "すぐに疲れてしまう",
+      "icon": "🤒",
+      "rarity": "common",
+      "type": "negative",
+      "roleRestriction": null,
+      "effects": { "fatigueMult": 1.2 }
+    },
+    {
+      "id": "abl_068",
+      "name": "雑",
+      "description": "仕事が少し雑になりがち",
+      "icon": "💨",
+      "rarity": "common",
+      "type": "negative",
+      "roleRestriction": "cook",
+      "effects": { "cookQuality": -0.04 }
+    },
+    {
+      "id": "abl_069",
+      "name": "遅刻魔",
+      "description": "時間にルーズ",
+      "icon": "⏰",
+      "rarity": "common",
+      "type": "negative",
+      "roleRestriction": null,
+      "effects": { "cookSpeed": -0.03, "reputation": -0.3 }
+    },
+    {
+      "id": "abl_070",
+      "name": "おっちょこちょい",
+      "description": "小さな失敗が多い",
+      "icon": "🫣",
+      "rarity": "common",
+      "type": "negative",
+      "roleRestriction": null,
+      "effects": { "accidentChance": 0.015 }
+    },
+    {
+      "id": "abl_071",
+      "name": "飽き性",
+      "description": "同じ作業が続くと集中力低下",
+      "icon": "🥱",
+      "rarity": "common",
+      "type": "negative",
+      "roleRestriction": null,
+      "effects": { "expMult": 0.9 }
+    },
+    {
+      "id": "abl_072",
+      "name": "頑固者",
+      "description": "人の意見を聞かない",
+      "icon": "🪨",
+      "rarity": "common",
+      "type": "negative",
+      "roleRestriction": null,
+      "effects": { "teamMorale": -1 }
+    },
+    {
+      "id": "abl_073",
+      "name": "サボり癖",
+      "description": "隙あらばサボる",
+      "icon": "🦥",
+      "rarity": "uncommon",
+      "type": "negative",
+      "roleRestriction": null,
+      "effects": { "fatigueMult": 1.3, "expMult": 0.8 }
+    },
+    {
+      "id": "abl_074",
+      "name": "毒舌",
+      "description": "言葉がキツく空気を壊す",
+      "icon": "🐍",
+      "rarity": "uncommon",
+      "type": "negative",
+      "roleRestriction": null,
+      "effects": { "teamMorale": -2 }
+    },
+    {
+      "id": "abl_075",
+      "name": "散財家",
+      "description": "高い給与を要求する",
+      "icon": "💸",
+      "rarity": "uncommon",
+      "type": "negative",
+      "roleRestriction": null,
+      "effects": { "salaryMult": 1.2 }
+    },
+    {
+      "id": "abl_076",
+      "name": "気分屋",
+      "description": "日によって出来が大きく変わる",
+      "icon": "🎭",
+      "rarity": "uncommon",
+      "type": "negative",
+      "roleRestriction": null,
+      "effects": { "cookQuality": -0.06, "accidentChance": 0.02 }
+    },
+    {
+      "id": "abl_077",
+      "name": "転職癖",
+      "description": "すぐ辞めたがる",
+      "icon": "🚪",
+      "rarity": "uncommon",
+      "type": "negative",
+      "roleRestriction": null,
+      "effects": { "turnoverRisk": 12 }
+    },
+    {
+      "id": "abl_078",
+      "name": "無駄遣い",
+      "description": "食材を多めに使ってしまう",
+      "icon": "🗑️",
+      "rarity": "uncommon",
+      "type": "negative",
+      "roleRestriction": "cook",
+      "effects": { "ingredientCost": 0.06 }
+    },
+    {
+      "id": "abl_079",
+      "name": "見栄っ張り",
+      "description": "高給を求め評判も落とす",
+      "icon": "💎",
+      "rarity": "uncommon",
+      "type": "negative",
+      "roleRestriction": null,
+      "effects": { "salaryMult": 1.15, "teamMorale": -1 }
+    },
+    {
+      "id": "abl_080",
+      "name": "短気",
+      "description": "すぐ怒って客と揉める",
+      "icon": "😡",
+      "rarity": "uncommon",
+      "type": "negative",
+      "roleRestriction": "hall",
+      "effects": { "satisfactionBonus": -5, "accidentChance": 0.02 }
+    },
+    {
+      "id": "abl_081",
+      "name": "ナルシスト",
+      "description": "自分に酔って仕事が遅い",
+      "icon": "🪞",
+      "rarity": "uncommon",
+      "type": "negative",
+      "roleRestriction": null,
+      "effects": { "cookSpeed": -0.06, "salaryMult": 1.1 }
+    },
+    {
+      "id": "abl_082",
+      "name": "愚痴好き",
+      "description": "不満を漏らして空気を悪くする",
+      "icon": "😮‍💨",
+      "rarity": "uncommon",
+      "type": "negative",
+      "roleRestriction": null,
+      "effects": { "teamMorale": -2, "moraleMult": 0.9 }
+    },
+    {
+      "id": "abl_083",
+      "name": "トラブルメーカー",
+      "description": "問題を引き起こす天才",
+      "icon": "💣",
+      "rarity": "rare",
+      "type": "negative",
+      "roleRestriction": null,
+      "effects": { "teamMorale": -3, "accidentChance": 0.03 }
+    },
+    {
+      "id": "abl_084",
+      "name": "味音痴",
+      "description": "味覚が壊滅的に鈍い",
+      "icon": "🤮",
+      "rarity": "rare",
+      "type": "negative",
+      "roleRestriction": "cook",
+      "effects": { "cookQuality": -0.15 }
+    },
+    {
+      "id": "abl_085",
+      "name": "怠け者",
+      "description": "全力を出すことがない",
+      "icon": "🐌",
+      "rarity": "rare",
+      "type": "negative",
+      "roleRestriction": null,
+      "effects": { "cookSpeed": -0.1, "fatigueMult": 1.3, "expMult": 0.7 }
+    },
+    {
+      "id": "abl_086",
+      "name": "疫病神",
+      "description": "不運を呼び寄せる体質",
+      "icon": "☠️",
+      "rarity": "rare",
+      "type": "negative",
+      "roleRestriction": null,
+      "effects": { "accidentChance": 0.04, "reputation": -0.5 }
+    },
+    {
+      "id": "abl_087",
+      "name": "暴君",
+      "description": "パワハラでチームを壊す",
+      "icon": "😈",
+      "rarity": "rare",
+      "type": "negative",
+      "roleRestriction": null,
+      "effects": { "teamMorale": -4, "turnoverRisk": 15 }
+    },
+    {
+      "id": "abl_088",
+      "name": "破壊王",
+      "description": "器具や食材を壊しまくる",
+      "icon": "💥",
+      "rarity": "epic",
+      "type": "negative",
+      "roleRestriction": "cook",
+      "effects": { "accidentChance": 0.05, "ingredientCost": 0.1 }
+    },
+    {
+      "id": "abl_089",
+      "name": "問題児",
+      "description": "あらゆる面で手がかかる",
+      "icon": "🚨",
+      "rarity": "epic",
+      "type": "negative",
+      "roleRestriction": null,
+      "effects": { "turnoverRisk": 20, "teamMorale": -4 }
+    },
+    {
+      "id": "abl_090",
+      "name": "厄災",
+      "description": "存在自体が災いを招く",
+      "icon": "🌪️",
+      "rarity": "epic",
+      "type": "negative",
+      "roleRestriction": null,
+      "effects": { "accidentChance": 0.06, "teamMorale": -3, "reputation": -1 }
+    },
+    {
+      "id": "abl_091",
+      "name": "完璧主義",
+      "description": "質は高いが作業が遅い",
+      "icon": "💠",
+      "rarity": "uncommon",
+      "type": "neutral",
+      "roleRestriction": "cook",
+      "effects": { "cookQuality": 0.15, "cookSpeed": -0.1 }
+    },
+    {
+      "id": "abl_092",
+      "name": "自由人",
+      "description": "才能はあるが高給取り",
+      "icon": "🦅",
+      "rarity": "uncommon",
+      "type": "neutral",
+      "roleRestriction": null,
+      "effects": { "expMult": 1.3, "salaryMult": 1.3 }
+    },
+    {
+      "id": "abl_093",
+      "name": "夜型人間",
+      "description": "夜は強いが朝は弱い",
+      "icon": "🌙",
+      "rarity": "common",
+      "type": "neutral",
+      "roleRestriction": null,
+      "effects": { "cookSpeed": 0.08, "fatigueMult": 1.1 }
+    },
+    {
+      "id": "abl_094",
+      "name": "職人気質",
+      "description": "腕は確かだが頑固",
+      "icon": "⚒️",
+      "rarity": "uncommon",
+      "type": "neutral",
+      "roleRestriction": "cook",
+      "effects": { "cookQuality": 0.1, "teamMorale": -1 }
+    },
+    {
+      "id": "abl_095",
+      "name": "豪快",
+      "description": "大胆な味付けだが材料消費大",
+      "icon": "🍳",
+      "rarity": "common",
+      "type": "neutral",
+      "roleRestriction": "cook",
+      "effects": { "cookQuality": 0.06, "ingredientCost": 0.04 }
+    },
+    {
+      "id": "abl_096",
+      "name": "有名人",
+      "description": "集客力抜群だが給与も高い",
+      "icon": "📺",
+      "rarity": "rare",
+      "type": "neutral",
+      "roleRestriction": null,
+      "effects": { "customerFlow": 0.1, "salaryMult": 1.4 }
+    },
+    {
+      "id": "abl_097",
+      "name": "挑戦者",
+      "description": "創作料理に挑むが失敗も多い",
+      "icon": "🧪",
+      "rarity": "uncommon",
+      "type": "neutral",
+      "roleRestriction": "cook",
+      "effects": { "menuPopularity": 0.1, "accidentChance": 0.02 }
+    },
+    {
+      "id": "abl_098",
+      "name": "一匹狼",
+      "description": "実力はあるが協調性がない",
+      "icon": "🐺",
+      "rarity": "rare",
+      "type": "neutral",
+      "roleRestriction": null,
+      "effects": { "cookQuality": 0.12, "cookSpeed": 0.08, "teamMorale": -2 }
+    },
+    {
+      "id": "abl_099",
+      "name": "熱血漢",
+      "description": "やる気は凄いが空回りも多い",
+      "icon": "🔥",
+      "rarity": "common",
+      "type": "neutral",
+      "roleRestriction": null,
+      "effects": { "expMult": 1.15, "accidentChance": 0.01 }
+    },
+    {
+      "id": "abl_100",
+      "name": "天邪鬼",
+      "description": "独自路線だが時に大当たり",
+      "icon": "🃏",
+      "rarity": "uncommon",
+      "type": "neutral",
+      "roleRestriction": "cook",
+      "effects": { "menuPopularity": 0.12, "teamMorale": -1, "cookQuality": 0.05 }
+    }
+  ],
+  "rarityChance": {
+    "none": 0.60,
+    "common": 0.20,
+    "uncommon": 0.10,
+    "rare": 0.06,
+    "epic": 0.03,
+    "legendary": 0.01
+  }
+}
