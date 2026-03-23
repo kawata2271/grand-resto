@@ -35,10 +35,12 @@ export class FloorView {
           });
         }
       } else if (c.status === "waiting") {
+        // Use customer ID to generate stable position (no random per frame)
+        const hash = c.id * 7 + 13;
         this.entities.push({
           type: "waiting",
-          x: 20 + Math.random() * 40,
-          y: this.canvas.height - 30 - Math.random() * 20,
+          x: 12 + (hash % 5) * 10,
+          y: this.canvas.height - 40 - (hash % 3) * 10,
           icon: c.typeIcon || "👤"
         });
       }
@@ -167,7 +169,7 @@ export class FloorView {
           ctx.fillText("🍽", e.x + 10, e.y - 5 + bob);
         }
       } else if (e.type === "waiting") {
-        const bob = Math.sin(this.time * 0.08 + e.y) * 1.5;
+        const bob = Math.sin(this.time * 0.02 + e.x * 0.5) * 1.5;
         ctx.font = "12px serif";
         ctx.textAlign = "center";
         ctx.fillText(e.icon, e.x, e.y + bob);
