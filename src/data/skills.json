@@ -1,0 +1,84 @@
+{
+  "cookPaths": [
+    {
+      "id": "cook_technique",
+      "name": "技術特化",
+      "icon": "🔪",
+      "description": "調理の精度を極める。料理の質が上がり高評価に繋がる",
+      "nodes": [
+        { "id": "ct_1", "name": "基本切り方", "level": 2, "effect": { "stat": "dexterity", "bonus": 5 }, "description": "野菜の切り方が安定する" },
+        { "id": "ct_2", "name": "火加減マスター", "level": 3, "effect": { "stat": "dexterity", "bonus": 5, "special": "cook_quality_up_5" }, "requires": "ct_1", "description": "焼き加減を完璧に制御" },
+        { "id": "ct_3", "name": "仕込みの達人", "level": 5, "effect": { "stat": "dexterity", "bonus": 8, "special": "prep_cost_down_10" }, "requires": "ct_2", "description": "仕込み効率UP。食材ロスが減る" },
+        { "id": "ct_4", "name": "味の魔術師", "level": 8, "effect": { "stat": "sense", "bonus": 10, "special": "cook_quality_up_10" }, "requires": "ct_3", "description": "繊細な味付けで客を虜にする" },
+        { "id": "ct_5", "name": "匠の技", "level": 12, "effect": { "stat": "dexterity", "bonus": 15, "special": "masterwork_chance" }, "requires": "ct_4", "description": "稀に「絶品料理」が生まれ、評判が大幅UP" }
+      ]
+    },
+    {
+      "id": "cook_speed",
+      "name": "速度特化",
+      "icon": "⚡",
+      "description": "調理速度を極める。回転率で勝負する店に最適",
+      "nodes": [
+        { "id": "cs_1", "name": "手際改善", "level": 2, "effect": { "stat": "dexterity", "bonus": 3, "special": "cook_speed_up_10" }, "description": "無駄な動きが減る" },
+        { "id": "cs_2", "name": "同時調理", "level": 3, "effect": { "special": "parallel_cook_2" }, "requires": "cs_1", "description": "2品同時に調理可能" },
+        { "id": "cs_3", "name": "段取り名人", "level": 5, "effect": { "stat": "memory", "bonus": 5, "special": "cook_speed_up_15" }, "requires": "cs_2", "description": "注文を見て先回りして準備" },
+        { "id": "cs_4", "name": "嵐の厨房", "level": 8, "effect": { "special": "rush_hour_bonus" }, "requires": "cs_3", "description": "ピーク時に調理速度が更に+20%" },
+        { "id": "cs_5", "name": "光速の料理人", "level": 12, "effect": { "stat": "dexterity", "bonus": 10, "special": "cook_speed_up_25" }, "requires": "cs_4", "description": "常人離れした速度。待ち時間が劇的に減る" }
+      ]
+    },
+    {
+      "id": "cook_creative",
+      "name": "創作特化",
+      "icon": "🎨",
+      "description": "創造力を極める。新メニュー開発とレシピ研究に強い",
+      "nodes": [
+        { "id": "cc_1", "name": "味覚の探求", "level": 2, "effect": { "stat": "sense", "bonus": 5 }, "description": "食材の組み合わせに敏感になる" },
+        { "id": "cc_2", "name": "研究効率UP", "level": 3, "effect": { "special": "research_speed_up_20" }, "requires": "cc_1", "description": "メニュー研究の日数が20%短縮" },
+        { "id": "cc_3", "name": "アレンジ料理", "level": 5, "effect": { "stat": "sense", "bonus": 8, "special": "menu_variation" }, "requires": "cc_2", "description": "既存メニューのアレンジ版が出せる" },
+        { "id": "cc_4", "name": "季節の感性", "level": 8, "effect": { "special": "seasonal_bonus" }, "requires": "cc_3", "description": "季節メニューの人気度+20%" },
+        { "id": "cc_5", "name": "天才シェフ", "level": 12, "effect": { "stat": "sense", "bonus": 15, "special": "research_cost_down_30" }, "requires": "cc_4", "description": "研究コスト-30%。隠しレシピ解放の可能性" }
+      ]
+    }
+  ],
+  "hallPaths": [
+    {
+      "id": "hall_service",
+      "name": "接客特化",
+      "icon": "😊",
+      "description": "ホスピタリティを極める。顧客満足度と評判に直結",
+      "nodes": [
+        { "id": "hs_1", "name": "笑顔の挨拶", "level": 2, "effect": { "stat": "communication", "bonus": 5 }, "description": "来店時の第一印象がUP" },
+        { "id": "hs_2", "name": "気配り上手", "level": 3, "effect": { "stat": "communication", "bonus": 5, "special": "satisfaction_up_5" }, "requires": "hs_1", "description": "客の様子を察して先回り" },
+        { "id": "hs_3", "name": "クレーム対応術", "level": 5, "effect": { "special": "complaint_recover" }, "requires": "hs_2", "description": "クレームを好印象に転換する" },
+        { "id": "hs_4", "name": "常連作りの名人", "level": 8, "effect": { "stat": "communication", "bonus": 10, "special": "regular_boost" }, "requires": "hs_3", "description": "リピーター率が上がる" },
+        { "id": "hs_5", "name": "カリスマ接客", "level": 12, "effect": { "stat": "communication", "bonus": 15, "special": "reputation_daily_bonus" }, "requires": "hs_4", "description": "存在するだけで評判が毎日微増" }
+      ]
+    },
+    {
+      "id": "hall_management",
+      "name": "管理特化",
+      "icon": "📋",
+      "description": "フロア管理を極める。回転率と効率で利益を上げる",
+      "nodes": [
+        { "id": "hm_1", "name": "席案内の最適化", "level": 2, "effect": { "special": "seating_optimize" }, "description": "適切な席に素早く案内" },
+        { "id": "hm_2", "name": "オーダー効率UP", "level": 3, "effect": { "stat": "memory", "bonus": 5, "special": "order_speed_up" }, "requires": "hm_1", "description": "注文ミスが減り、厨房への伝達が速い" },
+        { "id": "hm_3", "name": "テーブル回転術", "level": 5, "effect": { "special": "turnover_up_10" }, "requires": "hm_2", "description": "片付け→次の案内の流れが速い" },
+        { "id": "hm_4", "name": "フロアマネージャー", "level": 8, "effect": { "stat": "memory", "bonus": 10, "special": "staff_efficiency_up" }, "requires": "hm_3", "description": "他ホールスタッフの効率もUP" },
+        { "id": "hm_5", "name": "完璧なオペレーション", "level": 12, "effect": { "special": "no_wait_bonus" }, "requires": "hm_4", "description": "待ち客を極限まで減らす神管理" }
+      ]
+    },
+    {
+      "id": "hall_pr",
+      "name": "PR特化",
+      "icon": "📢",
+      "description": "宣伝・集客力を極める。口コミとSNSで客を呼ぶ",
+      "nodes": [
+        { "id": "hp_1", "name": "SNS発信", "level": 2, "effect": { "special": "customer_flow_up_5" }, "description": "料理写真をSNSに投稿" },
+        { "id": "hp_2", "name": "口コミ誘導", "level": 3, "effect": { "special": "reputation_gain_up_10" }, "requires": "hp_1", "description": "良い口コミを自然に増やす" },
+        { "id": "hp_3", "name": "イベント企画", "level": 5, "effect": { "special": "event_bonus" }, "requires": "hp_2", "description": "良いイベントの発生率UP" },
+        { "id": "hp_4", "name": "地域連携", "level": 8, "effect": { "special": "customer_flow_up_15" }, "requires": "hp_3", "description": "地域との繋がりで集客力大幅UP" },
+        { "id": "hp_5", "name": "カリスマ広報", "level": 12, "effect": { "special": "vip_attract" }, "requires": "hp_4", "description": "有名人・メディアが来やすくなる" }
+      ]
+    }
+  ]
+}

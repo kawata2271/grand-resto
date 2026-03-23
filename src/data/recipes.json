@@ -1,0 +1,416 @@
+{
+  "ingredients": [
+    { "id": "ing_rice", "name": "米", "cost": 100, "category": "grain" },
+    { "id": "ing_flour", "name": "小麦粉", "cost": 80, "category": "grain" },
+    { "id": "ing_noodle", "name": "麺", "cost": 120, "category": "grain" },
+    { "id": "ing_beef", "name": "牛肉", "cost": 400, "category": "meat" },
+    { "id": "ing_pork", "name": "豚肉", "cost": 280, "category": "meat" },
+    { "id": "ing_chicken", "name": "鶏肉", "cost": 200, "category": "meat" },
+    { "id": "ing_shrimp", "name": "海老", "cost": 350, "category": "seafood" },
+    { "id": "ing_fish", "name": "白身魚", "cost": 300, "category": "seafood" },
+    { "id": "ing_egg", "name": "卵", "cost": 60, "category": "dairy" },
+    { "id": "ing_milk", "name": "牛乳", "cost": 80, "category": "dairy" },
+    { "id": "ing_cheese", "name": "チーズ", "cost": 150, "category": "dairy" },
+    { "id": "ing_tofu", "name": "豆腐", "cost": 50, "category": "vegetable" },
+    { "id": "ing_vegetable", "name": "季節野菜", "cost": 100, "category": "vegetable" },
+    { "id": "ing_mushroom", "name": "きのこ", "cost": 120, "category": "vegetable" },
+    { "id": "ing_fruit", "name": "フルーツ", "cost": 200, "category": "fruit" },
+    { "id": "ing_cream", "name": "生クリーム", "cost": 180, "category": "dairy" },
+    { "id": "ing_chocolate", "name": "チョコレート", "cost": 250, "category": "sweet" },
+    { "id": "ing_matcha", "name": "抹茶", "cost": 300, "category": "spice" },
+    { "id": "ing_spice", "name": "香辛料", "cost": 200, "category": "spice" },
+    { "id": "ing_dashi", "name": "出汁", "cost": 60, "category": "seasoning" }
+  ],
+  "cookingMethods": [
+    { "id": "method_boil", "name": "煮る", "difficulty": 1 },
+    { "id": "method_grill", "name": "焼く", "difficulty": 2 },
+    { "id": "method_fry", "name": "揚げる", "difficulty": 3 },
+    { "id": "method_steam", "name": "蒸す", "difficulty": 2 },
+    { "id": "method_stir_fry", "name": "炒める", "difficulty": 2 },
+    { "id": "method_raw", "name": "生/刺身", "difficulty": 4 },
+    { "id": "method_simmer", "name": "煮込む", "difficulty": 2 },
+    { "id": "method_bake", "name": "オーブン焼き", "difficulty": 3 }
+  ],
+  "hiddenRecipes": [
+    {
+      "id": "recipe_croquette",
+      "name": "特製クリームコロッケ",
+      "ingredients": ["ing_flour", "ing_shrimp", "ing_milk"],
+      "method": "method_fry",
+      "resultMenu": {
+        "id": "menu_hidden_croquette",
+        "name": "特製クリームコロッケ",
+        "genre": "western",
+        "price": 780,
+        "cost": 280,
+        "cookTime": 10,
+        "difficulty": 4,
+        "popularity": 82,
+        "description": "サクサク衣にトロトロのクリーム。研究から生まれた自信作"
+      },
+      "requiredSense": 40,
+      "discoveryMessage": "海老とミルクの組み合わせから、とろけるコロッケが誕生！"
+    },
+    {
+      "id": "recipe_doria",
+      "name": "焼きチーズドリア",
+      "ingredients": ["ing_rice", "ing_cheese", "ing_chicken"],
+      "method": "method_bake",
+      "resultMenu": {
+        "id": "menu_hidden_doria",
+        "name": "焼きチーズドリア",
+        "genre": "western",
+        "price": 920,
+        "cost": 320,
+        "cookTime": 14,
+        "difficulty": 3,
+        "popularity": 80,
+        "description": "アツアツのチーズの下にコクのあるチキンライス"
+      },
+      "requiredSense": 35,
+      "discoveryMessage": "ご飯×チーズ×チキンの黄金比を発見！"
+    },
+    {
+      "id": "recipe_chawanmushi",
+      "name": "至高の茶碗蒸し",
+      "ingredients": ["ing_egg", "ing_dashi", "ing_shrimp"],
+      "method": "method_steam",
+      "resultMenu": {
+        "id": "menu_hidden_chawanmushi",
+        "name": "至高の茶碗蒸し",
+        "genre": "japanese",
+        "price": 580,
+        "cost": 180,
+        "cookTime": 12,
+        "difficulty": 4,
+        "popularity": 72,
+        "description": "プルプルの卵に海老が踊る、出汁が染みる逸品"
+      },
+      "requiredSense": 45,
+      "discoveryMessage": "卵と出汁と海老の完璧なハーモニーを体得！"
+    },
+    {
+      "id": "recipe_mapo_noodle",
+      "name": "麻婆麺",
+      "ingredients": ["ing_noodle", "ing_tofu", "ing_spice"],
+      "method": "method_boil",
+      "resultMenu": {
+        "id": "menu_hidden_mapo_noodle",
+        "name": "麻婆麺",
+        "genre": "chinese",
+        "price": 880,
+        "cost": 260,
+        "cookTime": 7,
+        "difficulty": 3,
+        "popularity": 84,
+        "description": "シビれる辛さとモチモチ麺の融合"
+      },
+      "requiredSense": 38,
+      "discoveryMessage": "麺×豆腐×香辛料の新しい可能性を発見！"
+    },
+    {
+      "id": "recipe_fruit_parfait",
+      "name": "贅沢フルーツパフェ",
+      "ingredients": ["ing_fruit", "ing_cream", "ing_chocolate"],
+      "method": "method_raw",
+      "resultMenu": {
+        "id": "menu_hidden_fruit_parfait",
+        "name": "贅沢フルーツパフェ",
+        "genre": "dessert",
+        "price": 980,
+        "cost": 400,
+        "cookTime": 8,
+        "difficulty": 4,
+        "popularity": 95,
+        "description": "旬のフルーツ山盛り。SNS拡散力MAX"
+      },
+      "requiredSense": 50,
+      "discoveryMessage": "フルーツ×クリーム×チョコの夢のパフェが完成！"
+    },
+    {
+      "id": "recipe_mushroom_risotto",
+      "name": "きのこリゾット",
+      "ingredients": ["ing_rice", "ing_mushroom", "ing_cheese"],
+      "method": "method_simmer",
+      "resultMenu": {
+        "id": "menu_hidden_risotto",
+        "name": "きのこリゾット",
+        "genre": "western",
+        "price": 1080,
+        "cost": 350,
+        "cookTime": 15,
+        "difficulty": 5,
+        "popularity": 76,
+        "description": "3種のきのこが香る、クリーミーな一品"
+      },
+      "requiredSense": 55,
+      "discoveryMessage": "米ときのことチーズが奏でる深い味わいを発見！"
+    },
+    {
+      "id": "recipe_matcha_fondant",
+      "name": "抹茶フォンダンショコラ",
+      "ingredients": ["ing_matcha", "ing_chocolate", "ing_egg"],
+      "method": "method_bake",
+      "resultMenu": {
+        "id": "menu_hidden_matcha_fondant",
+        "name": "抹茶フォンダンショコラ",
+        "genre": "dessert",
+        "price": 880,
+        "cost": 380,
+        "cookTime": 12,
+        "difficulty": 6,
+        "popularity": 88,
+        "description": "割ると抹茶チョコがとろ〜り。和洋折衷の芸術"
+      },
+      "requiredSense": 60,
+      "discoveryMessage": "抹茶×チョコの和洋融合デザートが誕生！"
+    },
+    {
+      "id": "recipe_beef_stew",
+      "name": "じっくり牛すじ煮込み",
+      "ingredients": ["ing_beef", "ing_vegetable", "ing_dashi"],
+      "method": "method_simmer",
+      "resultMenu": {
+        "id": "menu_hidden_beef_stew",
+        "name": "じっくり牛すじ煮込み",
+        "genre": "japanese",
+        "price": 980,
+        "cost": 400,
+        "cookTime": 18,
+        "difficulty": 3,
+        "popularity": 78,
+        "description": "8時間煮込んだ牛すじがホロホロに崩れる"
+      },
+      "requiredSense": 42,
+      "discoveryMessage": "牛肉×野菜×出汁を長時間煮込む極意を会得！"
+    },
+    {
+      "id": "recipe_ebi_tendon",
+      "name": "海老天丼",
+      "ingredients": ["ing_shrimp", "ing_rice", "ing_flour"],
+      "method": "method_fry",
+      "resultMenu": {
+        "id": "menu_hidden_ebi_tendon",
+        "name": "海老天丼",
+        "genre": "japanese",
+        "price": 1080,
+        "cost": 360,
+        "cookTime": 10,
+        "difficulty": 4,
+        "popularity": 86,
+        "description": "プリプリ海老をカラッと揚げてタレをくぐらせた王道丼"
+      },
+      "requiredSense": 42,
+      "discoveryMessage": "海老×米×小麦粉で天丼の極意を掴んだ！"
+    },
+    {
+      "id": "recipe_chocolate_cake",
+      "name": "チョコレートケーキ",
+      "ingredients": ["ing_chocolate", "ing_egg", "ing_flour"],
+      "method": "method_bake",
+      "resultMenu": {
+        "id": "menu_hidden_chocolate_cake",
+        "name": "チョコレートケーキ",
+        "genre": "dessert",
+        "price": 680,
+        "cost": 250,
+        "cookTime": 20,
+        "difficulty": 4,
+        "popularity": 90,
+        "description": "しっとり濃厚なガトーショコラ。食後の幸せを約束する"
+      },
+      "requiredSense": 45,
+      "discoveryMessage": "チョコ×卵×小麦粉から究極のケーキが焼き上がった！"
+    },
+    {
+      "id": "recipe_matcha_ice",
+      "name": "抹茶アイス",
+      "ingredients": ["ing_matcha", "ing_milk", "ing_cream"],
+      "method": "method_raw",
+      "resultMenu": {
+        "id": "menu_hidden_matcha_ice",
+        "name": "抹茶アイス",
+        "genre": "dessert",
+        "price": 520,
+        "cost": 190,
+        "cookTime": 5,
+        "difficulty": 3,
+        "popularity": 85,
+        "description": "宇治抹茶の深い苦みとミルクのまろやかさが溶け合う"
+      },
+      "requiredSense": 38,
+      "discoveryMessage": "抹茶×牛乳×クリームで極上アイスが完成！"
+    },
+    {
+      "id": "recipe_buta_kimuchi",
+      "name": "豚キムチ炒め",
+      "ingredients": ["ing_pork", "ing_spice", "ing_vegetable"],
+      "method": "method_stir_fry",
+      "resultMenu": {
+        "id": "menu_hidden_buta_kimuchi",
+        "name": "豚キムチ炒め",
+        "genre": "chinese",
+        "price": 780,
+        "cost": 280,
+        "cookTime": 6,
+        "difficulty": 2,
+        "popularity": 83,
+        "description": "ピリ辛の香辛料と豚肉の脂が野菜に絡むスタミナ料理"
+      },
+      "requiredSense": 35,
+      "discoveryMessage": "豚肉×香辛料×野菜のパワフル炒めが誕生！"
+    },
+    {
+      "id": "recipe_kinoko_gratin",
+      "name": "きのこグラタン",
+      "ingredients": ["ing_mushroom", "ing_cheese", "ing_milk"],
+      "method": "method_bake",
+      "resultMenu": {
+        "id": "menu_hidden_kinoko_gratin",
+        "name": "きのこグラタン",
+        "genre": "western",
+        "price": 920,
+        "cost": 320,
+        "cookTime": 16,
+        "difficulty": 3,
+        "popularity": 79,
+        "description": "きのこの旨味がベシャメルソースに溶け込んだ贅沢グラタン"
+      },
+      "requiredSense": 40,
+      "discoveryMessage": "きのこ×チーズ×ミルクをオーブンで焼いたら絶品に！"
+    },
+    {
+      "id": "recipe_fruit_sand",
+      "name": "フルーツサンド",
+      "ingredients": ["ing_fruit", "ing_cream", "ing_flour"],
+      "method": "method_raw",
+      "resultMenu": {
+        "id": "menu_hidden_fruit_sand",
+        "name": "フルーツサンド",
+        "genre": "dessert",
+        "price": 680,
+        "cost": 240,
+        "cookTime": 5,
+        "difficulty": 3,
+        "popularity": 91,
+        "description": "断面の美しさが映える、ふわふわクリームとジューシー果実"
+      },
+      "requiredSense": 42,
+      "discoveryMessage": "フルーツ×クリーム×パンで映えサンドが完成！"
+    },
+    {
+      "id": "recipe_kakuni",
+      "name": "角煮",
+      "ingredients": ["ing_pork", "ing_dashi", "ing_egg"],
+      "method": "method_simmer",
+      "resultMenu": {
+        "id": "menu_hidden_kakuni",
+        "name": "角煮",
+        "genre": "japanese",
+        "price": 1180,
+        "cost": 380,
+        "cookTime": 22,
+        "difficulty": 4,
+        "popularity": 82,
+        "description": "箸で切れるほど柔らかい豚の角煮、煮卵を添えて"
+      },
+      "requiredSense": 50,
+      "discoveryMessage": "豚肉×出汁×卵をじっくり煮込んで角煮の境地に到達！"
+    },
+    {
+      "id": "recipe_kaisen_chahan",
+      "name": "海鮮チャーハン",
+      "ingredients": ["ing_shrimp", "ing_rice", "ing_egg"],
+      "method": "method_stir_fry",
+      "resultMenu": {
+        "id": "menu_hidden_kaisen_chahan",
+        "name": "海鮮チャーハン",
+        "genre": "chinese",
+        "price": 880,
+        "cost": 310,
+        "cookTime": 6,
+        "difficulty": 4,
+        "popularity": 87,
+        "description": "パラパラご飯にプリプリ海老が踊る、火力勝負の一品"
+      },
+      "requiredSense": 45,
+      "discoveryMessage": "海老×米×卵を強火で炒めたら最高のチャーハンに！"
+    },
+    {
+      "id": "recipe_beef_stew_western",
+      "name": "ビーフシチュー",
+      "ingredients": ["ing_beef", "ing_vegetable", "ing_flour"],
+      "method": "method_simmer",
+      "resultMenu": {
+        "id": "menu_hidden_beef_stew_western",
+        "name": "ビーフシチュー",
+        "genre": "western",
+        "price": 1380,
+        "cost": 480,
+        "cookTime": 25,
+        "difficulty": 5,
+        "popularity": 85,
+        "description": "赤ワイン仕込みのデミグラスに牛肉がとろける本格派"
+      },
+      "requiredSense": 55,
+      "discoveryMessage": "牛肉×野菜×小麦粉で極上のビーフシチューが完成！"
+    },
+    {
+      "id": "recipe_chawanmushi_dx",
+      "name": "茶碗蒸しデラックス",
+      "ingredients": ["ing_egg", "ing_fish", "ing_mushroom"],
+      "method": "method_steam",
+      "resultMenu": {
+        "id": "menu_hidden_chawanmushi_dx",
+        "name": "茶碗蒸しデラックス",
+        "genre": "japanese",
+        "price": 780,
+        "cost": 280,
+        "cookTime": 14,
+        "difficulty": 5,
+        "popularity": 76,
+        "description": "白身魚ときのこを贅沢に盛り込んだ特別な茶碗蒸し"
+      },
+      "requiredSense": 50,
+      "discoveryMessage": "卵×白身魚×きのこで茶碗蒸しの新境地を開拓！"
+    },
+    {
+      "id": "recipe_cheese_fondue",
+      "name": "チーズフォンデュ",
+      "ingredients": ["ing_cheese", "ing_flour", "ing_milk"],
+      "method": "method_boil",
+      "resultMenu": {
+        "id": "menu_hidden_cheese_fondue",
+        "name": "チーズフォンデュ",
+        "genre": "western",
+        "price": 1280,
+        "cost": 420,
+        "cookTime": 12,
+        "difficulty": 4,
+        "popularity": 88,
+        "description": "とろ〜り熱々のチーズに具材をくぐらせる至福のひととき"
+      },
+      "requiredSense": 48,
+      "discoveryMessage": "チーズ×小麦粉×牛乳でフォンデュの魔法を発見！"
+    },
+    {
+      "id": "recipe_matcha_tiramisu",
+      "name": "抹茶ティラミス",
+      "ingredients": ["ing_matcha", "ing_cream", "ing_cheese"],
+      "method": "method_raw",
+      "resultMenu": {
+        "id": "menu_hidden_matcha_tiramisu",
+        "name": "抹茶ティラミス",
+        "genre": "dessert",
+        "price": 880,
+        "cost": 350,
+        "cookTime": 8,
+        "difficulty": 5,
+        "popularity": 92,
+        "description": "マスカルポーネと抹茶が織りなす和イタリアンの傑作"
+      },
+      "requiredSense": 58,
+      "discoveryMessage": "抹茶×クリーム×チーズで和風ティラミスが誕生！"
+    }
+  ]
+}

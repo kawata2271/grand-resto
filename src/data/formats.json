@@ -1,0 +1,76 @@
+{
+  "formats": [
+    {
+      "id": "format_general",
+      "name": "総合レストラン",
+      "icon": "🍽",
+      "description": "ジャンルを問わず幅広く提供。初心者向け",
+      "genreBonus": {},
+      "genreRestriction": [],
+      "customerBonus": {},
+      "reputationMult": 1.0,
+      "unlocked": true
+    },
+    {
+      "id": "format_japanese",
+      "name": "和食専門店",
+      "icon": "🍣",
+      "description": "和食メニューの人気が大幅UP。洋食・中華は提供不可",
+      "genreBonus": { "japanese": 1.4 },
+      "genreRestriction": ["western", "chinese"],
+      "customerBonus": { "elderly": 1.3, "business_group": 1.3, "tourist": 1.4 },
+      "reputationMult": 1.1,
+      "unlocked": true
+    },
+    {
+      "id": "format_western",
+      "name": "洋食レストラン",
+      "icon": "🍝",
+      "description": "洋食とデザートが人気UP。和食・中華は提供不可",
+      "genreBonus": { "western": 1.4, "dessert": 1.3 },
+      "genreRestriction": ["japanese", "chinese"],
+      "customerBonus": { "couple": 1.4, "family": 1.2, "tourist": 1.2 },
+      "reputationMult": 1.1,
+      "unlocked": true
+    },
+    {
+      "id": "format_chinese",
+      "name": "中華料理店",
+      "icon": "🥟",
+      "description": "中華メニューの回転率と人気が大幅UP。和食・洋食は不可",
+      "genreBonus": { "chinese": 1.5 },
+      "genreRestriction": ["japanese", "western"],
+      "customerBonus": { "student": 1.4, "salaryman": 1.3, "family": 1.2 },
+      "reputationMult": 1.0,
+      "unlocked": false,
+      "requirePrestige": 1
+    },
+    {
+      "id": "format_family",
+      "name": "ファミリーレストラン",
+      "icon": "🏠",
+      "description": "全ジャンル提供可能。ファミリー客と回転率にボーナス",
+      "genreBonus": { "japanese": 1.1, "western": 1.1, "chinese": 1.1, "dessert": 1.2, "drink": 1.2 },
+      "genreRestriction": [],
+      "customerBonus": { "family": 1.5, "elderly": 1.2, "student": 1.2 },
+      "reputationMult": 1.15,
+      "unlocked": false,
+      "requirePrestige": 2
+    },
+    {
+      "id": "format_fine",
+      "name": "高級レストラン",
+      "icon": "⭐",
+      "description": "高級メニュー特化。客単価が高いが来客数は少ない",
+      "genreBonus": { "japanese": 1.2, "western": 1.3 },
+      "genreRestriction": [],
+      "customerBonus": { "couple": 1.6, "business_group": 1.8, "solo_gourmet": 1.5, "tourist": 1.5 },
+      "reputationMult": 1.3,
+      "customerRateMult": 0.6,
+      "unlocked": false,
+      "requirePrestige": 3
+    }
+  ],
+  "changeCost": 200000,
+  "changeCooldownDays": 30
+}

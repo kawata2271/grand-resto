@@ -1,0 +1,42 @@
+{
+  "menus": [
+    { "id": "menu_soba", "name": "かけそば", "genre": "japanese", "price": 580, "cost": 150, "cookTime": 3, "difficulty": 1, "popularity": 70, "description": "温かい出汁が香る定番の一品", "unlocked": true, "researchCost": 0, "researchDays": 0 },
+    { "id": "menu_katsudon", "name": "カツ丼", "genre": "japanese", "price": 880, "cost": 320, "cookTime": 8, "difficulty": 3, "popularity": 85, "description": "サクサクのカツを卵でとじた人気メニュー", "unlocked": true, "researchCost": 0, "researchDays": 0 },
+    { "id": "menu_coffee", "name": "ブレンドコーヒー", "genre": "drink", "price": 380, "cost": 50, "cookTime": 2, "difficulty": 1, "popularity": 60, "description": "食後にほっと一息。原価率の優等生", "unlocked": true, "researchCost": 0, "researchDays": 0 },
+
+    { "id": "menu_udon", "name": "きつねうどん", "genre": "japanese", "price": 620, "cost": 160, "cookTime": 4, "difficulty": 1, "popularity": 65, "description": "甘く煮た油揚げがたっぷり", "unlocked": false, "researchCost": 15000, "researchDays": 2, "requiredCookLevel": 1 },
+    { "id": "menu_oyakodon", "name": "親子丼", "genre": "japanese", "price": 780, "cost": 250, "cookTime": 6, "difficulty": 2, "popularity": 75, "description": "ふわとろ卵と鶏肉の黄金コンビ", "unlocked": false, "researchCost": 20000, "researchDays": 2, "requiredCookLevel": 1 },
+    { "id": "menu_green_tea", "name": "抹茶ラテ", "genre": "drink", "price": 450, "cost": 80, "cookTime": 2, "difficulty": 1, "popularity": 55, "description": "ほろ苦い抹茶の風味が楽しめる", "unlocked": false, "researchCost": 10000, "researchDays": 1, "requiredCookLevel": 1 },
+
+    { "id": "menu_tempura", "name": "天ぷら定食", "genre": "japanese", "price": 980, "cost": 380, "cookTime": 10, "difficulty": 4, "popularity": 80, "description": "サクッと揚がった海老と野菜の盛り合わせ", "unlocked": false, "researchCost": 30000, "researchDays": 3, "requiredCookLevel": 2 },
+    { "id": "menu_parfait", "name": "季節のパフェ", "genre": "dessert", "price": 680, "cost": 200, "cookTime": 5, "difficulty": 3, "popularity": 90, "description": "見た目も華やか。若い客層に大人気", "unlocked": false, "researchCost": 25000, "researchDays": 3, "requiredCookLevel": 2 },
+    { "id": "menu_hamburg", "name": "ハンバーグ定食", "genre": "western", "price": 980, "cost": 350, "cookTime": 12, "difficulty": 3, "popularity": 88, "description": "肉汁あふれる手ごねハンバーグ", "unlocked": false, "researchCost": 35000, "researchDays": 4, "requiredCookLevel": 2 },
+    { "id": "menu_omurice", "name": "オムライス", "genre": "western", "price": 850, "cost": 280, "cookTime": 8, "difficulty": 3, "popularity": 82, "description": "ふわとろ卵にデミグラスソース", "unlocked": false, "researchCost": 28000, "researchDays": 3, "requiredCookLevel": 2 },
+    { "id": "menu_napolitan", "name": "ナポリタン", "genre": "western", "price": 780, "cost": 220, "cookTime": 7, "difficulty": 2, "popularity": 72, "description": "昔ながらの喫茶店の味", "unlocked": false, "researchCost": 18000, "researchDays": 2, "requiredCookLevel": 2 },
+
+    { "id": "menu_ramen", "name": "醤油ラーメン", "genre": "chinese", "price": 780, "cost": 250, "cookTime": 5, "difficulty": 2, "popularity": 88, "description": "あっさり醤油味。万人受けする一杯", "unlocked": false, "researchCost": 22000, "researchDays": 3, "requiredCookLevel": 2 },
+    { "id": "menu_gyoza", "name": "焼き餃子", "genre": "chinese", "price": 480, "cost": 130, "cookTime": 6, "difficulty": 2, "popularity": 80, "description": "パリッと焼けた皮とジューシーな餡", "unlocked": false, "researchCost": 15000, "researchDays": 2, "requiredCookLevel": 1 },
+    { "id": "menu_chahan", "name": "チャーハン", "genre": "chinese", "price": 720, "cost": 200, "cookTime": 4, "difficulty": 3, "popularity": 78, "description": "パラパラ炒飯は料理人の腕の見せ所", "unlocked": false, "researchCost": 20000, "researchDays": 2, "requiredCookLevel": 2 },
+    { "id": "menu_mapo", "name": "麻婆豆腐定食", "genre": "chinese", "price": 820, "cost": 260, "cookTime": 7, "difficulty": 3, "popularity": 76, "description": "痺れる辛さがクセになる本格派", "unlocked": false, "researchCost": 25000, "researchDays": 3, "requiredCookLevel": 2 },
+
+    { "id": "menu_sashimi", "name": "刺身定食", "genre": "japanese", "price": 1280, "cost": 550, "cookTime": 5, "difficulty": 5, "popularity": 70, "description": "新鮮な魚介を贅沢に。仕入れが命", "unlocked": false, "researchCost": 50000, "researchDays": 5, "requiredCookLevel": 3 },
+    { "id": "menu_sukiyaki", "name": "すき焼き御膳", "genre": "japanese", "price": 1580, "cost": 650, "cookTime": 15, "difficulty": 4, "popularity": 75, "description": "上質な牛肉を甘辛いタレで", "unlocked": false, "researchCost": 60000, "researchDays": 5, "requiredCookLevel": 3 },
+    { "id": "menu_steak", "name": "サーロインステーキ", "genre": "western", "price": 1880, "cost": 800, "cookTime": 15, "difficulty": 5, "popularity": 78, "description": "分厚い肉をレアに焼き上げる贅沢", "unlocked": false, "researchCost": 70000, "researchDays": 6, "requiredCookLevel": 4 },
+    { "id": "menu_gratin", "name": "海老グラタン", "genre": "western", "price": 920, "cost": 340, "cookTime": 14, "difficulty": 4, "popularity": 74, "description": "熱々のホワイトソースが絶品", "unlocked": false, "researchCost": 35000, "researchDays": 4, "requiredCookLevel": 3 },
+
+    { "id": "menu_tantanmen", "name": "担々麺", "genre": "chinese", "price": 880, "cost": 300, "cookTime": 7, "difficulty": 4, "popularity": 74, "description": "濃厚ゴマの風味と辛さのハーモニー", "unlocked": false, "researchCost": 30000, "researchDays": 4, "requiredCookLevel": 3 },
+    { "id": "menu_ebichili", "name": "エビチリ", "genre": "chinese", "price": 980, "cost": 420, "cookTime": 8, "difficulty": 4, "popularity": 72, "description": "プリプリ海老のチリソース炒め", "unlocked": false, "researchCost": 40000, "researchDays": 4, "requiredCookLevel": 3 },
+    { "id": "menu_peking", "name": "北京ダック", "genre": "chinese", "price": 2200, "cost": 900, "cookTime": 20, "difficulty": 6, "popularity": 65, "description": "パリパリの皮を薄餅で巻く至高の逸品", "unlocked": false, "researchCost": 100000, "researchDays": 8, "requiredCookLevel": 5 },
+
+    { "id": "menu_cake", "name": "本日のケーキ", "genre": "dessert", "price": 580, "cost": 180, "cookTime": 3, "difficulty": 2, "popularity": 78, "description": "日替わりの手作りケーキ", "unlocked": false, "researchCost": 20000, "researchDays": 2, "requiredCookLevel": 2 },
+    { "id": "menu_anmitsu", "name": "あんみつ", "genre": "dessert", "price": 520, "cost": 140, "cookTime": 4, "difficulty": 2, "popularity": 68, "description": "和の甘味。高齢者にも人気", "unlocked": false, "researchCost": 15000, "researchDays": 2, "requiredCookLevel": 1 },
+    { "id": "menu_souffle", "name": "スフレパンケーキ", "genre": "dessert", "price": 780, "cost": 250, "cookTime": 12, "difficulty": 5, "popularity": 92, "description": "SNS映え最強。焼き上がりに時間がかかる", "unlocked": false, "researchCost": 45000, "researchDays": 5, "requiredCookLevel": 4 },
+
+    { "id": "menu_juice", "name": "フレッシュジュース", "genre": "drink", "price": 420, "cost": 90, "cookTime": 2, "difficulty": 1, "popularity": 58, "description": "搾りたての果物ジュース", "unlocked": false, "researchCost": 8000, "researchDays": 1, "requiredCookLevel": 1 },
+    { "id": "menu_beer", "name": "生ビール", "genre": "drink", "price": 550, "cost": 120, "cookTime": 1, "difficulty": 1, "popularity": 75, "description": "仕事終わりの一杯。ディナー需要大", "unlocked": false, "researchCost": 12000, "researchDays": 1, "requiredCookLevel": 1 },
+    { "id": "menu_wine", "name": "グラスワイン", "genre": "drink", "price": 680, "cost": 180, "cookTime": 1, "difficulty": 1, "popularity": 50, "description": "食事に合わせたセレクト。高級路線に必須", "unlocked": false, "researchCost": 20000, "researchDays": 2, "requiredCookLevel": 1 },
+
+    { "id": "menu_kaiseki", "name": "ミニ懐石コース", "genre": "japanese", "price": 3500, "cost": 1400, "cookTime": 25, "difficulty": 7, "popularity": 60, "description": "前菜からデザートまで。最高峰の和食体験", "unlocked": false, "researchCost": 150000, "researchDays": 10, "requiredCookLevel": 6 },
+    { "id": "menu_french", "name": "フレンチコース", "genre": "western", "price": 4000, "cost": 1600, "cookTime": 30, "difficulty": 8, "popularity": 55, "description": "アミューズからデセールまでの正統派コース", "unlocked": false, "researchCost": 180000, "researchDays": 12, "requiredCookLevel": 7 }
+  ]
+}

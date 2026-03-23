@@ -1,0 +1,55 @@
+{
+  "tables": [
+    { "id": "table_2seat", "name": "2人席", "seats": 2, "cost": 30000, "description": "カップルや一人客向け。回転率が高い" },
+    { "id": "table_4seat", "name": "4人席", "seats": 4, "cost": 50000, "description": "ファミリーや友人グループ向け。標準的な席" },
+    { "id": "table_6seat", "name": "6人席", "seats": 6, "cost": 80000, "description": "大人数グループ対応。客単価が高い" }
+  ],
+  "maxTables": 12,
+  "scenarios": [
+    {
+      "id": "scenario_1",
+      "name": "この街でナンバーワンになれ",
+      "description": "月商100万円を達成し、評判を80以上に上げろ",
+      "goals": [
+        { "type": "monthly_revenue", "target": 1000000, "label": "月商100万円" },
+        { "type": "reputation", "target": 80, "label": "評判80以上" }
+      ],
+      "unlocked": true
+    },
+    {
+      "id": "scenario_challenge_debt",
+      "name": "借金からの逆転劇",
+      "description": "初期資金がマイナス500万円。借金を返済しつつ黒字経営を目指せ",
+      "goals": [
+        { "type": "reputation", "target": 50, "label": "評判50以上" },
+        { "type": "monthly_revenue", "target": 500000, "label": "月商50万円" }
+      ],
+      "modifiers": { "startMoney": -5000000 },
+      "unlocked": false,
+      "requirePrestige": 1
+    },
+    {
+      "id": "scenario_challenge_solo",
+      "name": "孤高の料理人",
+      "description": "スタッフ採用禁止。たった一人で店を切り盛りしろ",
+      "goals": [
+        { "type": "reputation", "target": 60, "label": "評判60以上" }
+      ],
+      "modifiers": { "noHiring": true, "startStaff": 1 },
+      "unlocked": false,
+      "requirePrestige": 1
+    },
+    {
+      "id": "scenario_challenge_inflation",
+      "name": "インフレの嵐",
+      "description": "食材価格が常時3倍。メニュー戦略と原価管理で生き残れ",
+      "goals": [
+        { "type": "monthly_revenue", "target": 800000, "label": "月商80万円" },
+        { "type": "reputation", "target": 70, "label": "評判70以上" }
+      ],
+      "modifiers": { "ingredientCostMult": 3.0 },
+      "unlocked": false,
+      "requirePrestige": 2
+    }
+  ]
+}

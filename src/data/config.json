@@ -1,0 +1,35 @@
+{
+  "simulation": {
+    "tickMinutes": 10,
+    "openHour": 10,
+    "closeHour": 22,
+    "peakLunchStart": 11,
+    "peakLunchEnd": 14,
+    "peakDinnerStart": 17,
+    "peakDinnerEnd": 21,
+    "baseCustomerRate": 3,
+    "peakMultiplier": 2.5,
+    "idleMultiplier": 0.4
+  },
+  "economy": {
+    "startingMoney": 1000000,
+    "dailyFixedCost": 5000,
+    "rentPerMonth": 200000
+  },
+  "tables": {
+    "default": [
+      { "id": "table_1", "seats": 4 },
+      { "id": "table_2", "seats": 4 },
+      { "id": "table_3", "seats": 2 },
+      { "id": "table_4", "seats": 2 },
+      { "id": "table_5", "seats": 6 }
+    ]
+  },
+  "customer": {
+    "minEatTime": 15,
+    "maxEatTime": 40,
+    "waitTolerance": 20,
+    "averageGroupSize": 2.2,
+    "orderPerPerson": 1.3
+  }
+}

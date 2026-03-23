@@ -1,0 +1,72 @@
+{
+  "rivalTemplates": [
+    {
+      "id": "rival_gyudon",
+      "name": "牛丼チェーン「丼太郎」",
+      "type": "chain",
+      "genre": "japanese",
+      "priceRange": "low",
+      "baseCustomerSteal": 0.08,
+      "aggressiveness": 0.3,
+      "description": "安さで勝負。学生とサラリーマンを持っていく",
+      "targetCustomers": ["salaryman", "student"],
+      "openCondition": { "minDay": 10 }
+    },
+    {
+      "id": "rival_cafe",
+      "name": "おしゃれカフェ「Bloom」",
+      "type": "indie",
+      "genre": "western",
+      "priceRange": "high",
+      "baseCustomerSteal": 0.05,
+      "aggressiveness": 0.2,
+      "description": "SNS映えで若者を吸引。デザートが強い",
+      "targetCustomers": ["couple", "tourist"],
+      "openCondition": { "minDay": 20, "minReputation": 30 }
+    },
+    {
+      "id": "rival_chinese",
+      "name": "中華料理「龍華飯店」",
+      "type": "indie",
+      "genre": "chinese",
+      "priceRange": "medium",
+      "baseCustomerSteal": 0.07,
+      "aggressiveness": 0.4,
+      "description": "回転率抜群の本格中華。ランチ客を奪う",
+      "targetCustomers": ["salaryman", "student", "family"],
+      "openCondition": { "minDay": 30 }
+    },
+    {
+      "id": "rival_family",
+      "name": "ファミレス「ジョイフル亭」",
+      "type": "chain",
+      "genre": "western",
+      "priceRange": "medium",
+      "baseCustomerSteal": 0.10,
+      "aggressiveness": 0.5,
+      "description": "何でもある大手チェーン。ファミリー層に強い",
+      "targetCustomers": ["family", "elderly"],
+      "openCondition": { "minDay": 50, "minReputation": 40 }
+    },
+    {
+      "id": "rival_fine",
+      "name": "高級レストラン「Le Ciel」",
+      "type": "indie",
+      "genre": "western",
+      "priceRange": "premium",
+      "baseCustomerSteal": 0.04,
+      "aggressiveness": 0.2,
+      "description": "質で勝負。接待・カップル客を狙う",
+      "targetCustomers": ["couple", "business_group"],
+      "openCondition": { "minDay": 80, "minReputation": 60 }
+    }
+  ],
+  "rivalActions": [
+    { "id": "price_cut", "name": "値下げキャンペーン", "weight": 20, "effect": { "customerStealMult": 1.5, "duration": 5 }, "description": "ライバルが期間限定値下げ。客が流れる" },
+    { "id": "new_menu", "name": "新メニュー投入", "weight": 15, "effect": { "customerStealMult": 1.3, "duration": 7 }, "description": "話題の新メニューで集客" },
+    { "id": "renovation", "name": "改装リニューアル", "weight": 8, "effect": { "customerStealMult": 1.4, "duration": 10 }, "description": "店舗を改装して注目度UP" },
+    { "id": "scout", "name": "引き抜き工作", "weight": 5, "effect": { "scoutTarget": true }, "description": "うちのスタッフを引き抜こうとしている" },
+    { "id": "bad_review", "name": "ライバルの悪評", "weight": 10, "effect": { "customerStealMult": 0.5, "duration": 5 }, "description": "ライバルが悪評で客が流れてくる" },
+    { "id": "close_temp", "name": "ライバル一時休業", "weight": 5, "effect": { "customerStealMult": 0, "duration": 7 }, "description": "ライバルが一時休業。チャンス！" }
+  ]
+}

@@ -1,0 +1,63 @@
+{
+  "templates": [
+    {
+      "id": "staff_rookie_cook",
+      "name": "新人料理人",
+      "role": "cook",
+      "baseSalary": 180000,
+      "hireCost": 50000,
+      "stats": { "stamina": 50, "dexterity": 40, "memory": 45, "strength": 50, "communication": 30, "sense": 35 },
+      "growthRate": 1.2,
+      "description": "やる気は十分。経験を積めば化ける",
+      "tier": 1
+    },
+    {
+      "id": "staff_rookie_hall",
+      "name": "新人ホールスタッフ",
+      "role": "hall",
+      "baseSalary": 160000,
+      "hireCost": 40000,
+      "stats": { "stamina": 45, "dexterity": 35, "memory": 50, "strength": 40, "communication": 55, "sense": 40 },
+      "growthRate": 1.1,
+      "description": "笑顔が武器。接客の基本はできている",
+      "tier": 1
+    },
+    {
+      "id": "staff_mid_cook",
+      "name": "経験者料理人",
+      "role": "cook",
+      "baseSalary": 250000,
+      "hireCost": 100000,
+      "stats": { "stamina": 60, "dexterity": 60, "memory": 55, "strength": 55, "communication": 40, "sense": 50 },
+      "growthRate": 0.9,
+      "description": "他店で3年の経験あり。即戦力",
+      "tier": 2
+    },
+    {
+      "id": "staff_mid_hall",
+      "name": "経験者ホールスタッフ",
+      "role": "hall",
+      "baseSalary": 220000,
+      "hireCost": 80000,
+      "stats": { "stamina": 55, "dexterity": 50, "memory": 60, "strength": 45, "communication": 70, "sense": 55 },
+      "growthRate": 0.85,
+      "description": "接客のプロ。クレーム対応もお手の物",
+      "tier": 2
+    },
+    {
+      "id": "staff_veteran_cook",
+      "name": "ベテラン料理人",
+      "role": "cook",
+      "baseSalary": 350000,
+      "hireCost": 200000,
+      "stats": { "stamina": 55, "dexterity": 80, "memory": 70, "strength": 50, "communication": 45, "sense": 75 },
+      "growthRate": 0.6,
+      "description": "腕は確か。高い給与に見合う働きをする",
+      "tier": 3
+    }
+  ],
+  "namePool": {
+    "lastNames": ["田中", "佐藤", "鈴木", "高橋", "伊藤", "渡辺", "山本", "中村", "小林", "加藤", "吉田", "山田", "松本", "井上", "木村", "林", "斎藤", "清水", "山口", "池田", "森", "阿部", "橋本", "石川", "前田", "藤田", "岡田", "後藤", "長谷川", "村上"],
+    "firstNames": ["太郎", "花子", "翔太", "美咲", "健太", "さくら", "大輝", "陽菜", "蓮", "結衣", "悠真", "凛", "陽翔", "葵", "湊", "芽依", "樹", "楓", "颯太", "莉子", "蒼", "紬", "律", "詩", "暖", "瑠奈", "碧", "柚希", "大和", "彩乃"]
+  }
+}

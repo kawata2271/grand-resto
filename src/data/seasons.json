@@ -1,0 +1,56 @@
+{
+  "seasons": [
+    {
+      "id": "spring",
+      "name": "春",
+      "icon": "🌸",
+      "months": [3, 4, 5],
+      "customerFlowMult": 1.1,
+      "ingredientCostMult": 0.95,
+      "genreBonus": { "japanese": 1.1, "dessert": 1.15 },
+      "customerBonus": { "tourist": 1.4, "couple": 1.2, "family": 1.1 },
+      "eventWeightBonus": { "evt_cherry_blossom": 3.0, "evt_golden_week": 2.0 },
+      "description": "桜の季節。観光客が増え、食材も安定する",
+      "color": "#f0a0b0"
+    },
+    {
+      "id": "summer",
+      "name": "夏",
+      "icon": "🌻",
+      "months": [6, 7, 8],
+      "customerFlowMult": 0.9,
+      "ingredientCostMult": 1.1,
+      "genreBonus": { "chinese": 1.1, "drink": 1.3 },
+      "customerBonus": { "student": 1.4, "family": 1.3 },
+      "eventWeightBonus": { "evt_heatwave": 2.0, "evt_typhoon": 2.0, "evt_rainy_week": 1.5 },
+      "description": "暑さで客足鈍る。冷たいメニューとドリンクが好調",
+      "color": "#f0c040"
+    },
+    {
+      "id": "autumn",
+      "name": "秋",
+      "icon": "🍁",
+      "months": [9, 10, 11],
+      "customerFlowMult": 1.15,
+      "ingredientCostMult": 0.9,
+      "genreBonus": { "japanese": 1.15, "western": 1.1 },
+      "customerBonus": { "solo_gourmet": 1.3, "elderly": 1.2, "business_group": 1.2 },
+      "eventWeightBonus": { "evt_food_trend": 1.5, "evt_nearby_festival": 2.0 },
+      "description": "食欲の秋。食材は旬で安く、味にうるさい客が増える",
+      "color": "#d08030"
+    },
+    {
+      "id": "winter",
+      "name": "冬",
+      "icon": "❄️",
+      "months": [12, 1, 2],
+      "customerFlowMult": 0.95,
+      "ingredientCostMult": 1.05,
+      "genreBonus": { "japanese": 1.1, "drink": 1.2 },
+      "customerBonus": { "business_group": 1.5, "couple": 1.3, "family": 1.2 },
+      "eventWeightBonus": { "evt_year_end": 2.0, "evt_snow": 2.5 },
+      "description": "忘年会・新年会需要。鍋や温かいメニューが人気",
+      "color": "#80a0d0"
+    }
+  ]
+}
