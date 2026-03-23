@@ -166,7 +166,7 @@ export class UI {
         <div class="scm-top">
           <span class="staff-name">${st.name}</span>
           <span class="staff-role-badge ${st.role}">${st.role==="cook"?"料理":"ホール"} Lv.${st.level}</span>
-          <span class="shift-icon">${this.app.shiftMgr.getShiftIcon(st.shift||"full")}</span>
+          <span class="shift-icon">${this.app.shiftMgr.getShiftIcon(st.shift||"full", st)}</span>
         </div>
         <div class="staff-bars">
           <div class="bar-row"><span class="bar-label">体力</span><div class="bar"><div class="bar-fill fatigue" style="width:${100-st.fatigue}%"></div></div></div>
@@ -294,13 +294,22 @@ export class UI {
 
     h += s.staff.map(st => {
       const shifts = ["full","morning","evening","off"];
-      return `<div class="shift-card">
+      const onBreak = sm.isOnBreak(st);
+      return `<div class="shift-card ${onBreak ? "on-break" : ""}">
         <div class="scm-top">
-          <span class="staff-name">${st.name}</span>
+          <span class="staff-name">${sm.getShiftIcon(st.shift, st)} ${st.name}</span>
           <span class="staff-role-badge ${st.role}">${st.role==="cook"?"料理":"ホール"} Lv.${st.level}</span>
         </div>
         <div class="shift-btns">
-          ${shifts.map(sh => `<button class="shift-btn ${(st.shift||"full")===sh?"selected":""}" data-id="${st.id}" data-shift="${sh}">${sm.getShiftIcon(sh)} ${sm.getShiftLabel(sh)}</button>`).join("")}
+          ${shifts.map(sh => `<button class="shift-btn ${(st.shift||"full")===sh&&!onBreak?"selected":""}" data-id="${st.id}" data-shift="${sh}">${sm.getShiftIcon(sh)} ${sm.getShiftLabel(sh)}</button>`).join("")}
+        </div>
+        <div style="margin-top:4px;display:flex;gap:3px;align-items:center">
+          ${onBreak
+            ? `<span class="break-badge">☕ 休憩中 残${st.breakRemaining}分</span><button class="btn btn-sm break-cancel-btn" data-id="${st.id}">復帰</button>`
+            : st.shift !== "off"
+              ? `<button class="btn btn-sm break-btn" data-id="${st.id}" data-min="20">☕20分</button><button class="btn btn-sm break-btn" data-id="${st.id}" data-min="30">☕30分</button><button class="btn btn-sm break-btn" data-id="${st.id}" data-min="60">☕60分</button>`
+              : ""
+          }
         </div>
         <div class="bar-row" style="margin-top:4px"><span class="bar-label">疲</span><div class="bar"><div class="bar-fill fatigue" style="width:${100-st.fatigue}%"></div></div><span class="bar-label">気</span><div class="bar"><div class="bar-fill morale" style="width:${st.morale}%"></div></div></div>
       </div>`;
@@ -309,6 +318,12 @@ export class UI {
 
     for (const b of el.querySelectorAll(".shift-btn")) {
       b.addEventListener("click", () => this.app.setShift(b.dataset.id, b.dataset.shift));
+    }
+    for (const b of el.querySelectorAll(".break-btn")) {
+      b.addEventListener("click", () => this.app.sendOnBreak(b.dataset.id, parseInt(b.dataset.min)));
+    }
+    for (const b of el.querySelectorAll(".break-cancel-btn")) {
+      b.addEventListener("click", () => this.app.cancelBreak(b.dataset.id));
     }
   }
 

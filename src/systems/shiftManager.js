@@ -10,6 +10,9 @@ export class ShiftManager {
       if (!staff.shift) {
         staff.shift = "full"; // full, morning, evening, off
       }
+      if (staff.breakRemaining === undefined) {
+        staff.breakRemaining = 0; // 0 = not on break
+      }
     }
   }
 
@@ -31,8 +34,59 @@ export class ShiftManager {
     return { success: true };
   }
 
+  // ─── 休憩システム ───
+  sendOnBreak(staffId, minutes = 30) {
+    const staff = this.state.staff.find(s => s.id === staffId);
+    if (!staff) return { success: false, reason: "スタッフが見つかりません" };
+    if (staff.shift === "off") return { success: false, reason: "休みのスタッフは休憩不要です" };
+    if (staff.breakRemaining > 0) return { success: false, reason: "すでに休憩中です" };
+
+    // Ensure at least 1 working staff of same role remains
+    const hour = this.state.time?.hour || 12;
+    const sameRoleWorking = this.state.staff.filter(s =>
+      s.id !== staffId && s.role === staff.role && this.isWorking(s, hour) && s.breakRemaining <= 0
+    );
+    if (sameRoleWorking.length === 0) {
+      return { success: false, reason: `他に稼働中の${staff.role === "cook" ? "料理人" : "ホール"}がいません` };
+    }
+
+    staff.breakRemaining = minutes;
+    return { success: true, name: staff.name, minutes };
+  }
+
+  cancelBreak(staffId) {
+    const staff = this.state.staff.find(s => s.id === staffId);
+    if (!staff) return { success: false, reason: "スタッフが見つかりません" };
+    if (staff.breakRemaining <= 0) return { success: false, reason: "休憩中ではありません" };
+
+    staff.breakRemaining = 0;
+    return { success: true, name: staff.name };
+  }
+
+  tickBreaks(tickMinutes) {
+    const events = [];
+    for (const staff of this.state.staff) {
+      if (staff.breakRemaining > 0) {
+        // Recover fatigue during break
+        staff.fatigue = Math.max(0, staff.fatigue - 8);
+        staff.morale = Math.min(100, staff.morale + 1);
+
+        staff.breakRemaining -= tickMinutes;
+        if (staff.breakRemaining <= 0) {
+          staff.breakRemaining = 0;
+          events.push(`☕ ${staff.name}が休憩から復帰`);
+        }
+      }
+    }
+    return events;
+  }
+
+  isOnBreak(staff) {
+    return (staff.breakRemaining || 0) > 0;
+  }
+
   getActiveStaff(hour) {
-    return this.state.staff.filter(s => this.isWorking(s, hour));
+    return this.state.staff.filter(s => this.isWorking(s, hour) && !this.isOnBreak(s));
   }
 
   isWorking(staff, hour) {
@@ -66,7 +120,8 @@ export class ShiftManager {
     }
   }
 
-  getShiftLabel(shift) {
+  getShiftLabel(shift, staff) {
+    if (staff && this.isOnBreak(staff)) return `休憩中(残${staff.breakRemaining}分)`;
     const labels = {
       full: "フル出勤",
       morning: "午前のみ",
@@ -76,7 +131,8 @@ export class ShiftManager {
     return labels[shift] || shift;
   }
 
-  getShiftIcon(shift) {
+  getShiftIcon(shift, staff) {
+    if (staff && this.isOnBreak(staff)) return "☕";
     const icons = { full: "🔵", morning: "🌅", evening: "🌆", off: "💤" };
     return icons[shift] || "?";
   }

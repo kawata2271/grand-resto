@@ -104,6 +104,10 @@ class GameApp {
   }
 
   doTick() {
+    // Process breaks
+    const breakEvts = this.shiftMgr.tickBreaks(this.config.simulation.tickMinutes);
+    for (const e of breakEvts) this.ui.addLog(e);
+
     const r = this.sim.tick();
     if (r.type === "closed") { this.ui.addLog("営業時間外。閉店処理をどうぞ。"); if (this.autoInterval) this.toggleAuto(); return; }
     if (r.waiting > 0 || r.eating > 0) {
@@ -219,8 +223,20 @@ class GameApp {
     this.ui.render(); return r;
   }
 
-  // Shift & Skill
+  // Shift & Skill & Break
   setShift(id, sh) { const r = this.shiftMgr.setShift(id, sh); if (r.success) this.ui.render(); else this.ui.addLog(`❌ ${r.reason}`); return r; }
+  sendOnBreak(id, minutes) {
+    const r = this.shiftMgr.sendOnBreak(id, minutes);
+    if (r.success) this.ui.addLog(`☕ ${r.name}を${r.minutes}分休憩に`);
+    else this.ui.addLog(`❌ ${r.reason}`);
+    this.ui.render(); return r;
+  }
+  cancelBreak(id) {
+    const r = this.shiftMgr.cancelBreak(id);
+    if (r.success) this.ui.addLog(`${r.name}を休憩から復帰させました`);
+    else this.ui.addLog(`❌ ${r.reason}`);
+    this.ui.render(); return r;
+  }
   selectPath(sid, pid) { const r = this.skillMgr.selectPath(sid, pid); if (r.success) { this.ui.addLog(`🌳 ${r.path.name}の道を選択`); this.ui.render(); } else this.ui.addLog(`❌ ${r.reason}`); return r; }
   unlockSkillNode(sid, nid) { const r = this.skillMgr.unlockNode(sid, nid); if (r.success) { this.ui.addLog(`⭐ ${r.staff.name}が「${r.node.name}」習得！`); this._syncBonuses(); this.ui.render(); } else this.ui.addLog(`❌ ${r.reason}`); return r; }
 
