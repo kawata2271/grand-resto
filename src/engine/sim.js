@@ -125,7 +125,7 @@ export class Simulation {
   }
 
   _processSeating(hall) {
-    const tables = this.state.restaurant.tables;
+    const tables = this.getTablesFromFurniture ? this.getTablesFromFurniture() : this.state.restaurant.tables;
     const tickMin = this.config.simulation.tickMinutes;
     const occ = new Set(this.customers.filter(c => c.status === "seated" || c.status === "eating").map(c => c.tableId));
     const cap = Math.max(1, hall.length * 2);

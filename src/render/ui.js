@@ -1,5 +1,7 @@
 import { FloorView } from "./floorView.js";
+import { FloorEditor } from "./floor-editor.js";
 import { ChartRenderer } from "./chart.js";
+import { FURNITURE_TYPES, FURNITURE_GRADES, CATEGORY_INFO, getFurnitureCost, getGradeTier } from "../systems/furniture-data.js";
 
 export class UI {
   constructor(gameApp) {
@@ -8,7 +10,12 @@ export class UI {
     this.currentTab = "overview";
     this.skillViewStaffId = null;
     this.floorView = null;
+    this.floorEditor = null;
     this.chartRenderer = null;
+    this._layoutCat = "table";
+    this._layoutGrade = "tier3";
+    this._layoutSelectedType = null;
+    this._layoutEditing = false;
   }
 
   init() {
@@ -60,11 +67,16 @@ export class UI {
     document.getElementById("btn-tutorial-next")?.addEventListener("click", () => this.app.advanceTutorial());
     document.getElementById("btn-tutorial-skip")?.addEventListener("click", () => this.app.skipTutorial());
 
-    // Floor view
+    // Floor view & editor
     const floorCanvas = document.getElementById("floor-canvas");
     if (floorCanvas) {
       this.floorView = new FloorView(floorCanvas);
       this.floorView.startAnimation(this.app.state, this.app.sim);
+      if (this.app.furnitureMgr) {
+        this.floorEditor = new FloorEditor(floorCanvas, this.app.furnitureMgr, this.app.state);
+        this.floorEditor.onPlaced(() => this.render());
+        this.floorEditor.onError((msg) => this.app.ui.addLog(`❌ ${msg}`));
+      }
     }
 
     // Show tutorial if needed
@@ -154,6 +166,7 @@ export class UI {
       case "recipe": this._tabRecipe(sp); break;
       case "rival": this._tabRival(sp); break;
       case "upgrade": this._tabUpgrade(sp); break;
+      case "layout": this._tabLayout(sp); break;
       case "relocate": this._tabRelocate(sp); break;
       case "format": this._tabFormat(sp); break;
       case "chart": this._tabChart(sp); break;
@@ -666,6 +679,147 @@ export class UI {
       <div class="muted">・錬成で隠しメニューを開発し独自性を出す</div>
     </div>`;
     el.innerHTML = h;
+  }
+
+  // ─── LAYOUT ───
+  _tabLayout(el) {
+    const fm = this.app.furnitureMgr;
+    if (!fm) { el.innerHTML = '<div class="muted">家具システム未初期化</div>'; return; }
+
+    const isOpen = this.app.state.time.hour >= this.app.config.simulation.openHour && this.app.state.time.hour < this.app.config.simulation.closeHour;
+    const score = fm.calculateLayoutScore();
+    const furniture = fm.getAll();
+
+    let h = `<div class="side-section"><h4>🏗 レイアウト編集</h4>`;
+
+    // Layout score
+    h += `<div class="layout-score">
+      <div class="ls-item"><div class="ls-label">総合</div><div class="ls-val" style="color:var(--gold)">${score.total}</div></div>
+      <div class="ls-item"><div class="ls-label">動線</div><div class="ls-val">${score.path}</div></div>
+      <div class="ls-item"><div class="ls-label">空間</div><div class="ls-val">${score.space}</div></div>
+      <div class="ls-item"><div class="ls-label">席密度</div><div class="ls-val">${score.density}</div></div>
+      <div class="ls-item"><div class="ls-label">快適性</div><div class="ls-val">${score.comfort}</div></div>
+      <div class="ls-item"><div class="ls-label">配膳</div><div class="ls-val">${score.service}</div></div>
+      <div class="ls-item"><div class="ls-label">美観</div><div class="ls-val">${score.aesthetic}</div></div>
+      <div class="ls-item"><div class="ls-label">調和</div><div class="ls-val">${score.gradeHarmony}</div></div>
+    </div>`;
+
+    h += `<div class="muted">家具: ${furniture.length}/40 | 席数: ${fm.getTotalSeats()} | 平均グレード: ${fm.getAverageGradeTier().toFixed(1)}</div>`;
+
+    if (isOpen) {
+      h += `<div class="turnover-warn">⚠ 営業中は編集できません</div></div>`;
+    } else {
+      // Edit toggle
+      h += `<button class="btn btn-sm ${this._layoutEditing?"danger":"primary"}" id="btn-toggle-edit">${this._layoutEditing?"✅ 編集終了":"🏗 編集開始"}</button></div>`;
+
+      if (this._layoutEditing) {
+        // Category filter
+        h += `<div class="side-section"><div class="loc-filter">`;
+        for (const [cat, info] of Object.entries(CATEGORY_INFO)) {
+          h += `<button class="loc-filter-btn ${this._layoutCat===cat?"active":""}" data-cat="${cat}">${info.icon} ${info.name}</button>`;
+        }
+        h += `</div>`;
+
+        // Furniture shop
+        const items = Object.entries(FURNITURE_TYPES).filter(([, t]) => t.category === this._layoutCat);
+        h += `<div class="furn-shop-grid">`;
+        h += items.map(([id, t]) => {
+          const cost = getFurnitureCost(id, this._layoutGrade);
+          const grade = t.allowedGrades ? FURNITURE_GRADES[this._layoutGrade] : null;
+          const canAfford = this.app.state.restaurant.money >= cost;
+          return `<div class="furn-shop-item ${this._layoutSelectedType===id?"selected":""} ${!canAfford?"cant-afford":""}" data-type="${id}">
+            <div class="fsi-name">${CATEGORY_INFO[t.category]?.icon||""} ${t.name}</div>
+            <div class="fsi-info">${t.capacity > 0 ? t.capacity + "席" : ""} ${t.size[0]}×${t.size[1]}</div>
+            <div class="fsi-info">${grade ? grade.name : ""} ¥${cost.toLocaleString()}</div>
+          </div>`;
+        }).join("");
+        h += `</div>`;
+
+        // Grade selector (only for graded items)
+        const selType = this._layoutSelectedType ? FURNITURE_TYPES[this._layoutSelectedType] : null;
+        if (selType?.allowedGrades) {
+          h += `<div class="side-section"><h4>グレード選択</h4><div class="grade-select">`;
+          for (const gId of selType.allowedGrades) {
+            const g = FURNITURE_GRADES[gId];
+            const locked = this.app.state.restaurant.reputation < g.repReq;
+            const cost = getFurnitureCost(this._layoutSelectedType, gId);
+            h += `<button class="grade-btn ${this._layoutGrade===gId?"selected":""} ${locked?"locked":""}" data-grade="${gId}" ${locked?"disabled":""}>${g.emoji} ${g.name} ¥${(cost/1000).toFixed(0)}K${locked?" 🔒":""}</button>`;
+          }
+          h += `</div>`;
+
+          // Selected grade stats
+          const sg = FURNITURE_GRADES[this._layoutGrade];
+          if (sg) {
+            h += `<div class="muted" style="margin-top:4px">快適:${sg.comfortBase} 回転:×${sg.turnoverMod} 単価:×${sg.priceAppealMod} 耐久:${sg.durability}日 美観:${sg.aesthetic}</div>`;
+          }
+          h += `</div>`;
+        }
+
+        // Instruction
+        h += `<div class="muted" style="margin:4px 0">家具を選んでキャンバスをクリックで配置</div>`;
+      }
+    }
+
+    // Placed furniture list
+    h += `<div class="side-section"><h4>配置済み家具</h4><div class="placed-list">`;
+    h += furniture.map(f => {
+      const t = FURNITURE_TYPES[f.type];
+      if (!t) return "";
+      const g = f.grade ? FURNITURE_GRADES[f.grade] : null;
+      const condStr = f.condition !== null ? ` [${f.condition}%]` : "";
+      const condClass = f.condition !== null && f.condition <= 30 ? ' style="color:var(--red)"' : "";
+      return `<div class="placed-item">
+        <span${condClass}>${CATEGORY_INFO[t.category]?.icon||""} ${t.name} ${g ? g.name : ""}${condStr}</span>
+        ${this._layoutEditing && !t.required ? `<button class="btn btn-sm danger remove-furn-btn" data-id="${f.id}">🗑</button>` : ""}
+        ${f.condition !== null && f.condition <= 50 ? `<button class="btn btn-sm repair-furn-btn" data-id="${f.id}">🔧</button>` : ""}
+      </div>`;
+    }).join("");
+    h += `</div></div>`;
+
+    el.innerHTML = h;
+
+    // Bind events
+    document.getElementById("btn-toggle-edit")?.addEventListener("click", () => {
+      this._layoutEditing = !this._layoutEditing;
+      if (this.floorEditor) {
+        this.floorEditor.setEditing(this._layoutEditing);
+        if (this._layoutEditing) {
+          this.floorView?.stopAnimation();
+          this.floorEditor.render();
+        } else {
+          this.floorView?.startAnimation(this.app.state, this.app.sim);
+          this.app.furnitureMgr.calculateLayoutScore();
+        }
+      }
+      this.render();
+    });
+
+    for (const b of el.querySelectorAll(".loc-filter-btn")) {
+      b.addEventListener("click", () => { this._layoutCat = b.dataset.cat; this.render(); });
+    }
+    for (const b of el.querySelectorAll(".furn-shop-item")) {
+      b.addEventListener("click", () => {
+        this._layoutSelectedType = b.dataset.type;
+        if (this.floorEditor) {
+          this.floorEditor.selectedType = b.dataset.type;
+          this.floorEditor.selectedGrade = this._layoutGrade;
+        }
+        this.render();
+      });
+    }
+    for (const b of el.querySelectorAll(".grade-btn:not(.locked)")) {
+      b.addEventListener("click", () => {
+        this._layoutGrade = b.dataset.grade;
+        if (this.floorEditor) this.floorEditor.selectedGrade = b.dataset.grade;
+        this.render();
+      });
+    }
+    for (const b of el.querySelectorAll(".remove-furn-btn")) {
+      b.addEventListener("click", () => { this.app.removeFurniture(b.dataset.id); if (this.floorEditor) this.floorEditor.render(); });
+    }
+    for (const b of el.querySelectorAll(".repair-furn-btn")) {
+      b.addEventListener("click", () => this.app.repairFurniture(b.dataset.id));
+    }
   }
 
   // ─── RELOCATE ───

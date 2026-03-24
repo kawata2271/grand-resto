@@ -232,6 +232,22 @@
   .ts-btn-small:hover{color:var(--red)}
   .ts-footer{font-family:'Space Mono',monospace;font-size:10px;color:var(--text2);margin-top:32px;letter-spacing:1px;opacity:.5}
 
+  /* LAYOUT EDITOR */
+  .layout-score{display:grid;grid-template-columns:repeat(4,1fr);gap:3px;margin:6px 0}
+  .ls-item{text-align:center;padding:3px;background:var(--bg);border-radius:3px}
+  .ls-label{font-size:8px;color:var(--text2)}.ls-val{font-size:12px;font-weight:700;font-family:'Space Mono',monospace}
+  .furn-shop-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:4px;margin:6px 0}
+  .furn-shop-item{padding:6px;background:var(--bg3);border:1px solid var(--border);border-radius:5px;cursor:pointer;transition:all .15s;font-size:10px}
+  .furn-shop-item:hover{border-color:var(--gold)}.furn-shop-item.selected{border-color:var(--gold);background:#2a1a08}
+  .furn-shop-item .fsi-name{font-weight:700;font-size:11px;margin-bottom:2px}
+  .furn-shop-item .fsi-info{color:var(--text2)}
+  .grade-select{display:flex;flex-wrap:wrap;gap:3px;margin:6px 0}
+  .grade-btn{padding:3px 6px;font-size:9px;background:var(--bg);border:1px solid var(--border);border-radius:3px;cursor:pointer;color:var(--text2);font-family:'Noto Sans JP',sans-serif}
+  .grade-btn:hover{border-color:var(--gold)}.grade-btn.selected{border-color:var(--gold);background:#2a1a08;color:var(--gold2)}
+  .grade-btn.locked{opacity:0.3;cursor:not-allowed}
+  .placed-list{max-height:150px;overflow-y:auto}
+  .placed-item{display:flex;justify-content:space-between;align-items:center;padding:3px 0;border-bottom:1px solid var(--bg3);font-size:10px}
+
   /* RELOCATION */
   .loc-card{padding:8px;background:var(--bg3);border-radius:6px;margin-bottom:6px;border:1px solid var(--border);cursor:pointer;transition:all .15s}
   .loc-card:hover{border-color:var(--gold)}
@@ -351,6 +367,7 @@
     <button class="tab-btn" data-tab="recipe">錬成</button>
     <button class="tab-btn" data-tab="rival">ライバル</button>
     <button class="tab-btn" data-tab="upgrade">設備</button>
+    <button class="tab-btn" data-tab="layout">配置</button>
     <button class="tab-btn" data-tab="relocate">移転</button>
     <button class="tab-btn" data-tab="format">業態</button>
     <button class="tab-btn" data-tab="chart">📈</button>

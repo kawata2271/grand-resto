@@ -17,6 +17,7 @@ import { FormatManager } from "./systems/formatManager.js";
 import { TutorialManager } from "./systems/tutorialManager.js";
 import { AbilityManager } from "./systems/abilityManager.js";
 import { RelocationManager } from "./systems/relocationManager.js";
+import { FurnitureManager } from "./systems/furniture.js";
 import { EndingManager } from "./systems/endingManager.js";
 import { TownManager } from "./systems/townManager.js";
 import { EffectManager } from "./render/effects.js";
@@ -74,7 +75,11 @@ class GameApp {
     this.tutorialMgr = new TutorialManager(this.state);
     this.abilityMgr = new AbilityManager(this.state, abilitiesData);
     this.relocationMgr = new RelocationManager(this.state, locationsData);
+    this.furnitureMgr = new FurnitureManager(this.state);
     this.endingMgr = new EndingManager(this.state, this.achievementMgr);
+
+    // Bridge: sim uses furniture tables instead of old tables
+    this.sim.getTablesFromFurniture = () => this.furnitureMgr.getTablesForSim();
     this.townMgr = new TownManager(this.state, townsData, config);
     this.effects = new EffectManager();
     this.staffTemplates = staffTemplates;
@@ -177,6 +182,11 @@ class GameApp {
         if (s.shift !== "off") s.morale = Math.min(100, Math.max(0, s.morale + Math.round(abilityTeam.teamMorale)));
       }
     }
+
+    // Furniture maintenance
+    const isBusy = (this.state.todayLog.customers || 0) > 30;
+    const furnMaint = this.furnitureMgr.dailyMaintenance(isBusy);
+    for (const e of furnMaint.events) this.ui.addLog(e);
 
     // Location
     this.relocationMgr.dailyUpdate();
@@ -334,7 +344,33 @@ class GameApp {
     this.ui.render(); return r;
   }
 
-  // Table
+  // Furniture
+  placeFurniture(typeId, gradeId, col, row) {
+    const r = this.furnitureMgr.placeFurniture(typeId, gradeId, col, row);
+    if (r.success) { this.ui.addLog(`🪑 ${r.furniture.type}を配置（¥${r.cost.toLocaleString()}）`); this.effects.floatText(`-¥${r.cost.toLocaleString()}`, window.innerWidth / 2, 60, "#c94040"); }
+    else this.ui.addLog(`❌ ${r.reason}`);
+    this.ui.render(); return r;
+  }
+  removeFurniture(id) {
+    const r = this.furnitureMgr.removeFurniture(id);
+    if (r.success) this.ui.addLog(`🗑 家具を撤去（返金¥${r.refund.toLocaleString()}）`);
+    else this.ui.addLog(`❌ ${r.reason}`);
+    this.ui.render(); return r;
+  }
+  repairFurniture(id) {
+    const r = this.furnitureMgr.repair(id);
+    if (r.success) this.ui.addLog(`🔧 修理完了（¥${r.cost.toLocaleString()}）`);
+    else this.ui.addLog(`❌ ${r.reason}`);
+    this.ui.render(); return r;
+  }
+  upgradeGrade(id, newGrade) {
+    const r = this.furnitureMgr.upgradeGrade(id, newGrade);
+    if (r.success) this.ui.addLog(`⬆️ グレード変更（差額¥${r.cost.toLocaleString()}）`);
+    else this.ui.addLog(`❌ ${r.reason}`);
+    this.ui.render(); return r;
+  }
+
+  // Table (legacy)
   buyTable(type) {
     const td = this.upgrades.tables.find(t => t.id === type);
     if (!td) return;
