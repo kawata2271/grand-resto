@@ -21,24 +21,63 @@ grand-resto/
       sim.js              — 1日シミュレーション（tick制）
       economy.js          — 経済計算・収支管理
       ai.js               — ライバルAI
-    systems/              — ゲームシステム
-      staff.js            — スタッフ管理（採用・育成・スキルツリー・相性）
-      menu.js             — メニュー管理（研究・開発・レシピ）
-      layout.js           — 店舗レイアウト（グリッドベース配置）
-      events.js           — ランダムイベント処理
-      prestige.js         — プレステージ（のれん分け）
-      town.js             — 街の成長・競合管理
-    render/               — 描画・UI
-      canvas.js           — Canvas描画エンジン
-      ui.js               — HTML UIコンポーネント
-      hud.js              — HUD（日時・資金・ステータス表示）
-    data/                 — ゲームデータ（JSON）
-      scenarios.json      — シナリオ定義
-      menus.json          — メニュー・レシピ定義
-      events.json         — ランダムイベント定義（200種目標）
-      skills.json         — スキルツリー定義
+    systems/ (28ファイル)  — ゲームシステム
+      staffManager.js     — スタッフ採用・解雇
+      shiftManager.js     — シフト管理・休憩・労基法対応
+      skillManager.js     — スキルツリー（6路線）
+      compatibilityManager.js — スタッフ相性
+      mentorManager.js    — 師弟関係
+      turnoverManager.js  — 離職リスク
+      abilityManager.js   — 特殊能力（100種）
+      menuManager.js      — メニュー管理・研究
+      recipeManager.js    — 料理錬成（隠しレシピ20種）
+      eventManager.js     — ランダムイベント（524種）
+      rivalManager.js     — ライバル店AI（5種）
+      seasonManager.js    — 季節システム
+      formatManager.js    — 業態変更（6業態）
+      townManager.js      — プロシージャル街マップ（8タイプ）
+      relocationManager.js — 店舗移転（30箇所）
+      prestigeManager.js  — プレステージ（のれん分け）
+      achievementManager.js — 実績（130種）
+      endingManager.js    — エンディング（6種）
+      tutorialManager.js  — チュートリアル
+      furniture-data.js   — 家具データ（38種×10グレード）
+      furniture.js        — 家具配置・スコアリング
+      marketing.js        — 集客・マーケティング（34施策）
+      cleaning.js         — 清掃・衛生管理
+      preparation.js      — 仕込み・食材在庫
+      equipment.js        — 設備管理（10設備）
+      reservation.js      — 予約管理
+      customerDB.js       — 顧客データベース
+      accounting.js       — 会計・融資・P/L
+    render/ (6ファイル)    — 描画・UI
+      ui.js               — HTML UIコンポーネント（20タブ）
+      floorView.js        — Canvas店内ビュー
+      floor-editor.js     — 家具配置エディタ
+      chart.js            — グラフ描画
+      effects.js          — アニメーション演出
+      titleScreen.js      — タイトル画面
+    data/ (20ファイル)     — ゲームデータ（JSON）
+      config.json         — ゲーム定数
+      menus.json          — メニュー（30品）
+      events.json         — ランダムイベント（524種）
+      skills.json         — スキルツリー
       staff-templates.json — スタッフテンプレート
-      towns.json          — 街タイプ定義
+      customers.json      — 客タイプ（8種）
+      abilities.json      — 特殊能力（100種）
+      achievements.json   — 実績（130種）
+      recipes.json        — 隠しレシピ（20種）
+      rivals.json         — ライバル店
+      seasons.json        — 季節データ
+      formats.json        — 業態データ
+      towns.json          — 街タイプ
+      locations.json      — 移転先（30箇所）
+      upgrades.json       — テーブル・シナリオ
+      marketing.json      — 集客施策（34種）
+      cleaning.json       — 清掃タスク
+      ingredients.json    — 食材マスタ（14種）
+      equipment.json      — 設備マスタ（10種）
+      help.json           — ヘルプデータ
     save/
       saveManager.js      — セーブ/ロード抽象化
   assets/

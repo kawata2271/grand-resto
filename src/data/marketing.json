@@ -1,13 +1,13 @@
 {
-  "awarenessDecayRate": 0.4,
-  "initialAwareness": 5,
+  "awarenessDecayRate": 0.3,
+  "initialAwareness": 8,
   "maxAwareness": 100,
   "initialBrandPower": 0,
   "initialReviewScore": 0,
   "reviewChanceBase": 0.15,
   "awarenessToTrafficCurve": {
-    "0":  0.02,
-    "10": 0.10,
+    "0":  0.05,
+    "10": 0.15,
     "20": 0.25,
     "30": 0.40,
     "40": 0.55,

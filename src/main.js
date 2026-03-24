@@ -216,6 +216,10 @@ class GameApp {
       }
     }
 
+    // Labor law daily update
+    const laborEvts = this.shiftMgr.dailyLaborUpdate();
+    for (const e of laborEvts) this.ui.addLog(e);
+
     // Reservation processing
     const noShows = this.reservationMgr.processNoShows();
     for (const e of noShows) this.ui.addLog(e);
@@ -340,6 +344,7 @@ class GameApp {
     const r = this.staffMgr.hire(i);
     if (r.success) {
       this.shiftMgr._ensureShiftData(); this.skillMgr._ensureSkillData(); this.mentorMgr._ensureData();
+      this.shiftMgr.markAsTrainee(r.staff.id); // New hire = trainee for 14 days
       // Roll for special ability
       const ability = this.abilityMgr.rollAbility(r.staff.role);
       if (ability) {
@@ -367,8 +372,14 @@ class GameApp {
     this.ui.render(); return r;
   }
 
-  // Shift & Skill & Break
+  // Shift & Skill & Break & Labor
   setShift(id, sh) { const r = this.shiftMgr.setShift(id, sh); if (r.success) this.ui.render(); else this.ui.addLog(`❌ ${r.reason}`); return r; }
+  usePaidLeave(id) {
+    const r = this.shiftMgr.usePaidLeave(id);
+    if (r.success) this.ui.addLog(`🏖 有給休暇取得（残${r.remaining}日）`);
+    else this.ui.addLog(`❌ ${r.reason}`);
+    this.ui.render(); return r;
+  }
   sendOnBreak(id, minutes) {
     const r = this.shiftMgr.sendOnBreak(id, minutes);
     if (r.success) this.ui.addLog(`☕ ${r.name}を${r.minutes}分休憩に`);

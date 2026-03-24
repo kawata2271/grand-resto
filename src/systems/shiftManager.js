@@ -7,12 +7,13 @@ export class ShiftManager {
 
   _ensureShiftData() {
     for (const staff of this.state.staff) {
-      if (!staff.shift) {
-        staff.shift = "full"; // full, morning, evening, off
-      }
-      if (staff.breakRemaining === undefined) {
-        staff.breakRemaining = 0; // 0 = not on break
-      }
+      if (!staff.shift) staff.shift = "full";
+      if (staff.breakRemaining === undefined) staff.breakRemaining = 0;
+      if (staff.weeklyHours === undefined) staff.weeklyHours = 0;
+      if (staff.overtimeHours === undefined) staff.overtimeHours = 0;
+      if (staff.paidLeave === undefined) staff.paidLeave = 0;
+      if (staff.isTrainee === undefined) staff.isTrainee = false;
+      if (staff.traineeDay === undefined) staff.traineeDay = 0;
     }
   }
 
@@ -149,7 +150,127 @@ export class ShiftManager {
     let total = 0;
     for (const s of this.state.staff) {
       total += (s.salary / 30) * this.getDailySalaryMultiplier(s);
+      // Overtime premium (25% extra)
+      if (s.overtimeHours > 0) total += (s.salary / 30 / 8) * s.overtimeHours * 0.25;
     }
     return Math.round(total);
+  }
+
+  // ─── 労基法対応 ───
+
+  // Get working hours for shift type (per day)
+  getShiftHours(shift) {
+    switch (shift) {
+      case "full": return 10; // 10:00-22:00 with breaks = ~10h working
+      case "morning": return 6;
+      case "evening": return 6;
+      case "off": return 0;
+      default: return 8;
+    }
+  }
+
+  // Daily update: track weekly hours, overtime, trainee progress
+  dailyLaborUpdate() {
+    const events = [];
+    const WEEKLY_LIMIT = 40;
+    const OVERTIME_WARN = 35;
+
+    for (const s of this.state.staff) {
+      const hours = this.getShiftHours(s.shift);
+
+      // Track weekly hours (reset every 7 days)
+      if ((this.state.stats.daysPlayed % 7) === 0) {
+        s.weeklyHours = 0;
+        s.overtimeHours = 0;
+      }
+      s.weeklyHours += hours;
+
+      // Overtime calculation
+      if (s.weeklyHours > WEEKLY_LIMIT) {
+        const overtime = s.weeklyHours - WEEKLY_LIMIT;
+        s.overtimeHours = overtime;
+        if (overtime > 10) {
+          s.morale = Math.max(0, s.morale - 3);
+          events.push(`⚠️ ${s.name}の残業が${overtime}hに。離職リスク上昇`);
+        }
+      }
+
+      // Overtime warning
+      if (s.weeklyHours >= OVERTIME_WARN && s.weeklyHours < WEEKLY_LIMIT) {
+        events.push(`⏰ ${s.name}の週労働${s.weeklyHours}h（上限${WEEKLY_LIMIT}h）`);
+      }
+
+      // Paid leave accrual (1 day per 30 working days)
+      if (s.daysWorked > 0 && s.daysWorked % 30 === 0) {
+        s.paidLeave = Math.min(20, (s.paidLeave || 0) + 1);
+      }
+
+      // Trainee progress
+      if (s.isTrainee) {
+        s.traineeDay++;
+        if (s.traineeDay >= 14) {
+          s.isTrainee = false;
+          events.push(`🎓 ${s.name}の研修期間が終了。即戦力に！`);
+        }
+      }
+
+      // Mandatory rest: if worked 6+ days in a row, force off
+      if (s.shift !== "off" && s._consecutiveWorkDays === undefined) s._consecutiveWorkDays = 0;
+      if (s.shift !== "off") {
+        s._consecutiveWorkDays = (s._consecutiveWorkDays || 0) + 1;
+        if (s._consecutiveWorkDays >= 6) {
+          events.push(`⚠️ ${s.name}は6連勤。法定休日を取らせてください`);
+          s.morale = Math.max(0, s.morale - 2);
+        }
+      } else {
+        s._consecutiveWorkDays = 0;
+      }
+    }
+
+    return events;
+  }
+
+  // Take paid leave
+  usePaidLeave(staffId) {
+    const staff = this.state.staff.find(s => s.id === staffId);
+    if (!staff) return { success: false, reason: "スタッフが見つかりません" };
+    if ((staff.paidLeave || 0) <= 0) return { success: false, reason: "有給休暇がありません" };
+    if (staff.shift === "off") return { success: false, reason: "すでに休みです" };
+
+    staff.paidLeave--;
+    staff.shift = "off";
+    staff.morale = Math.min(100, staff.morale + 8);
+    staff.fatigue = Math.max(0, staff.fatigue - 20);
+    return { success: true, remaining: staff.paidLeave };
+  }
+
+  // Mark new hire as trainee
+  markAsTrainee(staffId) {
+    const staff = this.state.staff.find(s => s.id === staffId);
+    if (staff) {
+      staff.isTrainee = true;
+      staff.traineeDay = 0;
+    }
+  }
+
+  // Get trainee efficiency (50% during training)
+  getTraineeEfficiency(staff) {
+    return staff.isTrainee ? 0.5 : 1.0;
+  }
+
+  // Get labor law summary
+  getLaborSummary() {
+    return this.state.staff.map(s => ({
+      id: s.id,
+      name: s.name,
+      weeklyHours: s.weeklyHours || 0,
+      overtimeHours: s.overtimeHours || 0,
+      paidLeave: s.paidLeave || 0,
+      isTrainee: s.isTrainee || false,
+      traineeDay: s.traineeDay || 0,
+      consecutiveWork: s._consecutiveWorkDays || 0,
+      isOvertime: (s.weeklyHours || 0) > 40,
+      needsRest: (s._consecutiveWorkDays || 0) >= 6
+    }));
   }
 }

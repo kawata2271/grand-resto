@@ -246,6 +246,23 @@
   .cc-active{background:#0a2a12;color:var(--green);border:1px solid var(--green)}
   .cc-cooldown{background:#2a1808;color:var(--gold);border:1px solid var(--gold)}
 
+  /* RESERVATION/CUSTOMER/ACCOUNTING */
+  .rsv-card{padding:6px;background:var(--bg3);border-radius:4px;margin-bottom:4px;border-left:3px solid var(--blue);font-size:10px}
+  .rsv-card.vip{border-left-color:var(--gold)}
+  .regular-card{padding:5px;background:var(--bg3);border-radius:4px;margin-bottom:3px;display:flex;justify-content:space-between;align-items:center;font-size:10px}
+  .regular-card .rc-name{font-weight:700}.regular-card .rc-info{color:var(--text2)}
+  .seg-row{display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid var(--bg3);font-size:10px}
+  .pl-table{width:100%;border-collapse:collapse;font-size:10px;margin:6px 0}
+  .pl-table td{padding:3px 6px;border-bottom:1px solid var(--bg3)}.pl-table td:last-child{text-align:right;font-family:'Space Mono',monospace}
+  .pl-table .pl-header{font-weight:700;color:var(--gold);border-bottom:1px solid var(--border)}
+  .pl-table .pl-total{font-weight:700;border-top:2px solid var(--border)}
+  .pl-table .positive{color:var(--green)}.pl-table .negative{color:var(--red)}
+  .loan-card{padding:6px;background:var(--bg3);border-radius:4px;margin-bottom:4px;border:1px solid var(--border);font-size:10px}
+  .loan-input{display:flex;gap:4px;align-items:center;margin:6px 0}
+  .loan-input input{background:var(--bg);border:1px solid var(--border);color:var(--text);padding:4px 8px;border-radius:4px;font-size:11px;width:120px;font-family:'Space Mono',monospace}
+  .policy-btn{padding:3px 8px;font-size:9px;background:var(--bg);border:1px solid var(--border);border-radius:3px;cursor:pointer;color:var(--text2);font-family:'Noto Sans JP',sans-serif}
+  .policy-btn:hover{border-color:var(--gold)}.policy-btn.active{border-color:var(--gold);background:#2a1a08;color:var(--gold2)}
+
   /* LAYOUT EDITOR */
   .layout-score{display:grid;grid-template-columns:repeat(4,1fr);gap:3px;margin:6px 0}
   .ls-item{text-align:center;padding:3px;background:var(--bg);border-radius:3px}
@@ -386,6 +403,9 @@
     <button class="tab-btn" data-tab="ops">運営</button>
     <button class="tab-btn" data-tab="layout">配置</button>
     <button class="tab-btn" data-tab="relocate">移転</button>
+    <button class="tab-btn" data-tab="reserve">予約</button>
+    <button class="tab-btn" data-tab="custdb">顧客</button>
+    <button class="tab-btn" data-tab="account">会計</button>
     <button class="tab-btn" data-tab="format">業態</button>
     <button class="tab-btn" data-tab="chart">📈</button>
     <button class="tab-btn" data-tab="achieve">実績</button>

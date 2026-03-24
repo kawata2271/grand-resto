@@ -177,6 +177,9 @@ export class UI {
       case "ops": this._tabOps(sp); break;
       case "layout": this._tabLayout(sp); break;
       case "relocate": this._tabRelocate(sp); break;
+      case "reserve": this._tabReserve(sp); break;
+      case "custdb": this._tabCustDB(sp); break;
+      case "account": this._tabAccount(sp); break;
       case "format": this._tabFormat(sp); break;
       case "chart": this._tabChart(sp); break;
       case "achieve": this._tabAchieve(sp); break;
@@ -343,6 +346,14 @@ export class UI {
           }
         </div>
         <div class="bar-row" style="margin-top:4px"><span class="bar-label">疲</span><div class="bar"><div class="bar-fill fatigue" style="width:${100-st.fatigue}%"></div></div><span class="bar-label">気</span><div class="bar"><div class="bar-fill morale" style="width:${st.morale}%"></div></div></div>
+        <div style="display:flex;gap:4px;margin-top:3px;font-size:8px;color:var(--text2);flex-wrap:wrap">
+          <span>週${st.weeklyHours||0}h${(st.weeklyHours||0)>40?"⚠️":""}</span>
+          ${st.overtimeHours>0?`<span style="color:var(--red)">残業${st.overtimeHours}h</span>`:""}
+          <span>有給${st.paidLeave||0}日</span>
+          ${st.isTrainee?`<span style="color:var(--blue)">🔰研修${st.traineeDay||0}/14日</span>`:""}
+          ${(st._consecutiveWorkDays||0)>=5?`<span style="color:var(--gold)">${st._consecutiveWorkDays}連勤</span>`:""}
+          ${(st.paidLeave||0)>0&&st.shift!=="off"?`<button class="btn btn-sm paid-leave-btn" data-id="${st.id}" style="font-size:8px;padding:1px 4px">🏖有給</button>`:""}
+        </div>
       </div>`;
     }).join("");
     el.innerHTML = h;
@@ -352,6 +363,9 @@ export class UI {
     }
     for (const b of el.querySelectorAll(".break-btn")) {
       b.addEventListener("click", () => this.app.sendOnBreak(b.dataset.id, parseInt(b.dataset.min)));
+    }
+    for (const b of el.querySelectorAll(".paid-leave-btn")) {
+      b.addEventListener("click", () => this.app.usePaidLeave(b.dataset.id));
     }
     for (const b of el.querySelectorAll(".break-cancel-btn")) {
       b.addEventListener("click", () => this.app.cancelBreak(b.dataset.id));
@@ -1117,6 +1131,189 @@ export class UI {
         }
       });
     }
+  }
+
+  // ─── RESERVE ───
+  _tabReserve(el) {
+    const rm = this.app.reservationMgr;
+    if (!rm) { el.innerHTML = '<div class="muted">予約システム未初期化</div>'; return; }
+    const sum = rm.getSummary();
+    const rsvs = this.app.state.reservations?.list || [];
+
+    let h = `<div class="side-section"><h4>📋 予約管理</h4>
+      <div class="mkt-summary">
+        <div class="mkt-stat"><div class="ms-label">本日予約</div><div class="ms-val">${sum.today}組</div></div>
+        <div class="mkt-stat"><div class="ms-label">累計</div><div class="ms-val">${sum.total}</div></div>
+        <div class="mkt-stat"><div class="ms-label">ノーショー</div><div class="ms-val">${sum.noShows}</div></div>
+      </div></div>`;
+
+    // Cancel policy
+    h += `<div class="side-section"><h4>キャンセルポリシー</h4>
+      <div style="display:flex;gap:4px">
+        <button class="policy-btn ${sum.policy==="none"?"active":""}" data-policy="none">なし</button>
+        <button class="policy-btn ${sum.policy==="deposit"?"active":""}" data-policy="deposit">デポジット</button>
+        <button class="policy-btn ${sum.policy==="strict"?"active":""}" data-policy="strict">厳格</button>
+      </div>
+      <div class="muted" style="margin-top:3px">${sum.policy==="none"?"ノーショー率15%":sum.policy==="deposit"?"ノーショー率10%（前金制）":"ノーショー率5%（全額前払い）"}</div>
+    </div>`;
+
+    // Today's reservations
+    h += `<div class="side-section"><h4>本日の予約一覧</h4>`;
+    if (rsvs.length === 0) {
+      h += '<div class="muted">予約はありません</div>';
+    } else {
+      h += rsvs.map(r => `
+        <div class="rsv-card ${r.isVIP?"vip":""}">
+          <span>${r.hour}:00 — ${r.groupSize}名${r.isVIP?" 👑VIP":""}</span>
+        </div>`).join("");
+    }
+    h += `</div>`;
+
+    h += `<div class="side-section"><div class="muted">💡 評判と認知度が高いほど予約が増えます。キャンセルポリシーを厳しくするとノーショーが減りますが、予約数自体も減る可能性があります。</div></div>`;
+
+    el.innerHTML = h;
+    for (const b of el.querySelectorAll(".policy-btn")) {
+      b.addEventListener("click", () => { this.app.reservationMgr.setCancelPolicy(b.dataset.policy); this.render(); });
+    }
+  }
+
+  // ─── CUSTOMER DB ───
+  _tabCustDB(el) {
+    const db = this.app.customerDBMgr;
+    if (!db) { el.innerHTML = '<div class="muted">顧客DB未初期化</div>'; return; }
+
+    const regulars = db.getRegulars().slice(0, 20);
+    const segments = db.getSegmentAnalysis();
+
+    let h = `<div class="side-section"><h4>👥 顧客データベース</h4>
+      <div class="mkt-summary">
+        <div class="mkt-stat"><div class="ms-label">累計来店</div><div class="ms-val">${db.getTotalVisitors().toLocaleString()}</div></div>
+        <div class="mkt-stat"><div class="ms-label">常連</div><div class="ms-val">${db.getTotalRegulars()}人</div></div>
+        <div class="mkt-stat"><div class="ms-label">セグメント</div><div class="ms-val">${segments.length}種</div></div>
+      </div></div>`;
+
+    // Segment analysis
+    if (segments.length > 0) {
+      h += `<div class="side-section"><h4>📊 客層分析</h4>`;
+      h += segments.map(s => `
+        <div class="seg-row">
+          <span>${s.type}</span>
+          <span>${s.visits}人</span>
+          <span>¥${s.avgSpend}/人</span>
+          <span>満足${s.avgSatisfaction}%</span>
+        </div>`).join("");
+      h += `</div>`;
+    }
+
+    // Regulars
+    h += `<div class="side-section"><h4>⭐ 常連客 TOP20</h4>`;
+    if (regulars.length === 0) {
+      h += '<div class="muted">常連客はまだいません。高い満足度で来店するとリピーターが生まれます。</div>';
+    } else {
+      h += `<div style="max-height:200px;overflow-y:auto">`;
+      h += regulars.map((r, i) => `
+        <div class="regular-card">
+          <span class="rc-name">${i + 1}. ${r.name}</span>
+          <span class="rc-info">${r.type} / ${r.visits}回 / ¥${r.totalSpend.toLocaleString()}</span>
+        </div>`).join("");
+      h += `</div>`;
+    }
+    h += `</div>`;
+
+    h += `<div class="side-section"><div class="muted">💡 満足度80%以上の来店客が5%の確率で常連になります。常連は3-7日周期で自然に再来店します。</div></div>`;
+
+    el.innerHTML = h;
+  }
+
+  // ─── ACCOUNTING ───
+  _tabAccount(el) {
+    const am = this.app.accountingMgr;
+    if (!am) { el.innerHTML = '<div class="muted">会計システム未初期化</div>'; return; }
+    const sum = am.getSummary();
+    const pl = sum.latestPL;
+    const loans = am.getActiveLoans();
+
+    let h = `<div class="side-section"><h4>💰 会計・経理</h4>
+      <div class="mkt-summary">
+        <div class="mkt-stat"><div class="ms-label">残高</div><div class="ms-val" style="color:${sum.balance>=0?"var(--green)":"var(--red)"}">¥${sum.balance.toLocaleString()}</div></div>
+        <div class="mkt-stat"><div class="ms-label">借入</div><div class="ms-val">${sum.totalDebt > 0 ? "¥" + sum.totalDebt.toLocaleString() : "なし"}</div></div>
+        <div class="mkt-stat"><div class="ms-label">累計税金</div><div class="ms-val">¥${sum.taxPaid.toLocaleString()}</div></div>
+      </div>
+      ${sum.bankruptDays > 0 ? `<div class="turnover-danger">⚠ 倒産まで残${7 - sum.bankruptDays}日！資金を確保してください</div>` : ""}
+    </div>`;
+
+    // P/L
+    if (pl) {
+      h += `<div class="side-section"><h4>📊 ${pl.month}月 損益計算書</h4>
+        <table class="pl-table">
+          <tr class="pl-header"><td>項目</td><td>金額</td></tr>
+          <tr><td>売上高</td><td class="positive">¥${pl.revenue.toLocaleString()}</td></tr>
+          <tr><td>食材原価</td><td class="negative">¥${pl.foodCost.toLocaleString()}</td></tr>
+          <tr class="pl-total"><td>粗利益</td><td class="${pl.grossProfit>=0?"positive":"negative"}">¥${pl.grossProfit.toLocaleString()}</td></tr>
+          <tr><td>人件費</td><td class="negative">¥${pl.laborCost.toLocaleString()}</td></tr>
+          <tr><td>家賃</td><td class="negative">¥${pl.rent.toLocaleString()}</td></tr>
+          <tr><td>設備費</td><td class="negative">¥${pl.equipmentCost.toLocaleString()}</td></tr>
+          <tr><td>広告費</td><td class="negative">¥${pl.marketingCost.toLocaleString()}</td></tr>
+          <tr class="pl-total"><td>営業利益</td><td class="${pl.operatingProfit>=0?"positive":"negative"}">¥${pl.operatingProfit.toLocaleString()}</td></tr>
+          <tr><td>税金</td><td class="negative">¥${pl.tax.toLocaleString()}</td></tr>
+          <tr class="pl-total"><td>純利益</td><td class="${pl.netProfit>=0?"positive":"negative"}">¥${pl.netProfit.toLocaleString()}</td></tr>
+        </table>
+        <div class="muted">食材原価率: ${pl.foodCostRatio}% / 人件費率: ${pl.laborCostRatio}%</div>
+      </div>`;
+    } else {
+      h += `<div class="side-section"><div class="muted">P/Lは月末に自動生成されます</div></div>`;
+    }
+
+    // Loans
+    h += `<div class="side-section"><h4>🏦 融資</h4>`;
+    if (loans.length > 0) {
+      h += loans.map(l => `
+        <div class="loan-card">
+          <div>融資額: ¥${l.principal.toLocaleString()} / 残: ¥${l.remaining.toLocaleString()}</div>
+          <div class="muted">月返済 ¥${l.monthlyPayment.toLocaleString()} / 残${l.monthsLeft}ヶ月</div>
+        </div>`).join("");
+    }
+    if (loans.length < 3) {
+      h += `<div class="loan-input">
+        <input type="number" id="loan-amount" placeholder="融資額" min="100000" max="5000000" step="100000" value="500000">
+        <button class="btn btn-sm primary" id="btn-apply-loan">融資申請</button>
+      </div>
+      <div class="muted">10万〜500万円。評判と営業日数で審査。年利5%、12ヶ月返済。</div>`;
+    } else {
+      h += '<div class="muted">融資上限（3件）に達しています</div>';
+    }
+    h += `</div>`;
+
+    // Cash flow mini chart
+    const cfHistory = this.app.state.accounting?.cashFlowHistory || [];
+    if (cfHistory.length > 5) {
+      h += `<div class="side-section"><h4>💹 資金推移（${cfHistory.length}日分）</h4>
+        <canvas class="chart-canvas" id="chart-cashflow" width="340" height="120"></canvas>
+      </div>`;
+    }
+
+    el.innerHTML = h;
+
+    // Bind loan button
+    document.getElementById("btn-apply-loan")?.addEventListener("click", () => {
+      const input = document.getElementById("loan-amount");
+      const amount = parseInt(input?.value || "500000");
+      this.app.applyForLoan(amount);
+    });
+
+    // Draw cash flow chart
+    requestAnimationFrame(() => {
+      const canvas = document.getElementById("chart-cashflow");
+      if (canvas && cfHistory.length > 2) {
+        if (!this.chartRenderer) { const { ChartRenderer } = { ChartRenderer: class { init(c){this.canvas=c;this.ctx=c.getContext("2d")} } }; }
+        // Use existing chart renderer
+        if (this.chartRenderer) {
+          this.chartRenderer.init(canvas);
+          const data = cfHistory.map(cf => ({ balance: cf.balance, label: `${cf.day}` }));
+          this.chartRenderer.drawLineChart(data, { series: [{ key: "balance", color: "#d4a843", label: "残高" }] });
+        }
+      }
+    });
   }
 
   // ─── FORMAT ───
