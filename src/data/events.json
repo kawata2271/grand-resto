@@ -9541,6 +9541,583 @@
         { "type": "money", "value": -3000 }
       ],
       "weight": 7
+    },
+    {
+      "id": "evt_sys_mold_found",
+      "name": "カビ発見",
+      "category": "hygiene",
+      "rarity": "uncommon",
+      "description": "厨房の隅にカビが発生しているのを発見。\n即座に除去と清掃を実施。\n清潔度が大きく低下してしまった。",
+      "effects": [
+        { "type": "reputation", "value": -15 },
+        { "type": "money", "value": -5000 }
+      ],
+      "weight": 7
+    },
+    {
+      "id": "evt_sys_sparkling_clean",
+      "name": "完璧な清掃",
+      "category": "hygiene",
+      "rarity": "uncommon",
+      "description": "店内の隅々まで完璧に清掃された状態。\nお客様からも「気持ちいいお店」と好評。\n清潔感が集客に好影響を与えている。",
+      "effects": [
+        { "type": "reputation", "value": 3 },
+        { "type": "customer_flow", "multiplier": 1.1, "duration": 3 }
+      ],
+      "weight": 8
+    },
+    {
+      "id": "evt_sys_toilet_praised",
+      "name": "トイレが綺麗と評判",
+      "category": "hygiene",
+      "rarity": "common",
+      "description": "「トイレがすごく綺麗！」とSNSで話題に。\n飲食店はトイレで決まるという人も多い。\n地味だけど大事なポイントを押さえている。",
+      "effects": [
+        { "type": "reputation", "value": 2 }
+      ],
+      "weight": 10
+    },
+    {
+      "id": "evt_sys_pest_complaint",
+      "name": "客が虫を目撃",
+      "category": "hygiene",
+      "rarity": "rare",
+      "description": "お客様が店内で虫を目撃してしまった。\n即座に駆除業者を手配するも、評判に大打撃。\n害虫駆除費用もかさむ。",
+      "effects": [
+        { "type": "reputation", "value": -8 },
+        { "type": "money", "value": -15000 }
+      ],
+      "weight": 4
+    },
+    {
+      "id": "evt_sys_health_inspector_tip",
+      "name": "保健所職員のアドバイス",
+      "category": "hygiene",
+      "rarity": "uncommon",
+      "description": "馴染みの保健所職員が立ち寄った。\n「この清掃方法だともっと効率的ですよ」\nプロのアドバイスで清掃スキルが向上。",
+      "effects": [
+        { "type": "staff_exp", "value": 5 },
+        { "type": "reputation", "value": 2 }
+      ],
+      "weight": 6
+    },
+    {
+      "id": "evt_sys_cleaning_staff_sick",
+      "name": "清掃担当が体調不良",
+      "category": "hygiene",
+      "rarity": "common",
+      "description": "清掃担当のスタッフが体調不良で欠勤。\n他のスタッフで補うも、清掃が行き届かない。\nしばらく清潔度の低下が早まりそうだ。",
+      "effects": [
+        { "type": "staff_fatigue", "value": 10 },
+        { "type": "reputation", "value": -3 }
+      ],
+      "weight": 8
+    },
+    {
+      "id": "evt_sys_deep_clean_reward",
+      "name": "大掃除ボーナス",
+      "category": "hygiene",
+      "rarity": "uncommon",
+      "description": "定休日を利用して徹底的な大掃除を実施。\n店がピカピカになりスタッフも気分爽快。\nチーム全体の士気が上がった。",
+      "effects": [
+        { "type": "reputation", "value": 5 },
+        { "type": "staff_morale", "target": "all", "value": 5 }
+      ],
+      "weight": 6
+    },
+    {
+      "id": "evt_sys_grease_fire",
+      "name": "グリストラップ火災",
+      "category": "hygiene",
+      "rarity": "rare",
+      "description": "グリストラップの清掃を怠った結果、火災が発生。\n幸い大事には至らなかったが、営業停止に。\n修繕費と売上損失が痛い。",
+      "effects": [
+        { "type": "money", "value": -30000 },
+        { "type": "customer_flow", "multiplier": 0, "duration": 1 }
+      ],
+      "weight": 3
+    },
+    {
+      "id": "evt_sys_sanitation_award",
+      "name": "衛生優良店表彰",
+      "category": "hygiene",
+      "rarity": "rare",
+      "description": "日頃の衛生管理が認められ、衛生優良店に表彰された。\nメディアにも取り上げられ認知度が大幅UP。\n店の格が一段上がった実感がある。",
+      "effects": [
+        { "type": "reputation", "value": 10 },
+        { "type": "customer_flow", "multiplier": 1.2, "duration": 5 }
+      ],
+      "weight": 3
+    },
+    {
+      "id": "evt_sys_drain_clog",
+      "name": "排水詰まりトラブル",
+      "category": "hygiene",
+      "rarity": "uncommon",
+      "description": "厨房の排水が詰まって水が流れない。\n業者を呼んで修理するも、調理効率が低下。\n衛生面でも不安が残る一日。",
+      "effects": [
+        { "type": "money", "value": -8000 },
+        { "type": "cook_speed", "multiplier": 0.8, "duration": 1 }
+      ],
+      "weight": 7
+    },
+    {
+      "id": "evt_sys_ingredient_shortage",
+      "name": "人気食材品切れ",
+      "category": "supply",
+      "rarity": "common",
+      "description": "人気メニューに使う食材が品切れに。\n代替品では味が落ちてしまう。\nお客さんの注文にも応えられず客足に影響。",
+      "effects": [
+        { "type": "customer_flow", "multiplier": 0.9, "duration": 2 }
+      ],
+      "weight": 10
+    },
+    {
+      "id": "evt_sys_perfect_prep",
+      "name": "完璧な仕込み",
+      "category": "supply",
+      "rarity": "uncommon",
+      "description": "今日の仕込みは完璧の一言。\n下ごしらえが丁寧で、調理がスムーズに進む。\n厨房全体のテンポが上がっている。",
+      "effects": [
+        { "type": "cook_speed", "multiplier": 1.2, "duration": 1 }
+      ],
+      "weight": 8
+    },
+    {
+      "id": "evt_sys_food_waste_shame",
+      "name": "フードロスが問題に",
+      "category": "supply",
+      "rarity": "common",
+      "description": "食材の廃棄が多すぎると問題に。\nSNSでも「もったいない」と批判の声が。\n在庫管理の見直しが急務。",
+      "effects": [
+        { "type": "reputation", "value": -3 }
+      ],
+      "weight": 8
+    },
+    {
+      "id": "evt_sys_supplier_bonus",
+      "name": "仕入先からサービス品",
+      "category": "supply",
+      "rarity": "uncommon",
+      "description": "長年の取引先から感謝のサービス品が届いた。\n高級食材のおまけ付き。\n日頃の信頼関係が活きている。",
+      "effects": [
+        { "type": "money", "value": 5000 }
+      ],
+      "weight": 7
+    },
+    {
+      "id": "evt_sys_frozen_pipe",
+      "name": "水道管凍結",
+      "category": "supply",
+      "rarity": "rare",
+      "description": "厳冬期に水道管が凍結してしまった。\n調理も洗い物もままならない緊急事態。\n修理費もかさむ痛い出費。",
+      "effects": [
+        { "type": "cook_speed", "multiplier": 0.5, "duration": 1 },
+        { "type": "money", "value": -10000 }
+      ],
+      "weight": 4
+    },
+    {
+      "id": "evt_sys_fresh_delivery",
+      "name": "産地直送の極上食材",
+      "category": "supply",
+      "rarity": "rare",
+      "description": "農家から産地直送の極上食材が届いた。\n新鮮さが段違いで、料理の味が格段にアップ。\nお客様の反応も上々だ。",
+      "effects": [
+        { "type": "menu_popularity", "multiplier": 1.3, "duration": 2 }
+      ],
+      "weight": 4
+    },
+    {
+      "id": "evt_sys_makanai_hit",
+      "name": "賄いが評判に",
+      "category": "supply",
+      "rarity": "uncommon",
+      "description": "今日の賄いが絶品だとスタッフ大絶賛。\n「この味をお客さんにも出したい」と士気UP。\n料理人としてのセンスが磨かれた。",
+      "effects": [
+        { "type": "staff_stat", "stat": "sense", "target": "all", "value": 1 }
+      ],
+      "weight": 5
+    },
+    {
+      "id": "evt_sys_inventory_audit",
+      "name": "棚卸しで不一致",
+      "category": "supply",
+      "rarity": "common",
+      "description": "月末の棚卸しで在庫数が合わない。\n記録ミスか紛失か、原因を調査中。\nスタッフの士気にも影響が出ている。",
+      "effects": [
+        { "type": "money", "value": -5000 },
+        { "type": "staff_morale", "target": "all", "value": -3 }
+      ],
+      "weight": 8
+    },
+    {
+      "id": "evt_sys_expiry_crisis",
+      "name": "消費期限ギリギリ大量在庫",
+      "category": "supply",
+      "rarity": "uncommon",
+      "description": "消費期限が迫る食材が大量に残っている。\n急遽値引きメニューとして提供したところ大好評。\n結果的に売上が伸びた。",
+      "effects": [
+        { "type": "money", "value": 10000 }
+      ],
+      "weight": 6
+    },
+    {
+      "id": "evt_sys_recipe_from_waste",
+      "name": "余り食材から新メニューヒント",
+      "category": "supply",
+      "rarity": "uncommon",
+      "description": "余った食材を組み合わせて試作したら意外な美味しさ。\n「これ、正式メニューにできるかも？」\n料理人の経験値が上がった。",
+      "effects": [
+        { "type": "staff_exp", "value": 5 }
+      ],
+      "weight": 6
+    },
+    {
+      "id": "evt_sys_aircon_breakdown",
+      "name": "エアコン故障で猛暑",
+      "category": "facility",
+      "rarity": "uncommon",
+      "description": "真夏にエアコンが故障。店内が灼熱地獄に。\nお客様は暑さに耐えきれず退店続出。\nスタッフも汗だくで士気が急降下。",
+      "effects": [
+        { "type": "customer_flow", "multiplier": 0.6, "duration": 2 },
+        { "type": "staff_morale", "target": "all", "value": -10 }
+      ],
+      "weight": 5
+    },
+    {
+      "id": "evt_sys_new_oven_effect",
+      "name": "新型オーブンの威力",
+      "category": "facility",
+      "rarity": "uncommon",
+      "description": "導入した新型オーブンが期待以上の性能。\n焼き上がりが早く、仕上がりも均一。\nしばらく調理効率の向上が続きそうだ。",
+      "effects": [
+        { "type": "cook_speed", "multiplier": 1.15, "duration": 5 }
+      ],
+      "weight": 5
+    },
+    {
+      "id": "evt_sys_pos_error",
+      "name": "レジシステムエラー",
+      "category": "facility",
+      "rarity": "common",
+      "description": "POSレジがエラーで停止。手計算で対応するも混乱。\n会計ミスで一部お客様に返金対応。\n回転率も低下してしまった。",
+      "effects": [
+        { "type": "money", "value": -3000 },
+        { "type": "customer_flow", "multiplier": 0.9, "duration": 1 }
+      ],
+      "weight": 8
+    },
+    {
+      "id": "evt_sys_fridge_upgrade",
+      "name": "冷蔵庫が快調",
+      "category": "facility",
+      "rarity": "uncommon",
+      "description": "冷蔵庫のメンテナンスが功を奏して絶好調。\n食材の鮮度が長持ちし、廃棄ロスが激減。\nしばらく食材コストが抑えられそうだ。",
+      "effects": [
+        { "type": "ingredient_cost", "multiplier": 0.9, "duration": 7 }
+      ],
+      "weight": 6
+    },
+    {
+      "id": "evt_sys_lighting_mood",
+      "name": "照明リニューアル効果",
+      "category": "facility",
+      "rarity": "uncommon",
+      "description": "照明を暖色系に変えたところ、店の雰囲気が激変。\n「居心地がいい」と口コミが増えている。\nちょっとした投資で大きな効果。",
+      "effects": [
+        { "type": "reputation", "value": 3 },
+        { "type": "customer_flow", "multiplier": 1.05, "duration": 5 }
+      ],
+      "weight": 6
+    },
+    {
+      "id": "evt_sys_dishwasher_flood",
+      "name": "食洗機水漏れ",
+      "category": "facility",
+      "rarity": "uncommon",
+      "description": "食洗機から大量の水漏れが発生。\n厨房が水浸しで片付けに追われる。\n修理費と疲労のダブルパンチ。",
+      "effects": [
+        { "type": "money", "value": -12000 },
+        { "type": "staff_fatigue", "value": 15 }
+      ],
+      "weight": 6
+    },
+    {
+      "id": "evt_sys_power_outage_kitchen",
+      "name": "厨房停電",
+      "category": "facility",
+      "rarity": "rare",
+      "description": "厨房の電気系統がダウンして調理不能に。\n電気工事業者を緊急手配するも今日は営業断念。\n売上ゼロの痛すぎる一日。",
+      "effects": [
+        { "type": "cook_speed", "multiplier": 0, "duration": 1 },
+        { "type": "money", "value": -5000 }
+      ],
+      "weight": 3
+    },
+    {
+      "id": "evt_sys_equipment_insurance",
+      "name": "設備保険が下りた",
+      "category": "facility",
+      "rarity": "rare",
+      "description": "以前の設備故障の保険金が下りた。\n思っていたより高額で嬉しい誤算。\n次の設備投資に回せそうだ。",
+      "effects": [
+        { "type": "money", "value": 20000 }
+      ],
+      "weight": 4
+    },
+    {
+      "id": "evt_sys_sns_viral",
+      "name": "SNS投稿が大バズ",
+      "category": "marketing",
+      "rarity": "rare",
+      "description": "お客様が投稿した料理写真がSNSで大バズり。\nリツイートが止まらず認知度が爆発的に上昇。\n予想外の大行列ができている。",
+      "effects": [
+        { "type": "reputation", "value": 20 },
+        { "type": "customer_flow", "multiplier": 1.8, "duration": 3 }
+      ],
+      "weight": 3
+    },
+    {
+      "id": "evt_sys_bad_review_response",
+      "name": "悪口コミへの完璧な返信",
+      "category": "marketing",
+      "rarity": "uncommon",
+      "description": "ネットの悪い口コミに丁寧で誠実な返信をした。\n「この対応なら信頼できる」と逆に好評。\nピンチをチャンスに変えた。",
+      "effects": [
+        { "type": "reputation", "value": 5 }
+      ],
+      "weight": 6
+    },
+    {
+      "id": "evt_sys_influencer_scandal",
+      "name": "招待インフルエンサーが炎上",
+      "category": "marketing",
+      "rarity": "rare",
+      "description": "PR用に招待したインフルエンサーが不祥事で炎上。\n関連づけられて店にも批判の矛先が。\n認知度も評判も下がる最悪の展開。",
+      "effects": [
+        { "type": "reputation", "value": -8 },
+        { "type": "customer_flow", "multiplier": 0.85, "duration": 3 }
+      ],
+      "weight": 3
+    },
+    {
+      "id": "evt_sys_flyer_rain",
+      "name": "チラシがゲリラ豪雨で全滅",
+      "category": "marketing",
+      "rarity": "common",
+      "description": "配布したばかりのチラシがゲリラ豪雨で全滅。\n印刷代が丸々無駄になってしまった。\n天候リスクも計算に入れないと…",
+      "effects": [
+        { "type": "money", "value": -5000 }
+      ],
+      "weight": 7
+    },
+    {
+      "id": "evt_sys_tv_sudden",
+      "name": "突然のTV取材",
+      "category": "marketing",
+      "rarity": "rare",
+      "description": "突然テレビの取材クルーが来店！\n地元グルメ特集で紹介されることに。\n放送後、問い合わせが殺到している。",
+      "effects": [
+        { "type": "reputation", "value": 25 },
+        { "type": "customer_flow", "multiplier": 2.0, "duration": 3 }
+      ],
+      "weight": 2
+    },
+    {
+      "id": "evt_sys_coupon_abuse",
+      "name": "クーポン不正利用",
+      "category": "marketing",
+      "rarity": "uncommon",
+      "description": "配布したクーポンが複製されて不正利用されていた。\n想定以上の割引が発生し、大きな損失に。\nクーポンの管理体制を見直す必要がある。",
+      "effects": [
+        { "type": "money", "value": -10000 }
+      ],
+      "weight": 5
+    },
+    {
+      "id": "evt_sys_review_milestone",
+      "name": "口コミ100件達成",
+      "category": "marketing",
+      "rarity": "uncommon",
+      "description": "グルメサイトの口コミが100件を突破。\n「口コミ人気店」のバッジが付与された。\n検索上位に表示されるようになり集客UP。",
+      "effects": [
+        { "type": "reputation", "value": 5 },
+        { "type": "customer_flow", "multiplier": 1.15, "duration": 7 }
+      ],
+      "weight": 4
+    },
+    {
+      "id": "evt_sys_brand_recognition",
+      "name": "ブランド認知イベント",
+      "category": "marketing",
+      "rarity": "uncommon",
+      "description": "地域のフードフェスに出店したところ大好評。\n店のブランドが広く認知されるきっかけに。\nしばらく認知度の減衰が穏やかになる。",
+      "effects": [
+        { "type": "reputation", "value": 5 },
+        { "type": "customer_flow", "multiplier": 1.1, "duration": 3 }
+      ],
+      "weight": 5
+    },
+    {
+      "id": "evt_sys_competitor_marketing",
+      "name": "ライバルが大規模広告",
+      "category": "marketing",
+      "rarity": "common",
+      "description": "ライバル店が大規模な広告キャンペーンを展開。\nお客さんがそちらに流れてしまっている。\n負けないための対策が必要だ。",
+      "effects": [
+        { "type": "customer_flow", "multiplier": 0.8, "duration": 5 }
+      ],
+      "weight": 8
+    },
+    {
+      "id": "evt_sys_word_of_mouth",
+      "name": "自然な口コミ拡散",
+      "category": "marketing",
+      "rarity": "common",
+      "description": "「あの店いいよ」と自然な口コミが広がっている。\n広告費ゼロの最強の集客。\n日々の努力が報われている証拠だ。",
+      "effects": [
+        { "type": "reputation", "value": 2 },
+        { "type": "customer_flow", "multiplier": 1.08, "duration": 5 }
+      ],
+      "weight": 10
+    },
+    {
+      "id": "evt_sys_tax_refund",
+      "name": "税金還付",
+      "category": "finance",
+      "rarity": "uncommon",
+      "description": "確定申告の結果、税金の還付が決定。\n思わぬ臨時収入に笑みがこぼれる。\n経理をしっかりやっておいて良かった。",
+      "effects": [
+        { "type": "money", "value": 30000 }
+      ],
+      "weight": 5
+    },
+    {
+      "id": "evt_sys_loan_offer",
+      "name": "銀行から好条件融資の提案",
+      "category": "finance",
+      "rarity": "rare",
+      "description": "取引銀行から好条件での融資提案が届いた。\n金利が通常より優遇されている。\n設備投資のチャンスかもしれない。",
+      "effects": [
+        { "type": "money", "value": 50000 },
+        { "type": "reputation", "value": 2 }
+      ],
+      "weight": 3
+    },
+    {
+      "id": "evt_sys_audit_clean",
+      "name": "税務調査クリア",
+      "category": "finance",
+      "rarity": "uncommon",
+      "description": "税務署の調査が入ったが問題なくクリア。\n「帳簿が整然としている」とお褒めの言葉。\n信頼度が上がった。",
+      "effects": [
+        { "type": "reputation", "value": 3 }
+      ],
+      "weight": 5
+    },
+    {
+      "id": "evt_sys_subsidy_available",
+      "name": "中小企業補助金のお知らせ",
+      "category": "finance",
+      "rarity": "rare",
+      "description": "中小企業向けの補助金に当選！\n申請していたのが通ったらしい。\nまとまった資金が手に入る。",
+      "effects": [
+        { "type": "money", "value": 50000 }
+      ],
+      "weight": 3
+    },
+    {
+      "id": "evt_sys_cashflow_crisis",
+      "name": "資金繰り危機",
+      "category": "finance",
+      "rarity": "uncommon",
+      "description": "月末の支払いが重なり資金繰りが厳しい。\n「来月大丈夫かな…」とスタッフにも不安が伝播。\n早急な収益改善が必要だ。",
+      "effects": [
+        { "type": "staff_morale", "target": "all", "value": -10 }
+      ],
+      "weight": 6
+    },
+    {
+      "id": "evt_sys_investor_interest",
+      "name": "投資家からの問い合わせ",
+      "category": "finance",
+      "rarity": "legendary",
+      "description": "著名な投資家から出資の打診が！\n「この店には可能性を感じる」との評価。\n大きな資金と信用を同時に手に入れた。",
+      "effects": [
+        { "type": "reputation", "value": 5 },
+        { "type": "money", "value": 100000 }
+      ],
+      "weight": 1
+    },
+    {
+      "id": "evt_sys_reservation_boom",
+      "name": "予約殺到",
+      "category": "customer",
+      "rarity": "uncommon",
+      "description": "予約の電話が鳴り止まない。\n口コミ効果かメディア露出か、とにかく大盛況。\n嬉しい悲鳴が続く日々。",
+      "effects": [
+        { "type": "customer_flow", "multiplier": 1.4, "duration": 3 }
+      ],
+      "weight": 5
+    },
+    {
+      "id": "evt_sys_regular_milestone",
+      "name": "常連50人達成",
+      "category": "customer",
+      "rarity": "uncommon",
+      "description": "常連客が50人を突破！\n「いつもの」で通じるお客さんがこんなに。\nスタッフも誇らしげだ。",
+      "effects": [
+        { "type": "reputation", "value": 5 },
+        { "type": "staff_morale", "target": "all", "value": 8 }
+      ],
+      "weight": 4
+    },
+    {
+      "id": "evt_sys_vip_complaint",
+      "name": "VIP客からのクレーム",
+      "category": "customer",
+      "rarity": "uncommon",
+      "description": "上顧客から厳しいクレームが入った。\n「いつもと味が違う」「サービスが雑」と不満爆発。\nVIPの信頼を取り戻すのは簡単ではない。",
+      "effects": [
+        { "type": "reputation", "value": -5 }
+      ],
+      "weight": 6
+    },
+    {
+      "id": "evt_sys_anniversary_reserve",
+      "name": "記念日予約の感動",
+      "category": "customer",
+      "rarity": "uncommon",
+      "description": "記念日利用のお客様がサプライズに大感激。\n涙を流して喜ぶ姿にスタッフも感動。\n「最高のお店です」と絶賛された。",
+      "effects": [
+        { "type": "reputation", "value": 3 },
+        { "type": "staff_morale", "target": "all", "value": 5 }
+      ],
+      "weight": 6
+    },
+    {
+      "id": "evt_sys_noshow_streak",
+      "name": "ノーショー3連続",
+      "category": "customer",
+      "rarity": "uncommon",
+      "description": "予約の無断キャンセルが3組連続で発生。\n用意した食材が無駄になり、スタッフも落胆。\n予約管理の仕組みを見直すべきか。",
+      "effects": [
+        { "type": "staff_morale", "target": "all", "value": -5 }
+      ],
+      "weight": 6
+    },
+    {
+      "id": "evt_sys_regular_gift",
+      "name": "常連からの差し入れ",
+      "category": "customer",
+      "rarity": "common",
+      "description": "常連のお客さんが差し入れを持ってきてくれた。\n「いつもお世話になってるから」と温かい一言。\nスタッフ全員のやる気が上がった。",
+      "effects": [
+        { "type": "staff_morale", "target": "all", "value": 8 },
+        { "type": "ingredient_cost", "multiplier": 0.95, "duration": 2 }
+      ],
+      "weight": 8
     }
   ]
 }
