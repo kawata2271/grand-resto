@@ -110,6 +110,41 @@
 
     { "id": "ach_special_broke_clear", "name": "無一文の奇跡", "description": "資金0円の状態から1日をクリアする", "icon": "🍀", "category": "special", "check": { "type": "money", "value": -1 } },
     { "id": "ach_special_revenue_200k", "name": "爆売れの日", "description": "1日の売上が20万円を超える", "icon": "🔥", "category": "special", "check": { "type": "daily_revenue", "value": 200000 } },
-    { "id": "ach_special_rep100_30days", "name": "不動の名声", "description": "評判100を30日間維持する", "icon": "🌠", "category": "special", "check": { "type": "consecutive_profit_days", "value": 30 } }
+    { "id": "ach_special_rep100_30days", "name": "不動の名声", "description": "評判100を30日間維持する", "icon": "🌠", "category": "special", "check": { "type": "consecutive_profit_days", "value": 30 } },
+
+    { "id": "ach_interior_designer", "name": "インテリアデザイナー", "description": "レイアウトスコアが90以上になる", "icon": "🎨", "category": "layout", "check": { "type": "layout_score", "value": 90 } },
+    { "id": "ach_perfect_path", "name": "完璧な動線", "description": "動線スコアが100に到達する", "icon": "🛤️", "category": "layout", "check": { "type": "layout_score", "value": 100 } },
+    { "id": "ach_seat_change_master", "name": "席替えマスター", "description": "レイアウトを10回変更する", "icon": "🔄", "category": "layout", "check": { "type": "layout_changes", "value": 10 } },
+    { "id": "ach_maze_restaurant", "name": "迷路レストラン", "description": "レイアウトスコアが10以下になる", "icon": "🌀", "category": "layout", "check": { "type": "layout_score", "value": -10 } },
+    { "id": "ach_queue_restaurant", "name": "行列のできる店", "description": "待ち客が20人以上になる", "icon": "🚶", "category": "layout", "check": { "type": "daily_customers", "value": 80 } },
+    { "id": "ach_turnover_king", "name": "回転王", "description": "1日に50組を回転させる", "icon": "♻️", "category": "layout", "check": { "type": "daily_customers", "value": 50 } },
+    { "id": "ach_clean_freak", "name": "きれい好き", "description": "清潔度を30日間最大に保つ", "icon": "✨", "category": "layout", "check": { "type": "layout_score", "value": 95 } },
+
+    { "id": "ach_frugal_profit", "name": "質素倹約", "description": "全家具Tier1で黒字を達成する", "icon": "💡", "category": "grade", "check": { "type": "grade_average", "value": 1 } },
+    { "id": "ach_cafe_master", "name": "カフェマスター", "description": "全家具をTier4で統一する", "icon": "☕", "category": "grade", "check": { "type": "grade_harmony", "value": 4 } },
+    { "id": "ach_luxury_space", "name": "ラグジュアリー空間", "description": "全家具の平均グレードがTier8以上になる", "icon": "💎", "category": "grade", "check": { "type": "grade_average", "value": 8 } },
+    { "id": "ach_supreme_table", "name": "至高の食卓", "description": "Tier10の家具を10個設置する", "icon": "👑", "category": "grade", "check": { "type": "furniture_count", "value": 10 } },
+    { "id": "ach_grade_gap", "name": "格差社会", "description": "Tier1とTier10の家具を同時に配置する", "icon": "⚖️", "category": "grade", "check": { "type": "grade_harmony", "value": -1 } },
+    { "id": "ach_cost_efficiency", "name": "コスパの鬼", "description": "Tier3以下の家具だけで評判50を達成する", "icon": "🧮", "category": "grade", "check": { "type": "grade_average", "value": 3 } },
+    { "id": "ach_roi_master", "name": "投資回収", "description": "家具の投資額を売上で回収する", "icon": "📊", "category": "grade", "check": { "type": "furniture_count", "value": 0 } },
+
+    { "id": "ach_sushi_master", "name": "寿司マスター", "description": "寿司カウンターを設置する", "icon": "🍣", "category": "counter", "check": { "type": "counter_count", "value": 1 } },
+    { "id": "ach_bartender", "name": "バーテンダー", "description": "バーカウンターを設置する", "icon": "🍸", "category": "counter", "check": { "type": "counter_count", "value": 1 } },
+    { "id": "ach_teppan_wizard", "name": "鉄板の魔術師", "description": "鉄板カウンターを設置する", "icon": "🔥", "category": "counter", "check": { "type": "counter_count", "value": 1 } },
+    { "id": "ach_counter_expert", "name": "カウンターの達人", "description": "全6種のカウンターを設置する", "icon": "🏆", "category": "counter", "check": { "type": "counter_count", "value": 6 } },
+    { "id": "ach_solo_diner", "name": "ぼっち飯の味方", "description": "カウンター席のみで1日営業する", "icon": "🪑", "category": "counter", "check": { "type": "counter_count", "value": -1 } },
+    { "id": "ach_sommelier", "name": "ソムリエ", "description": "ワインカウンターで100杯提供する", "icon": "🍷", "category": "counter", "check": { "type": "counter_count", "value": 100 } },
+
+    { "id": "ach_healing_space", "name": "癒しの空間", "description": "観葉植物を5つ以上配置する", "icon": "🌿", "category": "decor", "check": { "type": "furniture_count", "value": 5 } },
+    { "id": "ach_aquarium_cafe", "name": "アクアリウムカフェ", "description": "水槽を設置してカフェ営業する", "icon": "🐠", "category": "decor", "check": { "type": "furniture_count", "value": 1 } },
+    { "id": "ach_fireplace_view", "name": "暖炉のある風景", "description": "暖炉を設置する", "icon": "🔥", "category": "decor", "check": { "type": "furniture_count", "value": 1 } },
+    { "id": "ach_jukebox_hero", "name": "ジュークボックスヒーロー", "description": "ジュークボックスを設置する", "icon": "🎵", "category": "decor", "check": { "type": "furniture_count", "value": 1 } },
+    { "id": "ach_flower_shop", "name": "フラワーショップ", "description": "花の装飾を全箇所に配置する", "icon": "💐", "category": "decor", "check": { "type": "furniture_count", "value": 10 } },
+    { "id": "ach_museum_restaurant", "name": "美術館レストラン", "description": "審美スコアが100に到達する", "icon": "🖼️", "category": "decor", "check": { "type": "aesthetic_score", "value": 100 } },
+
+    { "id": "ach_terrace_king", "name": "テラスの王様", "description": "テラス席を最大まで拡張する", "icon": "☀️", "category": "layout", "check": { "type": "furniture_count", "value": 8 } },
+    { "id": "ach_horigotatsu_heaven", "name": "掘りごたつ天国", "description": "掘りごたつ席を5つ以上設置する", "icon": "🍵", "category": "layout", "check": { "type": "furniture_count", "value": 5 } },
+    { "id": "ach_private_room_master", "name": "完全個室マスター", "description": "個室を全席分確保する", "icon": "🚪", "category": "layout", "check": { "type": "furniture_count", "value": 6 } },
+    { "id": "ach_banquet_chief", "name": "宴会部長", "description": "宴会用大テーブルで20人以上の宴会を成功させる", "icon": "🎊", "category": "layout", "check": { "type": "daily_customers", "value": 20 } }
   ]
 }
