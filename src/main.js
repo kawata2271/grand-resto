@@ -22,6 +22,9 @@ import { MarketingManager } from "./systems/marketing.js";
 import { CleaningManager } from "./systems/cleaning.js";
 import { PreparationManager } from "./systems/preparation.js";
 import { EquipmentManager } from "./systems/equipment.js";
+import { ReservationManager } from "./systems/reservation.js";
+import { CustomerDBManager } from "./systems/customerDB.js";
+import { AccountingManager } from "./systems/accounting.js";
 import { EndingManager } from "./systems/endingManager.js";
 import { TownManager } from "./systems/townManager.js";
 import { EffectManager } from "./render/effects.js";
@@ -88,6 +91,9 @@ class GameApp {
     this.cleaningMgr = new CleaningManager(this.state, cleaningData);
     this.prepMgr = new PreparationManager(this.state, ingredientsData);
     this.equipmentMgr = new EquipmentManager(this.state, equipmentData);
+    this.reservationMgr = new ReservationManager(this.state);
+    this.customerDBMgr = new CustomerDBManager(this.state);
+    this.accountingMgr = new AccountingManager(this.state, config);
     this.endingMgr = new EndingManager(this.state, this.achievementMgr);
 
     // Bridge: sim uses furniture tables instead of old tables
@@ -210,6 +216,33 @@ class GameApp {
       }
     }
 
+    // Reservation processing
+    const noShows = this.reservationMgr.processNoShows();
+    for (const e of noShows) this.ui.addLog(e);
+    this.reservationMgr.clearDaily();
+    const rsvEvts = this.reservationMgr.generateDailyReservations();
+    for (const e of rsvEvts) this.ui.addLog(e);
+
+    // Customer DB tracking
+    if (this.state.todayLog.customers > 0) {
+      const types = this.state.todayLog.customerTypes || {};
+      for (const [type, count] of Object.entries(types)) {
+        const satisfaction = 60 + this.state.restaurant.reputation * 0.3;
+        const spending = (this.state.todayLog.revenue / Math.max(1, this.state.todayLog.customers)) * count;
+        this.customerDBMgr.recordVisit(type, count, satisfaction, spending);
+      }
+    }
+
+    // Accounting
+    this.accountingMgr.recordCashFlow();
+    const bankCheck = this.accountingMgr.checkBankruptcy();
+    if (bankCheck.bankrupt) {
+      this.ui.addLog(`💀 ${bankCheck.message}`);
+      this.effects.notify("💀", "倒産", bankCheck.message, 5000);
+    } else if (bankCheck.warning) {
+      this.ui.addLog(bankCheck.warning);
+    }
+
     // Cleaning daily update
     const cleanEvts = this.cleaningMgr.dailyUpdate();
     for (const e of cleanEvts) this.ui.addLog(e);
@@ -272,6 +305,17 @@ class GameApp {
     if (report.profit > 0) {
       const devEvts = this.townMgr.developTown(1);
       for (const e of devEvts) this.ui.addLog(`🏘 ${e}`);
+    }
+
+    // Monthly accounting
+    if (report.isNewMonth) {
+      const pl = this.accountingMgr.generateMonthlyPL();
+      if (pl) {
+        this.ui.addLog(`📊 ${pl.month}月 P/L: 売上¥${pl.revenue.toLocaleString()} 純利益¥${pl.netProfit.toLocaleString()} 食材率${pl.foodCostRatio}%`);
+        if (pl.tax > 0) this.ui.addLog(`🏛 税金¥${pl.tax.toLocaleString()}`);
+      }
+      const loanEvts = this.accountingMgr.processLoanPayments();
+      for (const e of loanEvts) this.ui.addLog(e);
     }
 
     saveGame(this.state);
@@ -469,6 +513,14 @@ class GameApp {
     }
     this.ui.render();
     return r;
+  }
+
+  // Accounting
+  applyForLoan(amount) {
+    const r = this.accountingMgr.applyForLoan(amount);
+    if (r.success) { this.ui.addLog(`🏦 融資¥${r.loan.principal.toLocaleString()}承認！月¥${r.loan.monthlyPayment.toLocaleString()}返済`); this.effects.notify("🏦", "融資承認", `¥${r.loan.principal.toLocaleString()}`, 2000); }
+    else this.ui.addLog(`❌ ${r.reason}`);
+    this.ui.render(); return r;
   }
 
   // Marketing
