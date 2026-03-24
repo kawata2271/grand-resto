@@ -181,7 +181,8 @@ class GameApp {
 
     const report = this.sim.endDay();
 
-    this.eventMgr.advanceDay();
+    const restoreEvts = this.eventMgr.advanceDay();
+    for (const e of restoreEvts) this.ui.addLog(`🔧 ${e}`);
     this.sim.customerFlowMult = this.eventMgr.getCustomerFlowMultiplier();
     this.sim.ingredientCostMult = this.eventMgr.getIngredientCostMultiplier();
     this._syncBonuses();
