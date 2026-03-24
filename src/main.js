@@ -22,6 +22,7 @@ import { MarketingManager } from "./systems/marketing.js";
 import { CleaningManager } from "./systems/cleaning.js";
 import { PreparationManager } from "./systems/preparation.js";
 import { EquipmentManager } from "./systems/equipment.js";
+// themes.json loaded inline below
 import { ReservationManager } from "./systems/reservation.js";
 import { CustomerDBManager } from "./systems/customerDB.js";
 import { AccountingManager } from "./systems/accounting.js";
@@ -33,7 +34,7 @@ import { saveGame, loadGame, hasSave, deleteSave } from "./save/saveManager.js";
 
 class GameApp {
   async init() {
-    const [config, menus, staffTemplates, eventsData, upgrades, customersData, skillsData, rivalsData, recipesData, achievementsData, seasonsData, formatsData, townsData, helpData, abilitiesData, locationsData, marketingData, cleaningData, ingredientsData, equipmentData] = await Promise.all([
+    const [config, menus, staffTemplates, eventsData, upgrades, customersData, skillsData, rivalsData, recipesData, achievementsData, seasonsData, formatsData, townsData, helpData, abilitiesData, locationsData, marketingData, cleaningData, ingredientsData, equipmentData, themesData] = await Promise.all([
       fetch("./src/data/config.json").then(r => r.json()),
       fetch("./src/data/menus.json").then(r => r.json()),
       fetch("./src/data/staff-templates.json").then(r => r.json()),
@@ -53,7 +54,8 @@ class GameApp {
       fetch("./src/data/marketing.json").then(r => r.json()),
       fetch("./src/data/cleaning.json").then(r => r.json()),
       fetch("./src/data/ingredients.json").then(r => r.json()),
-      fetch("./src/data/equipment.json").then(r => r.json())
+      fetch("./src/data/equipment.json").then(r => r.json()),
+      fetch("./src/data/themes.json").then(r => r.json())
     ]);
 
     this.config = config;
@@ -94,6 +96,10 @@ class GameApp {
     this.reservationMgr = new ReservationManager(this.state);
     this.customerDBMgr = new CustomerDBManager(this.state);
     this.accountingMgr = new AccountingManager(this.state, config);
+    this.themesData = themesData;
+    if (!this.state.restaurant.themeId) this.state.restaurant.themeId = "theme_none";
+    if (!this.state.restaurant.themeCooldown) this.state.restaurant.themeCooldown = 0;
+    if (!this.state.appliedSubsidies) this.state.appliedSubsidies = [];
     this.endingMgr = new EndingManager(this.state, this.achievementMgr);
 
     // Bridge: sim uses furniture tables instead of old tables
@@ -242,7 +248,8 @@ class GameApp {
     const bankCheck = this.accountingMgr.checkBankruptcy();
     if (bankCheck.bankrupt) {
       this.ui.addLog(`💀 ${bankCheck.message}`);
-      this.effects.notify("💀", "倒産", bankCheck.message, 5000);
+      this._showGameOver();
+      return; // Stop processing
     } else if (bankCheck.warning) {
       this.ui.addLog(bankCheck.warning);
     }
@@ -310,6 +317,21 @@ class GameApp {
       const devEvts = this.townMgr.developTown(1);
       for (const e of devEvts) this.ui.addLog(`🏘 ${e}`);
     }
+
+    // Takeout/delivery revenue
+    const takeoutRev = this.marketingMgr.getTakeoutRevenue(report.customers);
+    if (takeoutRev > 0) {
+      this.state.restaurant.money += takeoutRev;
+      report.takeoutRevenue = takeoutRev;
+      this.ui.addLog(`🥡 テイクアウト/デリバリー売上: ¥${takeoutRev.toLocaleString()}`);
+    }
+
+    // Theme daily cost
+    const currentTheme = this.themesData.themes.find(t => t.id === this.state.restaurant.themeId);
+    if (currentTheme?.dailyCost) {
+      this.state.restaurant.money -= currentTheme.dailyCost;
+    }
+    if (this.state.restaurant.themeCooldown > 0) this.state.restaurant.themeCooldown--;
 
     // Monthly accounting
     if (report.isNewMonth) {
@@ -526,6 +548,51 @@ class GameApp {
     return r;
   }
 
+  // Theme
+  changeTheme(themeId) {
+    const theme = this.themesData.themes.find(t => t.id === themeId);
+    if (!theme) return { success: false, reason: "テーマが見つかりません" };
+    if (this.state.restaurant.themeCooldown > 0) return { success: false, reason: `クールダウン中（残${this.state.restaurant.themeCooldown}日）` };
+    if (theme.repReq && this.state.restaurant.reputation < theme.repReq) return { success: false, reason: `評判${theme.repReq}以上が必要` };
+    const cost = theme.cost + this.themesData.changeCost;
+    if (this.state.restaurant.money < cost) return { success: false, reason: `資金不足（¥${cost.toLocaleString()}）` };
+    this.state.restaurant.money -= cost;
+    this.state.restaurant.themeId = themeId;
+    this.state.restaurant.themeCooldown = this.themesData.changeCooldownDays;
+    this.ui.addLog(`🎨 内装テーマ変更: ${theme.name}（¥${cost.toLocaleString()}）`);
+    this.effects.notify(theme.icon, "内装変更！", theme.name, 2000);
+    this.ui.render(); return { success: true, theme };
+  }
+
+  // Review reply
+  replyToReview(index, quality) {
+    const r = this.marketingMgr.replyToReview(index, quality);
+    if (r.success) this.ui.addLog(`💬 口コミ返信: ${r.effect}`);
+    else this.ui.addLog(`❌ ${r.reason}`);
+    this.ui.render(); return r;
+  }
+
+  // Subsidies
+  applyForSubsidy(subId) {
+    const sub = this.themesData.subsidies.find(s => s.id === subId);
+    if (!sub) return { success: false, reason: "補助金が見つかりません" };
+    if (this.state.appliedSubsidies.includes(subId)) return { success: false, reason: "すでに受給済みです" };
+    // Check conditions
+    const c = sub.condition;
+    if (c.maxDays && this.state.stats.daysPlayed > c.maxDays) return { success: false, reason: "申請期限切れ" };
+    if (c.minDays && this.state.stats.daysPlayed < c.minDays) return { success: false, reason: `営業${c.minDays}日以上が必要` };
+    if (c.minStaff && this.state.staff.length < c.minStaff) return { success: false, reason: `スタッフ${c.minStaff}人以上が必要` };
+    if (c.minReputation && this.state.restaurant.reputation < c.minReputation) return { success: false, reason: `評判${c.minReputation}以上が必要` };
+    if (c.minCleanliness && (this.cleaningMgr?.getOverallCleanliness() || 0) < c.minCleanliness) return { success: false, reason: `清潔度${c.minCleanliness}以上が必要` };
+    if (c.hasWebsite && !this.state.marketing?.activeCampaigns?.some(ac => ac.id === "campaign_website")) return { success: false, reason: "ホームページ開設が必要" };
+
+    this.state.restaurant.money += sub.amount;
+    this.state.appliedSubsidies.push(subId);
+    this.ui.addLog(`🏛 ${sub.name} ¥${sub.amount.toLocaleString()}を受給！`);
+    this.effects.notify(sub.icon, "補助金受給！", `${sub.name} ¥${sub.amount.toLocaleString()}`, 3000);
+    this.ui.render(); return { success: true, amount: sub.amount };
+  }
+
   // Accounting
   applyForLoan(amount) {
     const r = this.accountingMgr.applyForLoan(amount);
@@ -546,6 +613,29 @@ class GameApp {
     if (r.success) { this.ui.addLog("📢 施策を停止しました"); this._syncBonuses(); }
     else this.ui.addLog(`❌ ${r.reason}`);
     this.ui.render(); return r;
+  }
+
+  // Game Over
+  _showGameOver() {
+    const s = this.state.stats;
+    const overlay = document.getElementById("gameover-overlay");
+    if (!overlay) return;
+    overlay.classList.remove("hidden");
+    document.getElementById("gameover-message").textContent = "7日連続の資金不足により、お店は閉店しました…\nしかし、あなたの経験は次の挑戦に活きるはずです。";
+    document.getElementById("gameover-stats").innerHTML = `
+      <div class="report-grid">
+        <div class="report-item"><span>営業日数</span><span>${s.daysPlayed}日</span></div>
+        <div class="report-item"><span>総来客数</span><span>${s.totalCustomers.toLocaleString()}人</span></div>
+        <div class="report-item"><span>総売上</span><span>¥${s.totalRevenue.toLocaleString()}</span></div>
+        <div class="report-item"><span>最高日売上</span><span>¥${s.bestDayRevenue.toLocaleString()}</span></div>
+        <div class="report-item"><span>実績解除</span><span>${this.achievementMgr.getUnlockedCount()}/${this.achievementMgr.getTotalCount()}</span></div>
+        <div class="report-item"><span>常連数</span><span>${this.customerDBMgr?.getTotalRegulars() || 0}人</span></div>
+      </div>`;
+    document.getElementById("btn-gameover-restart")?.addEventListener("click", () => {
+      localStorage.removeItem("grand_resto_save");
+      location.reload();
+    });
+    this.effects.notify("💀", "GAME OVER", "倒産", 4000);
   }
 
   // Tutorial

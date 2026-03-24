@@ -234,6 +234,17 @@ export class MarketingManager {
     m.reviewCount++;
     m.reviewScore = (oldScore * oldCount + stars) / m.reviewCount;
 
+    // Store review text
+    const texts = {
+      5: ["最高の体験でした！","また絶対来ます","全てが完璧","感動しました","おすすめ！"],
+      4: ["美味しかったです","雰囲気も良い","満足です","また来たい","コスパ良し"],
+      3: ["普通でした","可もなく不可もなく","まあまあかな","期待通り","悪くはない"],
+      2: ["ちょっと残念","待ち時間が長い","値段の割に…","期待外れ","改善希望"],
+      1: ["二度と来ない","最悪の体験","ありえない","酷すぎる","お金返して"]
+    };
+    const reviewTexts = texts[stars] || texts[3];
+    this._addReview(stars, reviewTexts[Math.floor(Math.random() * reviewTexts.length)]);
+
     // Reviews affect awareness
     if (stars >= 4) this._addAwareness(0.5);
     if (stars <= 2) this._addAwareness(-0.3);
@@ -254,6 +265,63 @@ export class MarketingManager {
   _addAwareness(amount) {
     this.state.marketing.awareness = Math.max(0,
       Math.min(this.data.maxAwareness, this.state.marketing.awareness + amount));
+  }
+
+  // ─── Review management ───
+  getRecentReviews() {
+    if (!this.state.marketing.reviews) this.state.marketing.reviews = [];
+    return this.state.marketing.reviews.slice(-10).reverse();
+  }
+
+  _addReview(stars, text) {
+    if (!this.state.marketing.reviews) this.state.marketing.reviews = [];
+    this.state.marketing.reviews.push({
+      stars,
+      text,
+      day: this.state.stats.daysPlayed,
+      replied: false,
+      replyQuality: 0
+    });
+    if (this.state.marketing.reviews.length > 30) this.state.marketing.reviews.shift();
+  }
+
+  replyToReview(index, quality) {
+    const reviews = this.state.marketing.reviews || [];
+    const review = reviews[reviews.length - 1 - index];
+    if (!review || review.replied) return { success: false, reason: "返信済みまたは対象なし" };
+
+    review.replied = true;
+    review.replyQuality = quality;
+
+    // Good reply to bad review → reputation recovery
+    if (review.stars <= 2 && quality >= 2) {
+      this.state.restaurant.reputation = Math.min(100, this.state.restaurant.reputation + 2);
+      this._addAwareness(1);
+      return { success: true, effect: "評判+2、誠実な対応が好印象" };
+    }
+    if (review.stars <= 3 && quality >= 1) {
+      this._addAwareness(0.5);
+      return { success: true, effect: "認知度+0.5" };
+    }
+    return { success: true, effect: "返信完了" };
+  }
+
+  // ─── Takeout/Delivery revenue ───
+  getTakeoutRevenue(baseCustomers) {
+    const hasTakeout = this.state.marketing.activeCampaigns.some(ac => ac.id === "campaign_takeout");
+    const hasDelivery = this.state.marketing.activeCampaigns.some(ac => ac.id === "campaign_delivery_app");
+    let extra = 0;
+
+    if (hasTakeout) {
+      // 15% of dine-in as takeout, lower avg price
+      extra += Math.round(baseCustomers * 0.15 * 600);
+    }
+    if (hasDelivery) {
+      // 20% of dine-in as delivery, but 30% commission
+      const deliveryGross = Math.round(baseCustomers * 0.20 * 800);
+      extra += Math.round(deliveryGross * 0.70); // after commission
+    }
+    return extra;
   }
 
   // ─── Summary for UI ───

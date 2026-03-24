@@ -943,7 +943,23 @@ export class UI {
       h += `</div>`;
     }
 
-    h += `<div class="side-section"><div class="muted">💡 認知度が低いとお客さんが来ません。看板やチラシで認知度を上げましょう。何もしないと毎日-0.4ずつ減衰します。</div></div>`;
+    // Review replies
+    const reviews = this.app.marketingMgr?.getRecentReviews() || [];
+    const unreplied = reviews.filter(r => !r.replied && r.stars <= 3);
+    if (unreplied.length > 0) {
+      h += `<div class="side-section"><h4>📝 口コミ返信（未対応${unreplied.length}件）</h4>`;
+      h += reviews.slice(0, 5).map((r, i) => {
+        const stars = "★".repeat(r.stars) + "☆".repeat(5 - r.stars);
+        return `<div class="campaign-card ${r.replied?"":""}">
+          <div class="cc-header"><span style="color:${r.stars>=4?"var(--green)":r.stars>=3?"var(--gold)":"var(--red)"}">${stars}</span><span class="muted">${r.day}日目</span></div>
+          <div class="cc-desc">"${r.text}"</div>
+          ${!r.replied ? `<div style="display:flex;gap:3px"><button class="btn btn-sm reply-btn" data-idx="${i}" data-q="1">定型返信</button><button class="btn btn-sm primary reply-btn" data-idx="${i}" data-q="2">丁寧に返信</button><button class="btn btn-sm reply-btn" data-idx="${i}" data-q="3">個別対応</button></div>` : `<span class="cc-status cc-active">返信済</span>`}
+        </div>`;
+      }).join("");
+      h += `</div>`;
+    }
+
+    h += `<div class="side-section"><div class="muted">💡 認知度が低いとお客さんが来ません。看板やチラシで認知度を上げましょう。何もしないと毎日-0.3ずつ減衰します。</div></div>`;
 
     el.innerHTML = h;
 
@@ -952,6 +968,9 @@ export class UI {
     }
     for (const b of el.querySelectorAll(".stop-campaign-btn")) {
       b.addEventListener("click", () => this.app.stopCampaign(b.dataset.id));
+    }
+    for (const b of el.querySelectorAll(".reply-btn")) {
+      b.addEventListener("click", () => this.app.replyToReview(parseInt(b.dataset.idx), parseInt(b.dataset.q)));
     }
   }
 
@@ -1313,6 +1332,20 @@ export class UI {
     }
     h += `</div>`;
 
+    // Subsidies
+    const subsidies = this.app.themesData?.subsidies || [];
+    const applied = this.app.state.appliedSubsidies || [];
+    const availableSubs = subsidies.filter(s => !applied.includes(s.id));
+    if (availableSubs.length > 0 || applied.length > 0) {
+      h += `<div class="side-section"><h4>🏛 助成金・補助金</h4>`;
+      h += availableSubs.map(s => `
+        <div class="loan-card"><span>${s.icon} ${s.name} ¥${s.amount.toLocaleString()}</span>
+        <div class="muted">${s.description}</div>
+        <button class="btn btn-sm primary apply-sub-btn" data-id="${s.id}">申請</button></div>`).join("");
+      if (applied.length > 0) h += `<div class="muted">受給済: ${applied.length}件</div>`;
+      h += `</div>`;
+    }
+
     // Cash flow mini chart
     const cfHistory = this.app.state.accounting?.cashFlowHistory || [];
     if (cfHistory.length > 5) {
@@ -1329,6 +1362,11 @@ export class UI {
       const amount = parseInt(input?.value || "500000");
       this.app.applyForLoan(amount);
     });
+
+    // Bind subsidy buttons
+    for (const b of el.querySelectorAll(".apply-sub-btn")) {
+      b.addEventListener("click", () => this.app.applyForSubsidy(b.dataset.id));
+    }
 
     // Draw cash flow chart
     requestAnimationFrame(() => {
@@ -1371,9 +1409,33 @@ export class UI {
       <div class="muted">客足: ×${this.app.seasonMgr.getCustomerFlowMult()} / 食材コスト: ×${this.app.seasonMgr.getIngredientCostMult()}</div>
     </div>`;
 
+    // Interior theme
+    const themes = this.app.themesData?.themes || [];
+    const currentTheme = themes.find(t => t.id === this.app.state.restaurant.themeId) || themes[0];
+    h += `<div class="side-section"><h4>🎨 内装テーマ</h4>
+      <div class="muted">現在: ${currentTheme.icon} ${currentTheme.name}</div>
+      ${this.app.state.restaurant.themeCooldown > 0 ? `<div class="muted" style="color:var(--red)">変更CD ${this.app.state.restaurant.themeCooldown}日</div>` : ""}
+    </div>`;
+    h += themes.filter(t => t.id !== "theme_none").map(t => {
+      const isCurrent = t.id === currentTheme.id;
+      const locked = t.repReq && this.app.state.restaurant.reputation < t.repReq;
+      const canChange = !isCurrent && !locked && this.app.state.restaurant.themeCooldown <= 0;
+      const cost = t.cost + (this.app.themesData.changeCost || 0);
+      return `<div class="format-card ${isCurrent?"current":""} ${locked?"locked":""}">
+        <span class="format-icon">${t.icon}</span>
+        <div class="format-name">${t.name} ${isCurrent?"(現在)":""}${locked?" 🔒":""}</div>
+        <div class="muted">${t.description}</div>
+        <div class="muted">満足度${t.satisfactionMod>=0?"+":""}${t.satisfactionMod} / 美観+${t.aestheticBonus}${t.dailyCost ? ` / 維持¥${t.dailyCost}/日` : ""}</div>
+        ${canChange ? `<button class="btn btn-sm primary change-theme-btn" data-id="${t.id}">変更 ¥${cost.toLocaleString()}</button>` : ""}
+      </div>`;
+    }).join("");
+
     el.innerHTML = h;
     for (const b of el.querySelectorAll(".change-format-btn")) {
       b.addEventListener("click", () => this.app.changeFormat(b.dataset.id));
+    }
+    for (const b of el.querySelectorAll(".change-theme-btn")) {
+      b.addEventListener("click", () => this.app.changeTheme(b.dataset.id));
     }
   }
 

@@ -1,0 +1,23 @@
+{
+  "themes": [
+    { "id": "theme_none", "name": "デフォルト", "icon": "🏠", "cost": 0, "description": "特にテーマなし。無難な内装", "satisfactionMod": 0, "aestheticBonus": 0, "customerBonus": {}, "formatBonus": {} },
+    { "id": "theme_wa_modern", "name": "和モダン", "icon": "🎋", "cost": 150000, "description": "和の趣と現代デザインの融合。落ち着いた雰囲気", "satisfactionMod": 8, "aestheticBonus": 15, "customerBonus": { "elderly": 1.3, "business_group": 1.2, "tourist": 1.4 }, "formatBonus": { "format_japanese": 1.2 } },
+    { "id": "theme_casual", "name": "カジュアル", "icon": "🧡", "cost": 80000, "description": "明るく気軽な雰囲気。幅広い客層に好まれる", "satisfactionMod": 5, "aestheticBonus": 10, "customerBonus": { "family": 1.2, "student": 1.3, "salaryman": 1.1 }, "formatBonus": {} },
+    { "id": "theme_luxury", "name": "高級", "icon": "💎", "cost": 500000, "description": "シックで洗練された空間。客単価が大幅UP", "satisfactionMod": 15, "aestheticBonus": 25, "customerBonus": { "couple": 1.4, "business_group": 1.5, "solo_gourmet": 1.3 }, "formatBonus": { "format_fine": 1.3 }, "priceAppealBonus": 0.2, "repReq": 60 },
+    { "id": "theme_retro", "name": "レトロ喫茶", "icon": "☕", "cost": 100000, "description": "昭和レトロな懐かしい雰囲気。SNS映えも◎", "satisfactionMod": 7, "aestheticBonus": 12, "customerBonus": { "elderly": 1.3, "couple": 1.2, "tourist": 1.2 }, "formatBonus": {} },
+    { "id": "theme_industrial", "name": "インダストリアル", "icon": "🔩", "cost": 120000, "description": "コンクリート打ちっ放しと鉄骨。都会的でクール", "satisfactionMod": 5, "aestheticBonus": 14, "customerBonus": { "solo_gourmet": 1.3, "couple": 1.2, "student": 1.1 }, "formatBonus": {} },
+    { "id": "theme_garden", "name": "ガーデン", "icon": "🌿", "cost": 200000, "description": "緑あふれる癒し空間。植物の維持費がかかる", "satisfactionMod": 12, "aestheticBonus": 20, "customerBonus": { "couple": 1.3, "family": 1.2, "elderly": 1.2 }, "formatBonus": {}, "dailyCost": 500 },
+    { "id": "theme_izakaya", "name": "居酒屋風", "icon": "🏮", "cost": 80000, "description": "赤提灯と活気。夜の集客に強い", "satisfactionMod": 5, "aestheticBonus": 8, "customerBonus": { "salaryman": 1.4, "student": 1.3 }, "formatBonus": { "format_chinese": 1.1 }, "nightBonus": 1.3 }
+  ],
+  "changeCost": 50000,
+  "changeCooldownDays": 14,
+  "subsidies": [
+    { "id": "sub_startup", "name": "創業支援補助金", "amount": 200000, "condition": { "maxDays": 30 }, "description": "開業30日以内に申請可能", "icon": "🏛" },
+    { "id": "sub_hygiene", "name": "衛生設備補助金", "amount": 100000, "condition": { "minCleanliness": 80, "minDays": 30 }, "description": "清潔度80以上を30日維持", "icon": "🧹" },
+    { "id": "sub_employment", "name": "雇用促進助成金", "amount": 150000, "condition": { "minStaff": 5 }, "description": "スタッフ5人以上で申請可能", "icon": "👥" },
+    { "id": "sub_eco", "name": "省エネ補助金", "amount": 80000, "condition": { "minDays": 60 }, "description": "営業60日以上で申請可能", "icon": "🌱" },
+    { "id": "sub_barrier_free", "name": "バリアフリー補助金", "amount": 120000, "condition": { "minReputation": 40 }, "description": "評判40以上で申請可能", "icon": "♿" },
+    { "id": "sub_digital", "name": "IT導入補助金", "amount": 100000, "condition": { "hasWebsite": true }, "description": "ホームページ開設済みで申請可能", "icon": "💻" },
+    { "id": "sub_local", "name": "地域活性化補助金", "amount": 300000, "condition": { "minReputation": 70, "minDays": 90 }, "description": "評判70＋営業90日以上", "icon": "🏘" }
+  ]
+}

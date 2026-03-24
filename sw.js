@@ -58,7 +58,8 @@ const ASSETS = [
   "./src/data/marketing.json",
   "./src/data/cleaning.json",
   "./src/data/ingredients.json",
-  "./src/data/equipment.json"
+  "./src/data/equipment.json",
+  "./src/data/themes.json"
 ];
 
 self.addEventListener("install", (e) => {
