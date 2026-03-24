@@ -189,7 +189,36 @@ export class UI {
   // ─── OVERVIEW ───
   _tabOverview(el) {
     const s = this.app.state;
-    let h = `<div class="side-section"><h4>👨‍🍳 スタッフ (${s.staff.length}人)</h4>`;
+
+    // ── DASHBOARD ──
+    const mkt = this.app.marketingMgr?.getSummary() || {};
+    const cleanOverall = this.app.cleaningMgr?.getOverallCleanliness() || 0;
+    const prepReady = this.app.prepMgr ? Math.round(this.app.prepMgr.getPrepReadiness() * 100) : 0;
+    const failedEq = this.app.equipmentMgr?.getFailedEquipment() || [];
+    const rsvCount = this.app.reservationMgr?.getTodayCount() || 0;
+    const regulars = this.app.customerDBMgr?.getTotalRegulars() || 0;
+    const acctSum = this.app.accountingMgr?.getSummary() || {};
+    const season = this.app.seasonMgr?.getSeasonInfo() || {};
+    const locInfo = this.app.relocationMgr?.getLocationInfo() || {};
+
+    let h = `<div class="side-section"><h4>📊 経営ダッシュボード</h4>
+      <div class="layout-score">
+        <div class="ls-item"><div class="ls-label">認知度</div><div class="ls-val" style="color:${(mkt.awareness||0)<20?"var(--red)":(mkt.awareness||0)<50?"var(--gold)":"var(--green)"}">${mkt.awareness||0}%</div></div>
+        <div class="ls-item"><div class="ls-label">清潔度</div><div class="ls-val" style="color:${cleanOverall<40?"var(--red)":cleanOverall<70?"var(--gold)":"var(--green)"}">${cleanOverall}%</div></div>
+        <div class="ls-item"><div class="ls-label">仕込み</div><div class="ls-val" style="color:${prepReady<60?"var(--red)":prepReady<100?"var(--gold)":"var(--green)"}">${prepReady}%</div></div>
+        <div class="ls-item"><div class="ls-label">口コミ</div><div class="ls-val">${(mkt.reviewScore||0)>0?"★"+(mkt.reviewScore||0).toFixed(1):"—"}</div></div>
+        <div class="ls-item"><div class="ls-label">予約</div><div class="ls-val">${rsvCount}組</div></div>
+        <div class="ls-item"><div class="ls-label">常連</div><div class="ls-val">${regulars}人</div></div>
+        <div class="ls-item"><div class="ls-label">集客率</div><div class="ls-val">${mkt.trafficCoeff||0}%</div></div>
+        <div class="ls-item"><div class="ls-label">借入</div><div class="ls-val" style="color:${(acctSum.totalDebt||0)>0?"var(--red)":"var(--text2)"}">${(acctSum.totalDebt||0)>0?"¥"+(acctSum.totalDebt/10000).toFixed(0)+"万":"なし"}</div></div>
+      </div>
+      ${failedEq.length>0?`<div class="turnover-danger">💥 故障設備: ${failedEq.map(e=>e.name).join(", ")}</div>`:""}
+      ${this.app.cleaningMgr?.isShutdown()?'<div class="turnover-danger">🚫 営業停止中</div>':""}
+      ${(acctSum.bankruptDays||0)>0?`<div class="turnover-danger">⚠ 倒産まで残${7-(acctSum.bankruptDays||0)}日</div>`:""}
+    </div>`;
+
+    // ── STAFF MINI LIST ──
+    h += `<div class="side-section"><h4>👨‍🍳 スタッフ (${s.staff.length}人)</h4>`;
     h += s.staff.map(st => {
       const abl = this.app.abilityMgr.getStaffAbility(st);
       return `
@@ -1528,6 +1557,55 @@ export class UI {
       h += Object.entries(report.customerTypes).map(([k,v]) => `<span class="ct-tag">${k} ${v}人</span>`).join(" ");
       h += `</div>`;
     }
+
+    // ── 運営状況サマリー ──
+    h += `<div style="margin:8px 0;padding:8px;background:var(--bg3);border-radius:6px;border:1px solid var(--border)">`;
+    h += `<div style="font-size:11px;font-weight:700;color:var(--gold);margin-bottom:4px">📋 運営レポート</div>`;
+    h += `<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:3px;font-size:9px">`;
+
+    // Awareness & marketing
+    const mktS = this.app.marketingMgr?.getSummary();
+    if (mktS) {
+      h += `<div style="padding:2px 4px;background:var(--bg);border-radius:3px">📢 認知度: ${mktS.awareness}% (集客${mktS.trafficCoeff}%)</div>`;
+      h += `<div style="padding:2px 4px;background:var(--bg);border-radius:3px">⭐ 口コミ: ${mktS.reviewScore>0?"★"+mktS.reviewScore.toFixed(1):"—"} (${mktS.reviewCount}件)</div>`;
+    }
+
+    // Cleaning
+    const cleanO = this.app.cleaningMgr?.getOverallCleanliness();
+    if (cleanO !== undefined) {
+      const cleanColor = cleanO < 40 ? "var(--red)" : cleanO < 70 ? "var(--gold)" : "var(--green)";
+      h += `<div style="padding:2px 4px;background:var(--bg);border-radius:3px">🧹 清潔度: <span style="color:${cleanColor}">${cleanO}%</span></div>`;
+    }
+
+    // Prep readiness
+    const prepR = this.app.prepMgr ? Math.round(this.app.prepMgr.getPrepReadiness() * 100) : null;
+    if (prepR !== null) {
+      h += `<div style="padding:2px 4px;background:var(--bg);border-radius:3px">🍳 仕込み: ${prepR}%</div>`;
+    }
+
+    // Equipment
+    const failedE = this.app.equipmentMgr?.getFailedEquipment() || [];
+    h += `<div style="padding:2px 4px;background:var(--bg);border-radius:3px">⚙ 設備: ${failedE.length > 0 ? `<span style="color:var(--red)">${failedE.length}件故障</span>` : "正常"}</div>`;
+
+    // Reservations
+    const rsvS = this.app.reservationMgr?.getSummary();
+    if (rsvS) {
+      h += `<div style="padding:2px 4px;background:var(--bg);border-radius:3px">📋 予約: ${rsvS.today}組 / 常連: ${this.app.customerDBMgr?.getTotalRegulars() || 0}人</div>`;
+    }
+
+    // Labor
+    const overtime = this.app.state.staff.filter(s => (s.weeklyHours || 0) > 40);
+    if (overtime.length > 0) {
+      h += `<div style="padding:2px 4px;background:var(--bg);border-radius:3px;color:var(--red)">⏰ 残業: ${overtime.length}名</div>`;
+    }
+
+    // Accounting
+    const debt = this.app.accountingMgr?.getTotalDebt() || 0;
+    if (debt > 0) {
+      h += `<div style="padding:2px 4px;background:var(--bg);border-radius:3px">🏦 借入残: ¥${debt.toLocaleString()}</div>`;
+    }
+
+    h += `</div></div>`;
 
     if (event) {
       h += `<div class="report-event"><div class="re-title">📰 ${event.name}</div><div class="re-desc">${event.description.replace(/\n/g,"<br>")}</div></div>`;
