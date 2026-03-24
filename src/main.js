@@ -18,6 +18,7 @@ import { TutorialManager } from "./systems/tutorialManager.js";
 import { AbilityManager } from "./systems/abilityManager.js";
 import { RelocationManager } from "./systems/relocationManager.js";
 import { FurnitureManager } from "./systems/furniture.js";
+import { MarketingManager } from "./systems/marketing.js";
 import { EndingManager } from "./systems/endingManager.js";
 import { TownManager } from "./systems/townManager.js";
 import { EffectManager } from "./render/effects.js";
@@ -26,7 +27,7 @@ import { saveGame, loadGame, hasSave, deleteSave } from "./save/saveManager.js";
 
 class GameApp {
   async init() {
-    const [config, menus, staffTemplates, eventsData, upgrades, customersData, skillsData, rivalsData, recipesData, achievementsData, seasonsData, formatsData, townsData, helpData, abilitiesData, locationsData] = await Promise.all([
+    const [config, menus, staffTemplates, eventsData, upgrades, customersData, skillsData, rivalsData, recipesData, achievementsData, seasonsData, formatsData, townsData, helpData, abilitiesData, locationsData, marketingData] = await Promise.all([
       fetch("./src/data/config.json").then(r => r.json()),
       fetch("./src/data/menus.json").then(r => r.json()),
       fetch("./src/data/staff-templates.json").then(r => r.json()),
@@ -42,7 +43,8 @@ class GameApp {
       fetch("./src/data/towns.json").then(r => r.json()),
       fetch("./src/data/help.json").then(r => r.json()),
       fetch("./src/data/abilities.json").then(r => r.json()),
-      fetch("./src/data/locations.json").then(r => r.json())
+      fetch("./src/data/locations.json").then(r => r.json()),
+      fetch("./src/data/marketing.json").then(r => r.json())
     ]);
 
     this.config = config;
@@ -76,6 +78,7 @@ class GameApp {
     this.abilityMgr = new AbilityManager(this.state, abilitiesData);
     this.relocationMgr = new RelocationManager(this.state, locationsData);
     this.furnitureMgr = new FurnitureManager(this.state);
+    this.marketingMgr = new MarketingManager(this.state, marketingData);
     this.endingMgr = new EndingManager(this.state, this.achievementMgr);
 
     // Bridge: sim uses furniture tables instead of old tables
@@ -113,6 +116,7 @@ class GameApp {
     this.sim.seasonFlowMult = this.seasonMgr.getCustomerFlowMult();
     this.sim.seasonCostMult = this.seasonMgr.getIngredientCostMult();
     this.sim.formatRateMult = this.formatMgr.getCustomerRateMult();
+    this.sim.awarenessCoeff = this.marketingMgr.getTrafficCoefficient();
     this.sim.locationTrafficMult = this.relocationMgr.getTrafficMultiplier();
     this.sim.locationWealthMult = this.relocationMgr.getWealthMultiplier();
     this.sim.locationCompMult = this.relocationMgr.getCompetitionPenalty();
@@ -180,6 +184,20 @@ class GameApp {
     if (abilityTeam.teamMorale) {
       for (const s of this.state.staff) {
         if (s.shift !== "off") s.morale = Math.min(100, Math.max(0, s.morale + Math.round(abilityTeam.teamMorale)));
+      }
+    }
+
+    // Marketing daily update
+    const mktEvts = this.marketingMgr.dailyUpdate();
+    for (const e of mktEvts) this.ui.addLog(e);
+
+    // Process customer reviews
+    if (this.state.todayLog.customers > 0) {
+      const avgSatisfaction = 60 + this.state.restaurant.reputation * 0.3;
+      const review = this.marketingMgr.processReview(avgSatisfaction);
+      if (review) {
+        const stars = "★".repeat(review.stars) + "☆".repeat(5 - review.stars);
+        this.ui.addLog(`📝 口コミ投稿: ${stars}（平均${review.newAvg.toFixed(1)}点 / ${review.totalReviews}件）`);
       }
     }
 
@@ -430,6 +448,20 @@ class GameApp {
     }
     this.ui.render();
     return r;
+  }
+
+  // Marketing
+  startCampaign(id) {
+    const r = this.marketingMgr.startCampaign(id);
+    if (r.success) { this.ui.addLog(`📢 「${r.campaign.name}」を開始（¥${r.cost.toLocaleString()}）`); this.effects.eventFlash("📢", r.campaign.name); this._syncBonuses(); }
+    else this.ui.addLog(`❌ ${r.reason}`);
+    this.ui.render(); return r;
+  }
+  stopCampaign(id) {
+    const r = this.marketingMgr.stopCampaign(id);
+    if (r.success) { this.ui.addLog("📢 施策を停止しました"); this._syncBonuses(); }
+    else this.ui.addLog(`❌ ${r.reason}`);
+    this.ui.render(); return r;
   }
 
   // Tutorial

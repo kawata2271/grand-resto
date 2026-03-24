@@ -232,6 +232,20 @@
   .ts-btn-small:hover{color:var(--red)}
   .ts-footer{font-family:'Space Mono',monospace;font-size:10px;color:var(--text2);margin-top:32px;letter-spacing:1px;opacity:.5}
 
+  /* MARKETING */
+  .mkt-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin:6px 0}
+  .mkt-stat{text-align:center;padding:4px;background:var(--bg);border-radius:4px}
+  .mkt-stat .ms-label{font-size:8px;color:var(--text2)}.mkt-stat .ms-val{font-size:13px;font-weight:700;font-family:'Space Mono',monospace}
+  .campaign-card{padding:8px;background:var(--bg3);border:1px solid var(--border);border-radius:5px;margin-bottom:5px}
+  .campaign-card.active{border-color:var(--green);background:#0f1a0f}
+  .campaign-card.locked{opacity:0.4}
+  .cc-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:3px}
+  .cc-name{font-weight:700;font-size:11px}.cc-cost{font-size:10px;color:var(--gold);font-family:'Space Mono',monospace}
+  .cc-desc{font-size:9px;color:var(--text2);margin-bottom:4px}
+  .cc-status{font-size:9px;padding:2px 6px;border-radius:3px;display:inline-block}
+  .cc-active{background:#0a2a12;color:var(--green);border:1px solid var(--green)}
+  .cc-cooldown{background:#2a1808;color:var(--gold);border:1px solid var(--gold)}
+
   /* LAYOUT EDITOR */
   .layout-score{display:grid;grid-template-columns:repeat(4,1fr);gap:3px;margin:6px 0}
   .ls-item{text-align:center;padding:3px;background:var(--bg);border-radius:3px}
@@ -321,6 +335,7 @@
     <div class="header-stat"><div class="label">日付</div><div class="value" id="date"></div></div>
     <div class="header-stat"><div class="label">季節</div><div class="value" id="season-badge">🌸春</div></div>
     <div class="header-stat"><div class="label">業態</div><div class="value" id="format-badge">🍽総合</div></div>
+    <div class="header-stat"><div class="label">認知度</div><div class="value" id="awareness-badge">5</div></div>
     <div class="header-stat"><div class="label">立地</div><div class="value" id="location-badge" style="font-size:11px">📍初期</div></div>
     <div class="header-stat"><div class="label">資金</div><div class="value" id="money"></div></div>
     <div class="header-stat"><div class="label">評判</div><div class="value" id="reputation"></div></div>
@@ -367,6 +382,7 @@
     <button class="tab-btn" data-tab="recipe">錬成</button>
     <button class="tab-btn" data-tab="rival">ライバル</button>
     <button class="tab-btn" data-tab="upgrade">設備</button>
+    <button class="tab-btn" data-tab="marketing">集客</button>
     <button class="tab-btn" data-tab="layout">配置</button>
     <button class="tab-btn" data-tab="relocate">移転</button>
     <button class="tab-btn" data-tab="format">業態</button>

@@ -18,6 +18,7 @@ export class Simulation {
     this.locationWealthMult = 1.0;
     this.locationCompMult = 1.0;
     this.locationTrendMult = 1.0;
+    this.awarenessCoeff = 1.0; // marketing awareness coefficient
     this.customerTypes = [];
     this.shiftManager = null;
     this.skillManager = null;
@@ -75,6 +76,7 @@ export class Simulation {
     rate *= this.customerFlowMult * (1 + this.skillFlowBonus) * this.rivalFlowImpact;
     rate *= this.seasonFlowMult * this.formatRateMult;
     rate *= this.locationTrafficMult * this.locationCompMult * this.locationTrendMult;
+    rate *= this.awarenessCoeff; // awareness gates traffic
 
     const hall = this._getActive("hall");
     if (hall.length === 0) { rate *= 0.5; }

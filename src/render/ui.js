@@ -108,6 +108,13 @@ export class UI {
     document.getElementById("season-badge").style.color = season.color;
     const fmt = this.app.formatMgr.getCurrentFormat();
     document.getElementById("format-badge").textContent = `${fmt.icon}${fmt.name.replace(/レストラン|専門店|料理店/g, "")}`;
+    // Awareness
+    const mktSum = this.app.marketingMgr?.getSummary();
+    if (mktSum) {
+      const ab = document.getElementById("awareness-badge");
+      if (ab) { ab.textContent = `${mktSum.awareness}%`; ab.style.color = mktSum.awareness < 20 ? "#c94040" : mktSum.awareness < 50 ? "#d4a843" : "#4aaa6a"; }
+    }
+
     const locInfo = this.app.relocationMgr.getLocationInfo();
     const locBadge = document.getElementById("location-badge");
     if (locBadge) locBadge.textContent = `📍${locInfo.name.substring(0, 6)}`;
@@ -166,6 +173,7 @@ export class UI {
       case "recipe": this._tabRecipe(sp); break;
       case "rival": this._tabRival(sp); break;
       case "upgrade": this._tabUpgrade(sp); break;
+      case "marketing": this._tabMarketing(sp); break;
       case "layout": this._tabLayout(sp); break;
       case "relocate": this._tabRelocate(sp); break;
       case "format": this._tabFormat(sp); break;
@@ -679,6 +687,74 @@ export class UI {
       <div class="muted">・錬成で隠しメニューを開発し独自性を出す</div>
     </div>`;
     el.innerHTML = h;
+  }
+
+  // ─── MARKETING ───
+  _tabMarketing(el) {
+    const mm = this.app.marketingMgr;
+    if (!mm) { el.innerHTML = '<div class="muted">集客システム未初期化</div>'; return; }
+
+    const sum = mm.getSummary();
+    const campaigns = mm.getAvailableCampaigns();
+    const active = this.app.state.marketing.activeCampaigns;
+
+    let h = `<div class="side-section"><h4>📢 集客・マーケティング</h4>
+      <div class="mkt-summary">
+        <div class="mkt-stat"><div class="ms-label">認知度</div><div class="ms-val" style="color:${sum.awareness<20?"var(--red)":sum.awareness<50?"var(--gold)":"var(--green)"}">${sum.awareness}%</div></div>
+        <div class="mkt-stat"><div class="ms-label">ブランド力</div><div class="ms-val">${sum.brandPower}</div></div>
+        <div class="mkt-stat"><div class="ms-label">口コミ</div><div class="ms-val">${sum.reviewScore > 0 ? "★" + sum.reviewScore.toFixed(1) : "—"}<span style="font-size:8px;color:var(--text2)"> (${sum.reviewCount}件)</span></div></div>
+        <div class="mkt-stat"><div class="ms-label">集客係数</div><div class="ms-val">${sum.trafficCoeff}%</div></div>
+        <div class="mkt-stat"><div class="ms-label">実施中</div><div class="ms-val">${sum.activeCampaigns}件</div></div>
+        <div class="mkt-stat"><div class="ms-label">減衰</div><div class="ms-val">-0.4/日</div></div>
+      </div>
+    </div>`;
+
+    // Active campaigns
+    if (active.length > 0) {
+      h += `<div class="side-section"><h4>📊 実施中の施策</h4>`;
+      h += active.map(ac => `
+        <div class="campaign-card active">
+          <div class="cc-header"><span class="cc-name">${ac.name}</span><span class="cc-status cc-active">${ac.remainingDays === -1 ? "継続中" : `残${ac.remainingDays}日`}</span></div>
+          ${ac.type === "persistent" ? `<button class="btn btn-sm danger stop-campaign-btn" data-id="${ac.id}">停止</button>` : ""}
+        </div>`).join("");
+      h += `</div>`;
+    }
+
+    // Available campaigns by category
+    const cats = { analog: "アナログ集客", digital: "デジタル集客", price: "価格施策" };
+    for (const [catKey, catName] of Object.entries(cats)) {
+      const items = campaigns.filter(c => c.category === catKey);
+      if (items.length === 0) continue;
+
+      h += `<div class="side-section"><h4>${catName}</h4>`;
+      h += items.map(c => {
+        const isActive = c.isActive;
+        const disabled = c.locked || !c.canAfford || c.cooldownLeft > 0 || isActive;
+        return `<div class="campaign-card ${isActive?"active":""} ${c.locked?"locked":""}">
+          <div class="cc-header">
+            <span class="cc-name">${c.icon} ${c.name}</span>
+            <span class="cc-cost">${c.initialCost > 0 ? "¥" + c.initialCost.toLocaleString() : "無料"}</span>
+          </div>
+          <div class="cc-desc">${c.description}</div>
+          ${c.locked ? `<div class="muted">🔒 ${c.lockReason}</div>` : ""}
+          ${c.cooldownLeft > 0 ? `<span class="cc-status cc-cooldown">CD ${c.cooldownLeft}日</span>` : ""}
+          ${!disabled ? `<button class="btn btn-sm primary start-campaign-btn" data-id="${c.id}">実行</button>` : ""}
+          ${!c.canAfford && !c.locked && !isActive ? '<div class="muted" style="color:var(--red)">💰 資金不足</div>' : ""}
+        </div>`;
+      }).join("");
+      h += `</div>`;
+    }
+
+    h += `<div class="side-section"><div class="muted">💡 認知度が低いとお客さんが来ません。看板やチラシで認知度を上げましょう。何もしないと毎日-0.4ずつ減衰します。</div></div>`;
+
+    el.innerHTML = h;
+
+    for (const b of el.querySelectorAll(".start-campaign-btn")) {
+      b.addEventListener("click", () => this.app.startCampaign(b.dataset.id));
+    }
+    for (const b of el.querySelectorAll(".stop-campaign-btn")) {
+      b.addEventListener("click", () => this.app.stopCampaign(b.dataset.id));
+    }
   }
 
   // ─── LAYOUT ───
