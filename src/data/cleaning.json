@@ -1,0 +1,43 @@
+{
+  "areas": [
+    { "id": "hall", "name": "ホール", "icon": "🪑", "decayRate": 3, "customerImpact": 0.15, "description": "テーブル・床・窓の清掃" },
+    { "id": "kitchen", "name": "キッチン", "icon": "🍳", "decayRate": 5, "customerImpact": 0.05, "description": "コンロ・排水口・調理台の清掃" },
+    { "id": "toilet", "name": "トイレ", "icon": "🚻", "decayRate": 4, "customerImpact": 0.25, "description": "便器・床・手洗い場の清掃" },
+    { "id": "exterior", "name": "外回り", "icon": "🏠", "decayRate": 1, "customerImpact": 0.10, "description": "看板・入口・駐車場の清掃" }
+  ],
+  "tasks": [
+    { "id": "task_table_wipe", "area": "hall", "name": "テーブル拭き", "time": 10, "cleanAmount": 15, "difficulty": 1, "daily": true },
+    { "id": "task_floor_sweep", "area": "hall", "name": "床掃除", "time": 15, "cleanAmount": 12, "difficulty": 1, "daily": true },
+    { "id": "task_floor_mop", "area": "hall", "name": "モップがけ", "time": 15, "cleanAmount": 10, "difficulty": 1, "daily": true },
+    { "id": "task_window", "area": "hall", "name": "窓拭き", "time": 20, "cleanAmount": 8, "difficulty": 2, "daily": false },
+
+    { "id": "task_stove", "area": "kitchen", "name": "コンロ清掃", "time": 15, "cleanAmount": 12, "difficulty": 2, "daily": true },
+    { "id": "task_fryer", "area": "kitchen", "name": "フライヤー清掃", "time": 20, "cleanAmount": 10, "difficulty": 3, "daily": false },
+    { "id": "task_fridge", "area": "kitchen", "name": "冷蔵庫整理", "time": 20, "cleanAmount": 8, "difficulty": 2, "daily": false },
+    { "id": "task_drain", "area": "kitchen", "name": "排水口清掃", "time": 10, "cleanAmount": 10, "difficulty": 2, "daily": true },
+    { "id": "task_grease_trap", "area": "kitchen", "name": "グリストラップ清掃", "time": 30, "cleanAmount": 20, "difficulty": 4, "weekly": true, "skipPenalty": "pest_risk" },
+    { "id": "task_dishes", "area": "kitchen", "name": "食器洗い・片付け", "time": 20, "cleanAmount": 10, "difficulty": 1, "daily": true },
+
+    { "id": "task_toilet_clean", "area": "toilet", "name": "便器・床清掃", "time": 15, "cleanAmount": 20, "difficulty": 2, "daily": true },
+    { "id": "task_toilet_supply", "area": "toilet", "name": "消耗品補充", "time": 5, "cleanAmount": 5, "difficulty": 1, "daily": true },
+
+    { "id": "task_entrance", "area": "exterior", "name": "入口掃き掃除", "time": 10, "cleanAmount": 15, "difficulty": 1, "daily": true },
+    { "id": "task_sign_clean", "area": "exterior", "name": "看板清掃", "time": 10, "cleanAmount": 10, "difficulty": 1, "daily": false },
+    { "id": "task_trash", "area": "exterior", "name": "ゴミ出し", "time": 10, "cleanAmount": 5, "difficulty": 1, "daily": true, "dayRestriction": [1,3,5] },
+
+    { "id": "task_duct", "area": "kitchen", "name": "換気扇・ダクト清掃", "time": 0, "cleanAmount": 25, "difficulty": 5, "monthly": true, "outsourceCost": 15000 },
+    { "id": "task_pest_control", "area": "kitchen", "name": "害虫駆除", "time": 0, "cleanAmount": 15, "difficulty": 5, "monthly": true, "outsourceCost": 10000 }
+  ],
+  "healthInspection": {
+    "baseChance": 0.02,
+    "failThreshold": 40,
+    "shutdownDays": { "minor": 1, "major": 3, "critical": 7 },
+    "penaltyReputation": { "minor": -5, "major": -15, "critical": -30 }
+  },
+  "pestRisk": {
+    "baseChance": 0.01,
+    "dirtyMultiplier": 3,
+    "reputationHit": -10,
+    "costToRemove": 20000
+  }
+}

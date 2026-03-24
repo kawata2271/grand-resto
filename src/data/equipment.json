@@ -1,0 +1,20 @@
+{
+  "equipment": [
+    { "id": "eq_fridge", "name": "業務用冷蔵庫", "category": "kitchen", "baseCost": 200000, "monthlyCost": 3000, "durability": 365, "failureCost": 50000, "failureEffect": "food_spoil", "description": "食材保管の生命線。故障すると在庫全損", "icon": "🧊" },
+    { "id": "eq_freezer", "name": "業務用冷凍庫", "category": "kitchen", "baseCost": 250000, "monthlyCost": 4000, "durability": 365, "failureCost": 40000, "failureEffect": "frozen_spoil", "description": "冷凍食材の保管。霜取り必要", "icon": "❄️" },
+    { "id": "eq_stove", "name": "ガスコンロ", "category": "kitchen", "baseCost": 150000, "monthlyCost": 5000, "durability": 300, "failureCost": 30000, "failureEffect": "cook_speed_down", "speedBonus": 0.1, "description": "調理の要。口数で同時調理数が変わる", "icon": "🔥" },
+    { "id": "eq_fryer", "name": "フライヤー", "category": "kitchen", "baseCost": 100000, "monthlyCost": 2000, "durability": 200, "failureCost": 20000, "failureEffect": "menu_limit", "description": "揚げ物メニューに必須", "icon": "🍟" },
+    { "id": "eq_oven", "name": "オーブン", "category": "kitchen", "baseCost": 180000, "monthlyCost": 3000, "durability": 300, "failureCost": 35000, "failureEffect": "menu_limit", "speedBonus": 0.05, "description": "グラタン・パン・ケーキに必須", "icon": "🔲" },
+    { "id": "eq_dishwasher", "name": "食洗機", "category": "kitchen", "baseCost": 120000, "monthlyCost": 2000, "durability": 250, "failureCost": 25000, "failureEffect": "clean_penalty", "description": "洗い物の効率化。故障すると手洗い", "icon": "🫧" },
+    { "id": "eq_ice_machine", "name": "製氷機", "category": "kitchen", "baseCost": 80000, "monthlyCost": 1500, "durability": 200, "failureCost": 15000, "failureEffect": "drink_penalty", "description": "ドリンク提供に必須", "icon": "🧊" },
+    { "id": "eq_aircon", "name": "エアコン", "category": "hall", "baseCost": 300000, "monthlyCost": 8000, "durability": 365, "failureCost": 50000, "failureEffect": "satisfaction_down", "description": "快適温度の維持。故障で客の不満爆増", "icon": "❄️" },
+    { "id": "eq_lighting", "name": "照明設備", "category": "hall", "baseCost": 50000, "monthlyCost": 2000, "durability": 500, "failureCost": 10000, "failureEffect": "aesthetic_down", "description": "雰囲気を左右する重要設備", "icon": "💡" },
+    { "id": "eq_pos", "name": "POSレジ", "category": "hall", "baseCost": 100000, "monthlyCost": 3000, "durability": 400, "failureCost": 20000, "failureEffect": "checkout_slow", "description": "会計処理の効率化", "icon": "🖥️" }
+  ],
+  "maintenanceSchedule": {
+    "preventiveCost": 0.1,
+    "preventiveExtension": 0.3,
+    "failureChanceBase": 0.003,
+    "failureChancePerDayOverdue": 0.01
+  }
+}

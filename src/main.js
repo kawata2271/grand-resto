@@ -19,6 +19,9 @@ import { AbilityManager } from "./systems/abilityManager.js";
 import { RelocationManager } from "./systems/relocationManager.js";
 import { FurnitureManager } from "./systems/furniture.js";
 import { MarketingManager } from "./systems/marketing.js";
+import { CleaningManager } from "./systems/cleaning.js";
+import { PreparationManager } from "./systems/preparation.js";
+import { EquipmentManager } from "./systems/equipment.js";
 import { EndingManager } from "./systems/endingManager.js";
 import { TownManager } from "./systems/townManager.js";
 import { EffectManager } from "./render/effects.js";
@@ -27,7 +30,7 @@ import { saveGame, loadGame, hasSave, deleteSave } from "./save/saveManager.js";
 
 class GameApp {
   async init() {
-    const [config, menus, staffTemplates, eventsData, upgrades, customersData, skillsData, rivalsData, recipesData, achievementsData, seasonsData, formatsData, townsData, helpData, abilitiesData, locationsData, marketingData] = await Promise.all([
+    const [config, menus, staffTemplates, eventsData, upgrades, customersData, skillsData, rivalsData, recipesData, achievementsData, seasonsData, formatsData, townsData, helpData, abilitiesData, locationsData, marketingData, cleaningData, ingredientsData, equipmentData] = await Promise.all([
       fetch("./src/data/config.json").then(r => r.json()),
       fetch("./src/data/menus.json").then(r => r.json()),
       fetch("./src/data/staff-templates.json").then(r => r.json()),
@@ -44,7 +47,10 @@ class GameApp {
       fetch("./src/data/help.json").then(r => r.json()),
       fetch("./src/data/abilities.json").then(r => r.json()),
       fetch("./src/data/locations.json").then(r => r.json()),
-      fetch("./src/data/marketing.json").then(r => r.json())
+      fetch("./src/data/marketing.json").then(r => r.json()),
+      fetch("./src/data/cleaning.json").then(r => r.json()),
+      fetch("./src/data/ingredients.json").then(r => r.json()),
+      fetch("./src/data/equipment.json").then(r => r.json())
     ]);
 
     this.config = config;
@@ -79,6 +85,9 @@ class GameApp {
     this.relocationMgr = new RelocationManager(this.state, locationsData);
     this.furnitureMgr = new FurnitureManager(this.state);
     this.marketingMgr = new MarketingManager(this.state, marketingData);
+    this.cleaningMgr = new CleaningManager(this.state, cleaningData);
+    this.prepMgr = new PreparationManager(this.state, ingredientsData);
+    this.equipmentMgr = new EquipmentManager(this.state, equipmentData);
     this.endingMgr = new EndingManager(this.state, this.achievementMgr);
 
     // Bridge: sim uses furniture tables instead of old tables
@@ -200,6 +209,18 @@ class GameApp {
         this.ui.addLog(`📝 口コミ投稿: ${stars}（平均${review.newAvg.toFixed(1)}点 / ${review.totalReviews}件）`);
       }
     }
+
+    // Cleaning daily update
+    const cleanEvts = this.cleaningMgr.dailyUpdate();
+    for (const e of cleanEvts) this.ui.addLog(e);
+
+    // Inventory daily update
+    const invEvts = this.prepMgr.dailyUpdate();
+    for (const e of invEvts) this.ui.addLog(e);
+
+    // Equipment daily update
+    const eqEvts = this.equipmentMgr.dailyUpdate();
+    for (const e of eqEvts) this.ui.addLog(e);
 
     // Furniture maintenance
     const isBusy = (this.state.todayLog.customers || 0) > 30;

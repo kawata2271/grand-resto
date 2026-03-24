@@ -34,6 +34,9 @@ const ASSETS = [
   "./src/systems/furniture.js",
   "./src/render/floor-editor.js",
   "./src/systems/marketing.js",
+  "./src/systems/cleaning.js",
+  "./src/systems/preparation.js",
+  "./src/systems/equipment.js",
   "./src/data/config.json",
   "./src/data/menus.json",
   "./src/data/staff-templates.json",
@@ -49,7 +52,10 @@ const ASSETS = [
   "./src/data/towns.json",
   "./src/data/help.json",
   "./src/data/locations.json",
-  "./src/data/marketing.json"
+  "./src/data/marketing.json",
+  "./src/data/cleaning.json",
+  "./src/data/ingredients.json",
+  "./src/data/equipment.json"
 ];
 
 self.addEventListener("install", (e) => {

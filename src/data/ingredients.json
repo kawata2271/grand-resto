@@ -1,0 +1,33 @@
+{
+  "ingredients": [
+    { "id": "rice", "name": "米", "unit": "kg", "basePrice": 400, "shelfLife": 30, "category": "grain" },
+    { "id": "flour", "name": "小麦粉", "unit": "kg", "basePrice": 200, "shelfLife": 60, "category": "grain" },
+    { "id": "noodle", "name": "麺", "unit": "食", "basePrice": 80, "shelfLife": 3, "category": "grain" },
+    { "id": "beef", "name": "牛肉", "unit": "kg", "basePrice": 2500, "shelfLife": 3, "category": "meat" },
+    { "id": "pork", "name": "豚肉", "unit": "kg", "basePrice": 1200, "shelfLife": 3, "category": "meat" },
+    { "id": "chicken", "name": "鶏肉", "unit": "kg", "basePrice": 800, "shelfLife": 2, "category": "meat" },
+    { "id": "fish", "name": "鮮魚", "unit": "kg", "basePrice": 2000, "shelfLife": 1, "category": "seafood" },
+    { "id": "shrimp", "name": "海老", "unit": "kg", "basePrice": 3000, "shelfLife": 2, "category": "seafood" },
+    { "id": "egg", "name": "卵", "unit": "パック", "basePrice": 250, "shelfLife": 14, "category": "dairy" },
+    { "id": "milk", "name": "牛乳", "unit": "L", "basePrice": 200, "shelfLife": 7, "category": "dairy" },
+    { "id": "vegetable", "name": "野菜セット", "unit": "kg", "basePrice": 500, "shelfLife": 5, "category": "vegetable" },
+    { "id": "oil", "name": "調理油", "unit": "L", "basePrice": 300, "shelfLife": 90, "category": "seasoning" },
+    { "id": "seasoning", "name": "調味料セット", "unit": "セット", "basePrice": 1000, "shelfLife": 60, "category": "seasoning" },
+    { "id": "dashi", "name": "出汁パック", "unit": "袋", "basePrice": 150, "shelfLife": 30, "category": "seasoning" }
+  ],
+  "suppliers": [
+    { "id": "standard", "name": "一般卸", "priceMultiplier": 1.0, "qualityMultiplier": 1.0, "deliveryDays": 1, "minOrder": 0 },
+    { "id": "premium", "name": "高級食材商", "priceMultiplier": 1.5, "qualityMultiplier": 1.3, "deliveryDays": 1, "minOrder": 10000 },
+    { "id": "budget", "name": "業務用卸", "priceMultiplier": 0.8, "qualityMultiplier": 0.9, "deliveryDays": 2, "minOrder": 5000 },
+    { "id": "emergency", "name": "緊急発注", "priceMultiplier": 2.0, "qualityMultiplier": 1.0, "deliveryDays": 0, "minOrder": 0 }
+  ],
+  "prepTasks": [
+    { "id": "prep_veg_cut", "name": "野菜カット", "ingredient": "vegetable", "time": 20, "prepPerUnit": 5, "skillBonus": "dexterity" },
+    { "id": "prep_meat", "name": "肉の下処理", "ingredient": "pork", "time": 15, "prepPerUnit": 3, "skillBonus": "dexterity" },
+    { "id": "prep_dashi", "name": "出汁取り", "ingredient": "dashi", "time": 30, "prepPerUnit": 10, "skillBonus": "sense" },
+    { "id": "prep_rice", "name": "米炊き", "ingredient": "rice", "time": 25, "prepPerUnit": 8, "skillBonus": "memory" },
+    { "id": "prep_sauce", "name": "ソース仕込み", "ingredient": "seasoning", "time": 20, "prepPerUnit": 6, "skillBonus": "sense" }
+  ],
+  "wasteDisposalCostPerKg": 50,
+  "makanaiMoraleBonus": 3
+}
