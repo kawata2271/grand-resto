@@ -1,0 +1,41 @@
+{
+  "unlockMoney": 500000,
+  "locations": [
+    { "id": 1, "name": "銀座メインストリート", "category": "premium", "description": "日本一の繁華街。一流ブランドが軒を連ねる超一等地", "landCost": 5000000, "baseTraffic": 95, "wealthLevel": 10, "crimeRate": 1, "competition": 9, "trend": 8, "specialTrait": "接待客が常に来店。客単価+50%" },
+    { "id": 2, "name": "六本木タワー前", "category": "premium", "description": "外資系企業と高級レストランが集まるインターナショナルエリア", "landCost": 4500000, "baseTraffic": 88, "wealthLevel": 9, "crimeRate": 3, "competition": 8, "trend": 9, "specialTrait": "外国人客30%。ディナー売上+40%" },
+    { "id": 3, "name": "表参道大通り", "category": "premium", "description": "ファッションとグルメの最先端。SNS映えが命の激戦区", "landCost": 4000000, "baseTraffic": 90, "wealthLevel": 9, "crimeRate": 1, "competition": 9, "trend": 10, "specialTrait": "SNS拡散力2倍。トレンド感度最高" },
+    { "id": 4, "name": "日本橋高級エリア", "category": "premium", "description": "老舗と新店が共存する大人の美食街", "landCost": 3800000, "baseTraffic": 82, "wealthLevel": 10, "crimeRate": 0, "competition": 7, "trend": 6, "specialTrait": "和食の評判+30%。常連がつきやすい" },
+
+    { "id": 5, "name": "歌舞伎町裏通り", "category": "nightlife", "description": "眠らない街。深夜帯の集客は圧倒的だが治安は不安", "landCost": 1500000, "baseTraffic": 85, "wealthLevel": 5, "crimeRate": 8, "competition": 7, "trend": 6, "specialTrait": "深夜帯の客足3倍。酔客イベント多発" },
+    { "id": 6, "name": "中洲屋台通り", "category": "nightlife", "description": "博多の夜を彩る屋台文化の中心地。活気に溢れる", "landCost": 1200000, "baseTraffic": 78, "wealthLevel": 4, "crimeRate": 5, "competition": 8, "trend": 7, "specialTrait": "中華・ラーメン系の人気+40%。観光客多い" },
+    { "id": 7, "name": "すすきの繁華街", "category": "nightlife", "description": "北海道最大の歓楽街。海鮮メニューに強い土地柄", "landCost": 1000000, "baseTraffic": 72, "wealthLevel": 5, "crimeRate": 6, "competition": 6, "trend": 5, "specialTrait": "海鮮系原価-20%。冬の集客+30%" },
+    { "id": 8, "name": "道頓堀川沿い", "category": "nightlife", "description": "大阪ミナミの象徴。食い倒れの街は飲食の激戦地", "landCost": 1800000, "baseTraffic": 88, "wealthLevel": 5, "crimeRate": 4, "competition": 9, "trend": 8, "specialTrait": "ボリュームメニュー人気+30%。観光客多い" },
+    { "id": 9, "name": "栄・錦三丁目", "category": "nightlife", "description": "名古屋最大の繁華街。ビジネス客と夜遊び客が混在", "landCost": 1300000, "baseTraffic": 75, "wealthLevel": 6, "crimeRate": 5, "competition": 6, "trend": 5, "specialTrait": "味噌カツ等ご当地メニューにボーナス" },
+    { "id": 10, "name": "天神地下街前", "category": "nightlife", "description": "福岡の中心。地下街直結で雨の日も客足が落ちない", "landCost": 1400000, "baseTraffic": 80, "wealthLevel": 6, "crimeRate": 3, "competition": 7, "trend": 7, "specialTrait": "天候イベントの影響を50%軽減" },
+
+    { "id": 11, "name": "丸の内ビジネス街", "category": "office", "description": "日本経済の中心。平日ランチは戦場、週末は閑散", "landCost": 2500000, "baseTraffic": 80, "wealthLevel": 8, "crimeRate": 0, "competition": 7, "trend": 5, "specialTrait": "平日ランチ客足2倍。週末は-50%" },
+    { "id": 12, "name": "西新宿オフィス群", "category": "office", "description": "超高層ビルが立ち並ぶオフィス街。サラリーマンの胃袋を掴め", "landCost": 2000000, "baseTraffic": 75, "wealthLevel": 7, "crimeRate": 1, "competition": 6, "trend": 4, "specialTrait": "サラリーマン客+50%。回転率重視" },
+    { "id": 13, "name": "品川駅前", "category": "office", "description": "新幹線の玄関口。出張客と通勤客で朝から晩まで人が途切れない", "landCost": 2200000, "baseTraffic": 82, "wealthLevel": 7, "crimeRate": 1, "competition": 6, "trend": 6, "specialTrait": "朝食需要あり。テイクアウト人気" },
+    { "id": 14, "name": "大手町金融街", "category": "office", "description": "銀行と証券会社が密集。接待需要が高い硬派なエリア", "landCost": 2800000, "baseTraffic": 70, "wealthLevel": 9, "crimeRate": 0, "competition": 5, "trend": 3, "specialTrait": "接待利用+60%。高級メニュー注文率UP" },
+    { "id": 15, "name": "横浜みなとみらい", "category": "office", "description": "海を望むオシャレエリア。IT企業とデートスポットが共存", "landCost": 1800000, "baseTraffic": 72, "wealthLevel": 7, "crimeRate": 1, "competition": 5, "trend": 7, "specialTrait": "カップル客+40%。夕暮れ時の集客UP" },
+
+    { "id": 16, "name": "谷根千商店街", "category": "residential", "description": "下町情緒溢れる散歩道。常連との深い繋がりが魅力", "landCost": 500000, "baseTraffic": 45, "wealthLevel": 4, "crimeRate": 1, "competition": 3, "trend": 5, "specialTrait": "常連率2倍。相性ボーナス+20%" },
+    { "id": 17, "name": "武蔵小杉タワマンエリア", "category": "residential", "description": "若いファミリー層が多い新興住宅地。子連れ需要が高い", "landCost": 800000, "baseTraffic": 55, "wealthLevel": 6, "crimeRate": 1, "competition": 3, "trend": 6, "specialTrait": "ファミリー客+60%。お子様メニュー人気" },
+    { "id": 18, "name": "下北沢路地裏", "category": "residential", "description": "若者文化の発信地。個性的な店が愛される自由な街", "landCost": 700000, "baseTraffic": 60, "wealthLevel": 4, "crimeRate": 2, "competition": 5, "trend": 8, "specialTrait": "学生・若者客+50%。SNS拡散力UP" },
+    { "id": 19, "name": "吉祥寺商店街", "category": "residential", "description": "住みたい街ランキング常連。幅広い客層が魅力", "landCost": 1000000, "baseTraffic": 65, "wealthLevel": 6, "crimeRate": 1, "competition": 5, "trend": 6, "specialTrait": "全客層バランス良。安定経営向き" },
+    { "id": 20, "name": "巣鴨地蔵通り", "category": "residential", "description": "おばあちゃんの原宿。高齢者向けメニューが鍵", "landCost": 400000, "baseTraffic": 50, "wealthLevel": 3, "crimeRate": 0, "competition": 3, "trend": 2, "specialTrait": "高齢者客+80%。和食人気+30%" },
+
+    { "id": 21, "name": "浅草雷門前", "category": "tourist", "description": "東京を代表する観光スポット。外国人観光客が溢れる", "landCost": 2000000, "baseTraffic": 85, "wealthLevel": 5, "crimeRate": 3, "competition": 8, "trend": 7, "specialTrait": "観光客+100%。週末売上+50%" },
+    { "id": 22, "name": "京都祇園", "category": "tourist", "description": "千年の都。和の趣が求められる格式高い観光地", "landCost": 2500000, "baseTraffic": 75, "wealthLevel": 8, "crimeRate": 1, "competition": 6, "trend": 6, "specialTrait": "和食評判+50%。外国人VIP来店確率UP" },
+    { "id": 23, "name": "鎌倉小町通り", "category": "tourist", "description": "古都の人気散策路。食べ歩きとカフェ文化が根付く", "landCost": 1200000, "baseTraffic": 70, "wealthLevel": 6, "crimeRate": 1, "competition": 6, "trend": 7, "specialTrait": "デザート・テイクアウト人気+40%" },
+    { "id": 24, "name": "沖縄国際通り", "category": "tourist", "description": "南国リゾートの目抜き通り。季節変動が激しい", "landCost": 800000, "baseTraffic": 65, "wealthLevel": 4, "crimeRate": 2, "competition": 5, "trend": 7, "specialTrait": "夏の集客+80%。冬は-30%" },
+    { "id": 25, "name": "日光門前町", "category": "tourist", "description": "世界遺産の入口。修学旅行と外国人観光客が主力", "landCost": 600000, "baseTraffic": 55, "wealthLevel": 4, "crimeRate": 0, "competition": 3, "trend": 4, "specialTrait": "団体客+60%。紅葉シーズン大繁盛" },
+
+    { "id": 26, "name": "国道16号沿いロードサイド", "category": "suburban", "description": "車社会の大通り。駐車場完備が必須の大箱経営地", "landCost": 300000, "baseTraffic": 50, "wealthLevel": 4, "crimeRate": 2, "competition": 4, "trend": 2, "specialTrait": "ファミリー客主体。大テーブル需要高" },
+    { "id": 27, "name": "郊外ニュータウン", "category": "suburban", "description": "新興住宅地。若いファミリーが多く安定した需要", "landCost": 200000, "baseTraffic": 40, "wealthLevel": 5, "crimeRate": 1, "competition": 2, "trend": 3, "specialTrait": "最低コスト。リスク最小の安定経営" },
+    { "id": 28, "name": "高速SA隣接地", "category": "suburban", "description": "サービスエリアの隣。通過客が立ち寄るユニーク立地", "landCost": 250000, "baseTraffic": 55, "wealthLevel": 4, "crimeRate": 1, "competition": 2, "trend": 1, "specialTrait": "GW・お盆・年末の集客が爆発" },
+
+    { "id": 29, "name": "離島の港町", "category": "special", "description": "海の幸が目の前。食材コストは安いが集客は不安定", "landCost": 150000, "baseTraffic": 30, "wealthLevel": 3, "crimeRate": 0, "competition": 1, "trend": 3, "specialTrait": "海鮮原価-40%。天候で集客が大きく変動" },
+    { "id": 30, "name": "大学キャンパス前", "category": "special", "description": "学生1万人の胃袋を狙え。低単価だが圧倒的な客数", "landCost": 400000, "baseTraffic": 80, "wealthLevel": 2, "crimeRate": 2, "competition": 6, "trend": 5, "specialTrait": "学生客+200%。夏休み・春休みは-60%" }
+  ]
+}

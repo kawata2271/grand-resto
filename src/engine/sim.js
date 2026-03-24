@@ -14,6 +14,10 @@ export class Simulation {
     this.seasonFlowMult = 1.0;
     this.seasonCostMult = 1.0;
     this.formatRateMult = 1.0;
+    this.locationTrafficMult = 1.0;
+    this.locationWealthMult = 1.0;
+    this.locationCompMult = 1.0;
+    this.locationTrendMult = 1.0;
     this.customerTypes = [];
     this.shiftManager = null;
     this.skillManager = null;
@@ -70,6 +74,7 @@ export class Simulation {
     rate *= (0.5 + this.state.restaurant.reputation / 100);
     rate *= this.customerFlowMult * (1 + this.skillFlowBonus) * this.rivalFlowImpact;
     rate *= this.seasonFlowMult * this.formatRateMult;
+    rate *= this.locationTrafficMult * this.locationCompMult * this.locationTrendMult;
 
     const hall = this._getActive("hall");
     if (hall.length === 0) { rate *= 0.5; }

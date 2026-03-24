@@ -29,6 +29,7 @@ const ASSETS = [
   "./src/systems/tutorialManager.js",
   "./src/systems/endingManager.js",
   "./src/systems/townManager.js",
+  "./src/systems/relocationManager.js",
   "./src/data/config.json",
   "./src/data/menus.json",
   "./src/data/staff-templates.json",
@@ -42,7 +43,8 @@ const ASSETS = [
   "./src/data/seasons.json",
   "./src/data/formats.json",
   "./src/data/towns.json",
-  "./src/data/help.json"
+  "./src/data/help.json",
+  "./src/data/locations.json"
 ];
 
 self.addEventListener("install", (e) => {

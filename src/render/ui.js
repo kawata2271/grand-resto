@@ -96,6 +96,9 @@ export class UI {
     document.getElementById("season-badge").style.color = season.color;
     const fmt = this.app.formatMgr.getCurrentFormat();
     document.getElementById("format-badge").textContent = `${fmt.icon}${fmt.name.replace(/レストラン|専門店|料理店/g, "")}`;
+    const locInfo = this.app.relocationMgr.getLocationInfo();
+    const locBadge = document.getElementById("location-badge");
+    if (locBadge) locBadge.textContent = `📍${locInfo.name.substring(0, 6)}`;
 
     this._renderTables();
     this._renderActiveEffects();
@@ -151,6 +154,7 @@ export class UI {
       case "recipe": this._tabRecipe(sp); break;
       case "rival": this._tabRival(sp); break;
       case "upgrade": this._tabUpgrade(sp); break;
+      case "relocate": this._tabRelocate(sp); break;
       case "format": this._tabFormat(sp); break;
       case "chart": this._tabChart(sp); break;
       case "achieve": this._tabAchieve(sp); break;
@@ -662,6 +666,72 @@ export class UI {
       <div class="muted">・錬成で隠しメニューを開発し独自性を出す</div>
     </div>`;
     el.innerHTML = h;
+  }
+
+  // ─── RELOCATE ───
+  _tabRelocate(el) {
+    const rm = this.app.relocationMgr;
+    if (!this._locFilter) this._locFilter = "all";
+
+    if (!rm.isUnlocked()) {
+      el.innerHTML = `<div class="side-section"><h4>🏠 店舗移転</h4><div class="muted">所持金が¥${rm.unlockMoney.toLocaleString()}以上で解放されます</div></div>`;
+      return;
+    }
+
+    const current = rm.getCurrentLocation();
+    const locs = rm.getAvailableLocations();
+    const cats = ["all", "premium", "nightlife", "office", "residential", "tourist", "suburban", "special"];
+    const filtered = this._locFilter === "all" ? locs : locs.filter(l => l.category === this._locFilter);
+
+    let h = `<div class="side-section"><h4>🏠 店舗移転</h4>
+      <div class="muted">現在地: ${current ? `${current.name}（${rm.getCategoryLabel(current.category)}）` : "初期立地"}</div>
+    </div>`;
+
+    // Filter buttons
+    h += `<div class="loc-filter">`;
+    h += cats.map(c => `<button class="loc-filter-btn ${this._locFilter===c?"active":""}" data-cat="${c}">${c==="all"?"全て":rm.getCategoryLabel(c)}</button>`).join("");
+    h += `</div>`;
+
+    // Location cards
+    h += filtered.map(l => {
+      const color = rm.getCategoryColor(l.category);
+      return `<div class="loc-card ${l.isCurrent?"current":""} ${!l.canAfford&&!l.isCurrent?"cant-afford":""}">
+        <div class="loc-card-header">
+          <span class="loc-name">${l.name}</span>
+          <span class="loc-cat" style="background:${color}20;color:${color};border:1px solid ${color}">${rm.getCategoryLabel(l.category)}</span>
+        </div>
+        <div class="loc-desc">${l.description}</div>
+        <div class="loc-stats">
+          <div class="loc-stat"><div class="loc-stat-label">集客</div><div class="loc-stat-val">${l.baseTraffic}</div></div>
+          <div class="loc-stat"><div class="loc-stat-label">客層</div><div class="loc-stat-val">${l.wealthLevel}</div></div>
+          <div class="loc-stat"><div class="loc-stat-label">競合</div><div class="loc-stat-val">${l.competition}</div></div>
+          <div class="loc-stat"><div class="loc-stat-label">治安</div><div class="loc-stat-val">${10-l.crimeRate}</div></div>
+          <div class="loc-stat"><div class="loc-stat-label">流行</div><div class="loc-stat-val">${l.trend}</div></div>
+          <div class="loc-stat"><div class="loc-stat-label">費用</div><div class="loc-stat-val">¥${(l.landCost/10000).toFixed(0)}万</div></div>
+        </div>
+        <div class="loc-special">${l.specialTrait}</div>
+        ${l.isCurrent ? '<div class="muted" style="margin-top:4px;color:var(--green)">📍 現在地</div>'
+          : !l.canAfford ? '<div class="muted" style="margin-top:4px;color:var(--red)">💰 資金不足</div>'
+          : `<button class="btn btn-sm primary relocate-btn" data-id="${l.id}" style="margin-top:4px;width:100%">🏠 ここに移転する（¥${l.landCost.toLocaleString()}）</button>`}
+      </div>`;
+    }).join("");
+
+    el.innerHTML = h;
+
+    // Bind filter buttons
+    for (const b of el.querySelectorAll(".loc-filter-btn")) {
+      b.addEventListener("click", () => { this._locFilter = b.dataset.cat; this.render(); });
+    }
+
+    // Bind relocate buttons
+    for (const b of el.querySelectorAll(".relocate-btn")) {
+      b.addEventListener("click", () => {
+        const loc = rm.locations.find(l => l.id === parseInt(b.dataset.id));
+        if (loc && confirm(`${loc.name}に移転しますか？\n費用: ¥${loc.landCost.toLocaleString()}\n※評判が大幅にリセットされます`)) {
+          this.app.relocate(parseInt(b.dataset.id));
+        }
+      });
+    }
   }
 
   // ─── FORMAT ───

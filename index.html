@@ -232,6 +232,24 @@
   .ts-btn-small:hover{color:var(--red)}
   .ts-footer{font-family:'Space Mono',monospace;font-size:10px;color:var(--text2);margin-top:32px;letter-spacing:1px;opacity:.5}
 
+  /* RELOCATION */
+  .loc-card{padding:8px;background:var(--bg3);border-radius:6px;margin-bottom:6px;border:1px solid var(--border);cursor:pointer;transition:all .15s}
+  .loc-card:hover{border-color:var(--gold)}
+  .loc-card.current{border-color:var(--green);background:#0f1a0f}
+  .loc-card.cant-afford{opacity:0.5}
+  .loc-card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:3px}
+  .loc-name{font-weight:700;font-size:12px}
+  .loc-cat{font-size:9px;padding:1px 6px;border-radius:3px;font-weight:700}
+  .loc-desc{font-size:10px;color:var(--text2);margin-bottom:4px}
+  .loc-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-bottom:4px}
+  .loc-stat{text-align:center;padding:2px;background:var(--bg);border-radius:3px;font-size:9px}
+  .loc-stat-label{color:var(--text2)}.loc-stat-val{font-weight:700;font-family:'Space Mono',monospace}
+  .loc-cost{font-size:11px;color:var(--gold);font-weight:700}
+  .loc-special{font-size:9px;color:var(--purple);margin-top:2px;font-style:italic}
+  .loc-filter{display:flex;gap:3px;flex-wrap:wrap;margin-bottom:8px}
+  .loc-filter-btn{font-size:9px;padding:2px 6px;background:var(--bg);border:1px solid var(--border);border-radius:3px;cursor:pointer;color:var(--text2);font-family:'Noto Sans JP',sans-serif}
+  .loc-filter-btn:hover,.loc-filter-btn.active{border-color:var(--gold);color:var(--gold2)}
+
   /* MOBILE RESPONSIVE */
   @media(max-width:800px){
     .main{grid-template-columns:1fr;grid-template-rows:auto auto auto 1fr}
@@ -287,6 +305,7 @@
     <div class="header-stat"><div class="label">日付</div><div class="value" id="date"></div></div>
     <div class="header-stat"><div class="label">季節</div><div class="value" id="season-badge">🌸春</div></div>
     <div class="header-stat"><div class="label">業態</div><div class="value" id="format-badge">🍽総合</div></div>
+    <div class="header-stat"><div class="label">立地</div><div class="value" id="location-badge" style="font-size:11px">📍初期</div></div>
     <div class="header-stat"><div class="label">資金</div><div class="value" id="money"></div></div>
     <div class="header-stat"><div class="label">評判</div><div class="value" id="reputation"></div></div>
   </div>
@@ -332,6 +351,7 @@
     <button class="tab-btn" data-tab="recipe">錬成</button>
     <button class="tab-btn" data-tab="rival">ライバル</button>
     <button class="tab-btn" data-tab="upgrade">設備</button>
+    <button class="tab-btn" data-tab="relocate">移転</button>
     <button class="tab-btn" data-tab="format">業態</button>
     <button class="tab-btn" data-tab="chart">📈</button>
     <button class="tab-btn" data-tab="achieve">実績</button>

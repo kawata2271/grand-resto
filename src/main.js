@@ -16,6 +16,7 @@ import { SeasonManager } from "./systems/seasonManager.js";
 import { FormatManager } from "./systems/formatManager.js";
 import { TutorialManager } from "./systems/tutorialManager.js";
 import { AbilityManager } from "./systems/abilityManager.js";
+import { RelocationManager } from "./systems/relocationManager.js";
 import { EndingManager } from "./systems/endingManager.js";
 import { TownManager } from "./systems/townManager.js";
 import { EffectManager } from "./render/effects.js";
@@ -24,7 +25,7 @@ import { saveGame, loadGame, hasSave, deleteSave } from "./save/saveManager.js";
 
 class GameApp {
   async init() {
-    const [config, menus, staffTemplates, eventsData, upgrades, customersData, skillsData, rivalsData, recipesData, achievementsData, seasonsData, formatsData, townsData, helpData, abilitiesData] = await Promise.all([
+    const [config, menus, staffTemplates, eventsData, upgrades, customersData, skillsData, rivalsData, recipesData, achievementsData, seasonsData, formatsData, townsData, helpData, abilitiesData, locationsData] = await Promise.all([
       fetch("./src/data/config.json").then(r => r.json()),
       fetch("./src/data/menus.json").then(r => r.json()),
       fetch("./src/data/staff-templates.json").then(r => r.json()),
@@ -39,7 +40,8 @@ class GameApp {
       fetch("./src/data/formats.json").then(r => r.json()),
       fetch("./src/data/towns.json").then(r => r.json()),
       fetch("./src/data/help.json").then(r => r.json()),
-      fetch("./src/data/abilities.json").then(r => r.json())
+      fetch("./src/data/abilities.json").then(r => r.json()),
+      fetch("./src/data/locations.json").then(r => r.json())
     ]);
 
     this.config = config;
@@ -71,6 +73,7 @@ class GameApp {
     this.formatMgr = new FormatManager(this.state, formatsData);
     this.tutorialMgr = new TutorialManager(this.state);
     this.abilityMgr = new AbilityManager(this.state, abilitiesData);
+    this.relocationMgr = new RelocationManager(this.state, locationsData);
     this.endingMgr = new EndingManager(this.state, this.achievementMgr);
     this.townMgr = new TownManager(this.state, townsData, config);
     this.effects = new EffectManager();
@@ -105,6 +108,10 @@ class GameApp {
     this.sim.seasonFlowMult = this.seasonMgr.getCustomerFlowMult();
     this.sim.seasonCostMult = this.seasonMgr.getIngredientCostMult();
     this.sim.formatRateMult = this.formatMgr.getCustomerRateMult();
+    this.sim.locationTrafficMult = this.relocationMgr.getTrafficMultiplier();
+    this.sim.locationWealthMult = this.relocationMgr.getWealthMultiplier();
+    this.sim.locationCompMult = this.relocationMgr.getCompetitionPenalty();
+    this.sim.locationTrendMult = this.relocationMgr.getTrendBonus();
   }
 
   doTick() {
@@ -169,6 +176,17 @@ class GameApp {
       for (const s of this.state.staff) {
         if (s.shift !== "off") s.morale = Math.min(100, Math.max(0, s.morale + Math.round(abilityTeam.teamMorale)));
       }
+    }
+
+    // Location
+    this.relocationMgr.dailyUpdate();
+    const crimeChance = this.relocationMgr.getCrimeEventChance();
+    if (crimeChance > 0 && Math.random() < crimeChance) {
+      const crimes = ["食い逃げが発生！（-¥5,000）","深夜に不審者が…（修理費-¥8,000）","落書きされた（清掃費-¥3,000）"];
+      const crime = crimes[Math.floor(Math.random() * crimes.length)];
+      const cost = crime.includes("8,000") ? 8000 : crime.includes("5,000") ? 5000 : 3000;
+      this.state.restaurant.money -= cost;
+      this.ui.addLog(`🚨 ${crime}`);
     }
 
     // Format cooldown
@@ -381,6 +399,21 @@ class GameApp {
   // Tutorial
   advanceTutorial() { this.tutorialMgr.advance(); this.ui.render(); }
   skipTutorial() { this.tutorialMgr.skip(); this.ui.render(); }
+
+  // Relocation
+  relocate(locationId) {
+    const r = this.relocationMgr.relocate(locationId);
+    if (r.success) {
+      this.ui.addLog(`🏠 ${r.location.name}に移転！（費用¥${r.location.landCost.toLocaleString()}）`);
+      this.ui.addLog(`📊 評判: ${r.oldReputation} → ${r.newReputation}（新天地でやり直し）`);
+      this.effects.notify("🏠", "店舗移転完了！", `${r.location.name}での新生活スタート`, 3000);
+      this._syncBonuses();
+    } else {
+      this.ui.addLog(`❌ ${r.reason}`);
+    }
+    this.ui.render();
+    return r;
+  }
 }
 
 import { TitleScreen } from "./render/titleScreen.js";
