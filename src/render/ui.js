@@ -192,7 +192,7 @@ export class UI {
 
     // ── DASHBOARD ──
     const mkt = this.app.marketingMgr?.getSummary() || {};
-    const cleanOverall = this.app.cleaningMgr?.getOverallCleanliness() || 0;
+    const cleanOverall = this.app.cleaningMgr?.getHygieneScore() || 0;
     const prepReady = this.app.prepMgr ? Math.round(this.app.prepMgr.getPrepReadiness() * 100) : 0;
     const failedEq = this.app.equipmentMgr?.getFailedEquipment() || [];
     const rsvCount = this.app.reservationMgr?.getTodayCount() || 0;
@@ -204,7 +204,7 @@ export class UI {
     let h = `<div class="side-section"><h4>📊 経営ダッシュボード</h4>
       <div class="layout-score">
         <div class="ls-item"><div class="ls-label">認知度</div><div class="ls-val" style="color:${(mkt.awareness||0)<20?"var(--red)":(mkt.awareness||0)<50?"var(--gold)":"var(--green)"}">${mkt.awareness||0}%</div></div>
-        <div class="ls-item"><div class="ls-label">清潔度</div><div class="ls-val" style="color:${cleanOverall<40?"var(--red)":cleanOverall<70?"var(--gold)":"var(--green)"}">${cleanOverall}%</div></div>
+        <div class="ls-item"><div class="ls-label">衛生</div><div class="ls-val" style="color:${cleanOverall<40?"var(--red)":cleanOverall<60?"var(--gold)":"var(--green)"}">${cleanOverall}</div></div>
         <div class="ls-item"><div class="ls-label">仕込み</div><div class="ls-val" style="color:${prepReady<60?"var(--red)":prepReady<100?"var(--gold)":"var(--green)"}">${prepReady}%</div></div>
         <div class="ls-item"><div class="ls-label">口コミ</div><div class="ls-val">${(mkt.reviewScore||0)>0?"★"+(mkt.reviewScore||0).toFixed(1):"—"}</div></div>
         <div class="ls-item"><div class="ls-label">予約</div><div class="ls-val">${rsvCount}組</div></div>
@@ -735,6 +735,7 @@ export class UI {
 
   // ─── OPS (清掃・仕込み・設備) ───
   _tabOps(el) {
+    if (!this._opsSubTab) this._opsSubTab = "clean";
     const cm = this.app.cleaningMgr;
     const pm = this.app.prepMgr;
     const em = this.app.equipmentMgr;
@@ -742,28 +743,87 @@ export class UI {
 
     let h = "";
 
-    // ── CLEANING ──
+    // ── CLEANING (expanded) ──
     const areas = cm.getAreaSummaries();
     const overall = cm.getOverallCleanliness();
-    h += `<div class="side-section"><h4>🧹 清掃 (清潔度: ${overall}%)</h4>`;
-    h += `<div class="layout-score">`;
-    h += areas.map(a => `<div class="ls-item"><div class="ls-label">${a.icon}${a.name}</div><div class="ls-val" style="color:${a.cleanliness<40?"var(--red)":a.cleanliness<70?"var(--gold)":"var(--green)"}">${a.cleanliness}%</div></div>`).join("");
-    h += `</div>`;
-    if (cm.isShutdown()) h += `<div class="turnover-danger">🚫 営業停止中！</div>`;
-    h += `<button class="btn btn-sm primary" id="btn-quick-clean">🧹 一括清掃（スタッフ自動割当）</button>`;
+    const hygieneScore = cm.getHygieneScore();
+    const hygieneColor = hygieneScore < 40 ? "var(--red)" : hygieneScore < 60 ? "var(--gold)" : "var(--green)";
 
-    const tasks = cm.getAvailableTasks().filter(t => !t.completed && t.available && !t.isOutsource);
-    if (tasks.length > 0) {
-      h += `<div style="margin-top:4px;max-height:80px;overflow-y:auto">`;
-      h += tasks.slice(0, 5).map(t => `<div class="placed-item"><span>${t.name} (${t.area})</span><button class="btn btn-sm clean-task-btn" data-id="${t.id}">実行</button></div>`).join("");
+    h += `<div class="side-section"><h4>🧹 清掃・衛生管理</h4>
+      <div class="layout-score">
+        <div class="ls-item"><div class="ls-label">衛生スコア</div><div class="ls-val" style="color:${hygieneColor}">${hygieneScore}</div></div>
+        ${areas.map(a => `<div class="ls-item"><div class="ls-label">${a.icon}${a.name}</div><div class="ls-val" style="color:${a.cleanliness<40?"var(--red)":a.cleanliness<70?"var(--gold)":"var(--green)"}">${a.cleanliness}%</div></div>`).join("")}
+        <div class="ls-item"><div class="ls-label">月額費用</div><div class="ls-val">¥${cm.getMonthlyCost().toLocaleString()}</div></div>
+      </div>`;
+    if (cm.isShutdown()) h += `<div class="turnover-danger">🚫 営業停止中！</div>`;
+    if (hygieneScore < 40) h += `<div class="turnover-warn">⚠ 衛生スコア危険域！保健所検査リスク</div>`;
+
+    // スタッフ体力一覧
+    h += `<div style="margin:4px 0;font-size:9px">`;
+    h += this.app.state.staff.filter(s => s.shift !== "off").map(s => {
+      const st = cm.getStaminaStatus(s);
+      return `<span style="margin-right:6px;color:${st.color}">${s.name.split(" ")[0]}:${Math.round(s.stamina||100)}${st.label}</span>`;
+    }).join("");
+    h += `</div>`;
+
+    // Quick actions
+    h += `<div style="display:flex;gap:3px;margin:4px 0">
+      <button class="btn btn-sm primary" id="btn-quick-close-clean">🧹 閉店清掃一括</button>
+    </div>`;
+
+    // Closing tasks
+    const closingTasks = cm.getClosingTaskStatus();
+    const unfinished = closingTasks.filter(t => !t.completed);
+    if (unfinished.length > 0) {
+      h += `<div style="max-height:100px;overflow-y:auto;margin:4px 0">`;
+      h += unfinished.map(t => {
+        const eqPct = Math.round(t.equipReduction * 100);
+        const costLabel = eqPct > 0 ? `体力${t.staminaCost}(設備-${eqPct}%)` : `体力${t.staminaCost}`;
+        return `<div class="placed-item">
+          <span>${t.outsourced ? "✅" : "⬜"} ${t.name} <span class="muted">${costLabel}</span></span>
+          ${t.outsourced ? '<span class="muted">業者</span>' : `<select class="sel-small close-staff-sel" data-task="${t.id}">${this.app.state.staff.filter(s=>s.shift!=="off"&&(s.stamina||100)>0).map(s=>`<option value="${s.id}">${s.name.split(" ")[0]}(${Math.round(s.stamina||100)})</option>`).join("")}</select><button class="btn btn-sm close-task-btn" data-task="${t.id}">実行</button>`}
+        </div>`;
+      }).join("");
+      h += `</div>`;
+    } else if (closingTasks.length > 0) {
+      h += `<div class="muted" style="color:var(--green)">✅ 閉店清掃完了！</div>`;
+    }
+
+    // Periodic tasks (overdue)
+    const periodic = cm.getPeriodicTaskStatus().filter(t => t.overdue && !t.outsourced);
+    if (periodic.length > 0) {
+      h += `<div style="margin-top:4px"><div class="muted" style="color:var(--red)">⚠ 期限超過の定期清掃:</div>`;
+      h += periodic.map(t => `<div class="placed-item"><span>${t.name}（${t.daysSince}日前）</span><button class="btn btn-sm periodic-btn" data-task="${t.id}">実行</button></div>`).join("");
       h += `</div>`;
     }
+    h += `</div>`;
 
-    // Outsource options
-    const outsource = cm.getAvailableTasks().filter(t => t.isOutsource && !t.completed);
-    if (outsource.length > 0) {
-      h += outsource.map(t => `<div class="placed-item"><span>${t.name}</span><button class="btn btn-sm outsource-btn" data-id="${t.id}">業者委託¥${(t.outsourceCost||0).toLocaleString()}</button></div>`).join("");
+    // ── OUTSOURCE & EQUIPMENT ──
+    h += `<div class="side-section"><h4>💼 業者・設備・消耗品</h4>`;
+
+    // Outsource packages
+    const outsourcePkgs = cm.getOutsourceStatus();
+    h += `<div class="muted" style="margin-bottom:3px">📋 清掃業者:</div>`;
+    h += outsourcePkgs.filter(p => !p.oneshot).map(p => `
+      <div class="placed-item">
+        <span>${p.active?"✅":""} ${p.name} <span class="muted">¥${(p.monthlyCost||0).toLocaleString()}/月</span></span>
+        ${p.active ? `<button class="btn btn-sm danger cancel-out-btn" data-id="${p.id}">解約</button>` : `<button class="btn btn-sm primary sub-out-btn" data-id="${p.id}">契約</button>`}
+      </div>`).join("");
+
+    // Equipment
+    const equipment = cm.getEquipmentStatus();
+    const unowned = equipment.filter(e => !e.owned);
+    if (unowned.length > 0) {
+      h += `<div class="muted" style="margin-top:4px">🔧 清掃設備:</div>`;
+      h += unowned.map(e => `<div class="placed-item"><span>${e.icon} ${e.name}</span><button class="btn btn-sm primary buy-ceq-btn" data-id="${e.id}">¥${e.cost.toLocaleString()}</button></div>`).join("");
     }
+    const owned = equipment.filter(e => e.owned);
+    if (owned.length > 0) h += `<div class="muted">導入済: ${owned.map(e => e.icon + e.name).join(", ")}</div>`;
+
+    // Consumables
+    const consumables = cm.getConsumableStatus();
+    h += `<div class="muted" style="margin-top:4px">🧴 消耗品:</div>`;
+    h += consumables.map(c => `<div class="placed-item"><span>${c.active?"✅":""} ${c.name} <span class="muted">¥${c.monthlyCost.toLocaleString()}/月</span></span><button class="btn btn-sm ${c.active?"danger":"primary"} toggle-con-btn" data-id="${c.id}">${c.active?"停止":"導入"}</button></div>`).join("");
     h += `</div>`;
 
     // ── PREPARATION ──
@@ -819,11 +879,8 @@ export class UI {
     el.innerHTML = h;
 
     // Bind events
-    document.getElementById("btn-quick-clean")?.addEventListener("click", () => {
-      const r = this.app.cleaningMgr.quickCleanAll();
-      if (r.length) this.app.ui.addLog(`🧹 清掃完了: ${r.join(", ")}`);
-      else this.app.ui.addLog("🧹 清掃するタスクがありません");
-      this.render();
+    document.getElementById("btn-quick-close-clean")?.addEventListener("click", () => {
+      this.app.quickCloseClean();
     });
     document.getElementById("btn-auto-restock")?.addEventListener("click", () => {
       const r = this.app.prepMgr.autoRestock();
@@ -844,22 +901,29 @@ export class UI {
       else this.app.ui.addLog(`❌ ${r.reason}`);
       this.render();
     });
-    for (const b of el.querySelectorAll(".clean-task-btn")) {
+    for (const b of el.querySelectorAll(".close-task-btn")) {
       b.addEventListener("click", () => {
-        const staff = this.app.state.staff.find(s => s.shift !== "off");
-        const r = this.app.cleaningMgr.doTask(b.dataset.id, staff?.id);
-        if (r.success) this.app.ui.addLog(`🧹 清掃完了`);
-        else this.app.ui.addLog(`❌ ${r.reason}`);
-        this.render();
+        const sel = el.querySelector(`.close-staff-sel[data-task="${b.dataset.task}"]`);
+        this.app.doClosingTask(b.dataset.task, sel?.value);
       });
     }
-    for (const b of el.querySelectorAll(".outsource-btn")) {
+    for (const b of el.querySelectorAll(".periodic-btn")) {
       b.addEventListener("click", () => {
-        const r = this.app.cleaningMgr.doTask(b.dataset.id);
-        if (r.success) this.app.ui.addLog(`🧹 業者委託完了（¥${r.cost.toLocaleString()}）`);
-        else this.app.ui.addLog(`❌ ${r.reason}`);
-        this.render();
+        const staff = this.app.state.staff.find(s => s.shift !== "off" && (s.stamina || 100) > 10);
+        this.app.doPeriodicClean(b.dataset.task, staff?.id);
       });
+    }
+    for (const b of el.querySelectorAll(".sub-out-btn")) {
+      b.addEventListener("click", () => this.app.subscribeOutsource(b.dataset.id));
+    }
+    for (const b of el.querySelectorAll(".cancel-out-btn")) {
+      b.addEventListener("click", () => this.app.cancelOutsource(b.dataset.id));
+    }
+    for (const b of el.querySelectorAll(".buy-ceq-btn")) {
+      b.addEventListener("click", () => this.app.purchaseCleanEquip(b.dataset.id));
+    }
+    for (const b of el.querySelectorAll(".toggle-con-btn")) {
+      b.addEventListener("click", () => this.app.toggleConsumable(b.dataset.id));
     }
     for (const b of el.querySelectorAll(".maint-btn")) {
       b.addEventListener("click", () => {

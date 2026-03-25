@@ -149,6 +149,10 @@ class GameApp {
     const breakEvts = this.shiftMgr.tickBreaks(this.config.simulation.tickMinutes);
     for (const e of breakEvts) this.ui.addLog(e);
 
+    // Cleaning tick (stamina drain + service tasks)
+    const cleanTickEvts = this.cleaningMgr.processTick(this.config.simulation.tickMinutes);
+    for (const e of cleanTickEvts) this.ui.addLog(e);
+
     const r = this.sim.tick();
     if (r.type === "closed") { this.ui.addLog("営業時間外。閉店処理をどうぞ。"); if (this.autoInterval) this.toggleAuto(); return; }
     if (r.waiting > 0 || r.eating > 0) {
@@ -598,6 +602,52 @@ class GameApp {
     const r = this.accountingMgr.applyForLoan(amount);
     if (r.success) { this.ui.addLog(`🏦 融資¥${r.loan.principal.toLocaleString()}承認！月¥${r.loan.monthlyPayment.toLocaleString()}返済`); this.effects.notify("🏦", "融資承認", `¥${r.loan.principal.toLocaleString()}`, 2000); }
     else this.ui.addLog(`❌ ${r.reason}`);
+    this.ui.render(); return r;
+  }
+
+  // Cleaning actions
+  doClosingTask(taskId, staffId) {
+    const r = this.cleaningMgr.doClosingTask(taskId, staffId);
+    if (r.success) {
+      if (r.outsourced) this.ui.addLog(`🧹 業者が実施`);
+      else this.ui.addLog(`🧹 ${r.staffName}が清掃（体力-${r.staminaCost}→${r.staffStamina}）`);
+    } else this.ui.addLog(`❌ ${r.reason}`);
+    this.ui.render(); return r;
+  }
+  quickCloseClean() {
+    const results = this.cleaningMgr.quickCloseAll();
+    for (const r of results) {
+      if (r.outsourced) this.ui.addLog(`🧹 ${r.task}（業者）`);
+      else this.ui.addLog(`🧹 ${r.task}（${r.staff} 体力-${r.stamina}）`);
+    }
+    if (results.length === 0) this.ui.addLog("🧹 清掃タスクなし");
+    this.ui.render();
+  }
+  doPeriodicClean(taskId, staffId) {
+    const r = this.cleaningMgr.doPeriodicTask(taskId, staffId);
+    if (r.success) this.ui.addLog(r.outsourced ? "🧹 業者が定期清掃実施" : `🧹 定期清掃完了（体力-${r.staminaCost}）`);
+    else this.ui.addLog(`❌ ${r.reason}`);
+    this.ui.render(); return r;
+  }
+  subscribeOutsource(pkgId) {
+    const r = this.cleaningMgr.subscribeOutsource(pkgId);
+    if (r.success) this.ui.addLog(`📋 清掃業者契約${r.cost ? `（¥${r.cost.toLocaleString()}）` : "開始"}`);
+    else this.ui.addLog(`❌ ${r.reason}`);
+    this.ui.render(); return r;
+  }
+  cancelOutsource(pkgId) {
+    const r = this.cleaningMgr.cancelOutsource(pkgId);
+    if (r.success) this.ui.addLog("📋 業者契約を解除");
+    this.ui.render(); return r;
+  }
+  purchaseCleanEquip(eqId) {
+    const r = this.cleaningMgr.purchaseEquipment(eqId);
+    if (r.success) { this.ui.addLog(`🔧 ${r.equipment.name}を導入`); this.effects.notify(r.equipment.icon, "清掃設備導入！", r.equipment.name, 2000); }
+    else this.ui.addLog(`❌ ${r.reason}`);
+    this.ui.render(); return r;
+  }
+  toggleConsumable(conId) {
+    const r = this.cleaningMgr.toggleConsumable(conId);
     this.ui.render(); return r;
   }
 
