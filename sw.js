@@ -1,4 +1,4 @@
-const CACHE_NAME = "grand-resto-v1";
+const CACHE_NAME = "grand-resto-v2";
 const ASSETS = [
   "./",
   "./index.html",
@@ -28,6 +28,7 @@ const ASSETS = [
   "./src/systems/formatManager.js",
   "./src/systems/tutorialManager.js",
   "./src/systems/endingManager.js",
+  "./src/systems/abilityManager.js",
   "./src/systems/townManager.js",
   "./src/systems/relocationManager.js",
   "./src/systems/furniture-data.js",
