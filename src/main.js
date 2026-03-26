@@ -149,6 +149,10 @@ class GameApp {
     const breakEvts = this.shiftMgr.tickBreaks(this.config.simulation.tickMinutes);
     for (const e of breakEvts) this.ui.addLog(e);
 
+    // Cleaning area task progress
+    const areaCleanEvts = this.cleaningMgr.tickAreaClean();
+    for (const e of areaCleanEvts) this.ui.addLog(e);
+
     // Cleaning tick (stamina drain + service tasks)
     const cleanTickEvts = this.cleaningMgr.processTick(this.config.simulation.tickMinutes);
     for (const e of cleanTickEvts) this.ui.addLog(e);
@@ -257,6 +261,9 @@ class GameApp {
     } else if (bankCheck.warning) {
       this.ui.addLog(bankCheck.warning);
     }
+
+    // Cleaning: end-of-day decay based on customer count
+    this.cleaningMgr.endOfDayDecay(report.customers);
 
     // Cleaning daily update
     const cleanEvts = this.cleaningMgr.dailyUpdate();
@@ -601,6 +608,14 @@ class GameApp {
   applyForLoan(amount) {
     const r = this.accountingMgr.applyForLoan(amount);
     if (r.success) { this.ui.addLog(`🏦 融資¥${r.loan.principal.toLocaleString()}承認！月¥${r.loan.monthlyPayment.toLocaleString()}返済`); this.effects.notify("🏦", "融資承認", `¥${r.loan.principal.toLocaleString()}`, 2000); }
+    else this.ui.addLog(`❌ ${r.reason}`);
+    this.ui.render(); return r;
+  }
+
+  // Cleaning tab: area cleaning
+  startAreaClean(areaId, staffId) {
+    const r = this.cleaningMgr.startAreaClean(areaId, staffId);
+    if (r.success) this.ui.addLog(`🧹 ${r.staffName}が${r.areaName}の清掃を開始（${r.ticks}tick）`);
     else this.ui.addLog(`❌ ${r.reason}`);
     this.ui.render(); return r;
   }

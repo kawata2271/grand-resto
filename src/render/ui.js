@@ -173,6 +173,7 @@ export class UI {
       case "recipe": this._tabRecipe(sp); break;
       case "rival": this._tabRival(sp); break;
       case "upgrade": this._tabUpgrade(sp); break;
+      case "cleaning": this._tabCleaning(sp); break;
       case "marketing": this._tabMarketing(sp); break;
       case "ops": this._tabOps(sp); break;
       case "layout": this._tabLayout(sp); break;
@@ -731,6 +732,75 @@ export class UI {
       <div class="muted">・錬成で隠しメニューを開発し独自性を出す</div>
     </div>`;
     el.innerHTML = h;
+  }
+
+  // ─── CLEANING TAB ───
+  _tabCleaning(el) {
+    const cm = this.app.cleaningMgr;
+    if (!cm) { el.innerHTML = '<div class="muted">清掃システム未初期化</div>'; return; }
+
+    const data = cm.getCleaningTabData();
+    const scoreColor = data.hygieneScore >= 90 ? "var(--green)" : data.hygieneScore >= 70 ? "var(--gold2)" : data.hygieneScore >= 50 ? "var(--gold)" : "var(--red)";
+    const availableStaff = this.app.state.staff.filter(s => s.shift !== "off" && (s.stamina || 100) > 10 && !data.areas.some(a => a.isActive && cm.getActiveCleanTasks().find(t => t.staffId === s.id)));
+
+    let h = "";
+
+    // Hygiene gauge
+    h += `<div class="hygiene-gauge">
+      <div class="hg-score" style="color:${scoreColor}">${data.hygieneScore}</div>
+      <div class="hg-label">衛生スコア</div>
+      <div style="font-size:var(--font-xs);color:var(--text2);margin-top:4px">平均清潔度: ${data.averageScore}% / 累計清掃: ${data.totalCleanings}回 / 進行中: ${data.activeTasks}件</div>
+    </div>`;
+
+    // Area cards
+    h += `<div class="side-section"><h4>エリア別清潔度</h4>`;
+    h += data.areas.map(a => {
+      const statusLabels = { excellent: "優秀", good: "良好", warning: "注意", danger: "危険" };
+      return `<div class="clean-area-card ${a.isActive ? "active" : ""}">
+        <div class="clean-header">
+          <span class="clean-name">${a.icon} ${a.name}</span>
+          <span class="clean-status ${a.status}">${statusLabels[a.status]} ${a.cleanliness}%</span>
+        </div>
+        <div class="clean-bar"><div class="clean-bar-fill ${a.status}" style="width:${a.cleanliness}%"></div></div>
+        <div class="clean-info">
+          ${a.lastCleanedBy ? `最終清掃: ${a.lastCleanedBy}` : "本日未清掃"}
+          ${a.isActive ? ` / 自然劣化: -${a.decayRate}/日` : ` / 劣化: -${a.decayRate}/日`}
+        </div>
+        <div class="clean-actions">
+          ${a.isActive
+            ? `<div class="clean-progress">🔄 ${a.activeStaff}が清掃中（残${a.ticksLeft}tick）</div>`
+            : `<select class="sel-small clean-staff-sel" data-area="${a.id}">
+                ${availableStaff.map(s => `<option value="${s.id}">${s.name.split(" ")[0]}(体${Math.round(s.stamina || 100)})</option>`).join("")}
+                ${availableStaff.length === 0 ? '<option value="">スタッフなし</option>' : ""}
+              </select>
+              <button class="btn btn-sm primary start-clean-btn" data-area="${a.id}" ${availableStaff.length === 0 ? "disabled" : ""}>清掃する</button>`
+          }
+        </div>
+      </div>`;
+    }).join("");
+    h += `</div>`;
+
+    // Today's log
+    const log = data.todayLog;
+    if (log.length > 0) {
+      h += `<div class="side-section"><h4>📋 本日の清掃ログ</h4>`;
+      h += `<div style="max-height:100px;overflow-y:auto">`;
+      h += log.map(l => `<div class="clean-log-item">${l.time.hour}:${String(l.time.minute).padStart(2,"0")} ${l.areaName} — ${l.staffName}（+${l.recovery}）</div>`).join("");
+      h += `</div></div>`;
+    }
+
+    // Tips
+    h += `<div class="side-section"><div class="muted">💡 清潔度が低いと客の満足度が下がり、衛生検査で営業停止になるリスクがあります。スタッフを割り当てて定期的に清掃しましょう。業者委託は「運営」タブから。</div></div>`;
+
+    el.innerHTML = h;
+
+    // Bind
+    for (const b of el.querySelectorAll(".start-clean-btn")) {
+      b.addEventListener("click", () => {
+        const sel = el.querySelector(`.clean-staff-sel[data-area="${b.dataset.area}"]`);
+        if (sel?.value) this.app.startAreaClean(b.dataset.area, sel.value);
+      });
+    }
   }
 
   // ─── OPS (清掃・仕込み・設備) ───
@@ -1681,6 +1751,19 @@ export class UI {
     if (report.customerTypes && Object.keys(report.customerTypes).length > 0) {
       h += `<div class="report-customers"><div class="rc-title">客層内訳</div>`;
       h += Object.entries(report.customerTypes).map(([k,v]) => `<span class="ct-tag">${k} ${v}人</span>`).join(" ");
+      h += `</div>`;
+    }
+
+    // ── 衛生レポート ──
+    const hygieneReport = this.app.cleaningMgr?.getHygieneSummaryForReport();
+    if (hygieneReport?.length > 0) {
+      const avgH = this.app.cleaningMgr?.getHygieneScore() || 0;
+      h += `<div style="margin:8px 0;padding:8px;background:var(--bg3);border-radius:var(--radius-md);border:1px solid var(--border)">`;
+      h += `<div style="font-size:var(--font-sm);font-weight:700;color:var(--gold);margin-bottom:4px">📋 衛生レポート（スコア: ${avgH}/100）</div>`;
+      h += hygieneReport.map(r => {
+        const color = r.cleanliness < 50 ? "var(--red)" : r.cleanliness < 70 ? "var(--gold)" : "var(--green)";
+        return `<div style="font-size:var(--font-xs);padding:1px 0">${r.icon} ${r.name}: <span style="color:${color}">${r.cleanliness}%</span> (清掃${r.cleanCount}回) ${r.status}</div>`;
+      }).join("");
       h += `</div>`;
     }
 

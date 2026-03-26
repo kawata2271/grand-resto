@@ -18,10 +18,13 @@ export class CleaningManager {
         activeConsumables: [],
         shutdownDays: 0,
         cleaningRotation: {},
-        totalTasksDone: 0
+        totalTasksDone: 0,
+        activeTasks: [],
+        todayCleanLog: [],
+        totalCleanings: 0
       };
       for (const area of this.data.areas) {
-        this.state.cleaning.areas[area.id] = 70;
+        this.state.cleaning.areas[area.id] = 100;
       }
     }
     // Ensure staff stamina
@@ -441,5 +444,143 @@ export class CleaningManager {
       if (con?.monthlyCost) cost += con.monthlyCost;
     }
     return cost;
+  }
+
+  // ═══ CLEANING TAB: area-based cleaning ═══
+
+  startAreaClean(areaId, staffId) {
+    const areaDef = this.data.areas.find(a => a.id === areaId);
+    if (!areaDef) return { success: false, reason: "エリアが見つかりません" };
+
+    const staff = this.state.staff.find(s => s.id === staffId);
+    if (!staff) return { success: false, reason: "スタッフを選択してください" };
+    if (staff.shift === "off") return { success: false, reason: `${staff.name}は休みです` };
+    if ((staff.stamina || 100) <= 10) return { success: false, reason: `${staff.name}は体力不足です` };
+
+    // Check if already cleaning
+    if (this.state.cleaning.activeTasks.some(t => t.staffId === staffId)) {
+      return { success: false, reason: `${staff.name}は清掃中です` };
+    }
+    if (this.state.cleaning.activeTasks.some(t => t.areaId === areaId)) {
+      return { success: false, reason: `${areaDef.name}は清掃中です` };
+    }
+
+    this.state.cleaning.activeTasks.push({
+      areaId,
+      staffId,
+      staffName: staff.name,
+      ticksRemaining: areaDef.cleanTime || 3
+    });
+
+    return { success: true, areaName: areaDef.name, staffName: staff.name, ticks: areaDef.cleanTime || 3 };
+  }
+
+  tickAreaClean() {
+    const events = [];
+    const toRemove = [];
+
+    for (const task of this.state.cleaning.activeTasks) {
+      task.ticksRemaining--;
+
+      if (task.ticksRemaining <= 0) {
+        const areaDef = this.data.areas.find(a => a.id === task.areaId);
+        const staff = this.state.staff.find(s => s.id === task.staffId);
+
+        let recovery = areaDef?.baseRecovery || 30;
+        // Veteran bonus
+        if (staff && staff.daysWorked >= 60) recovery = Math.round(recovery * 1.2);
+        // Stamina cost
+        if (staff) {
+          const cost = Math.round((areaDef?.cleanTime || 3) * 4);
+          staff.stamina = Math.max(0, (staff.stamina || 100) - cost);
+        }
+
+        this.state.cleaning.areas[task.areaId] = Math.min(100,
+          (this.state.cleaning.areas[task.areaId] || 0) + recovery);
+
+        this.state.cleaning.totalCleanings = (this.state.cleaning.totalCleanings || 0) + 1;
+        this.state.cleaning.todayCleanLog.push({
+          area: task.areaId,
+          areaName: areaDef?.name || task.areaId,
+          staffName: task.staffName,
+          recovery,
+          time: { ...this.state.time }
+        });
+
+        events.push(`🧹 ${task.staffName}が${areaDef?.name || task.areaId}を清掃完了（+${recovery}）`);
+        toRemove.push(task);
+      }
+    }
+
+    this.state.cleaning.activeTasks = this.state.cleaning.activeTasks.filter(t => !toRemove.includes(t));
+    return events;
+  }
+
+  getActiveCleanTasks() {
+    return this.state.cleaning.activeTasks || [];
+  }
+
+  getTodayCleanLog() {
+    return this.state.cleaning.todayCleanLog || [];
+  }
+
+  getCleaningTabData() {
+    const areas = this.data.areas.map(a => {
+      const cleanliness = Math.round(this.state.cleaning.areas[a.id] || 0);
+      const active = this.state.cleaning.activeTasks?.find(t => t.areaId === a.id);
+      const lastLog = [...(this.state.cleaning.todayCleanLog || [])].reverse().find(l => l.area === a.id);
+      return {
+        ...a,
+        cleanliness,
+        isActive: !!active,
+        activeStaff: active?.staffName || null,
+        ticksLeft: active?.ticksRemaining || 0,
+        lastCleanedBy: lastLog?.staffName || null,
+        status: cleanliness >= 90 ? "excellent" : cleanliness >= 70 ? "good" : cleanliness >= 50 ? "warning" : "danger"
+      };
+    });
+
+    const avg = areas.reduce((s, a) => s + a.cleanliness, 0) / areas.length;
+
+    return {
+      areas,
+      averageScore: Math.round(avg),
+      hygieneScore: this.getHygieneScore(),
+      todayLog: this.getTodayCleanLog(),
+      totalCleanings: this.state.cleaning.totalCleanings || 0,
+      activeTasks: this.getActiveCleanTasks().length
+    };
+  }
+
+  // End of day: reset log, apply decay with customer factor
+  endOfDayDecay(customerCount) {
+    for (const area of this.data.areas) {
+      let decay = area.decayRate;
+      // Customer-proportional decay
+      if (area.customerDecayFactor && customerCount > 0) {
+        decay += Math.round(customerCount * area.customerDecayFactor);
+      }
+      this.state.cleaning.areas[area.id] = Math.max(0,
+        (this.state.cleaning.areas[area.id] || 0) - decay);
+    }
+    // Reset daily log
+    this.state.cleaning.todayCleanLog = [];
+    this.state.cleaning.activeTasks = [];
+  }
+
+  getHygieneSummaryForReport() {
+    const report = [];
+    for (const area of this.data.areas) {
+      const clean = Math.round(this.state.cleaning.areas[area.id] || 0);
+      const logs = (this.state.cleaning.todayCleanLog || []).filter(l => l.area === area.id);
+      report.push({
+        icon: area.icon,
+        name: area.name,
+        cleanliness: clean,
+        cleanCount: logs.length,
+        status: clean < 50 ? "⚠️" : ""
+      });
+    }
+    return report;
   }
 }

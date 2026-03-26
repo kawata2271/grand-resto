@@ -282,6 +282,31 @@
   .cc-active{background:#0a2a12;color:var(--green);border:1px solid var(--green)}
   .cc-cooldown{background:#2a1808;color:var(--gold);border:1px solid var(--gold)}
 
+  /* CLEANING TAB */
+  .clean-area-card{padding:10px;background:var(--bg3);border-radius:var(--radius-md);margin-bottom:8px;border:1px solid var(--border);transition:border-color var(--dur) var(--ease)}
+  .clean-area-card:hover{border-color:var(--border2)}
+  .clean-area-card.active{border-color:var(--blue);background:linear-gradient(135deg,#0a1218,var(--bg3))}
+  .clean-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+  .clean-name{font-weight:700;font-size:var(--font-sm)}
+  .clean-status{font-size:var(--font-xs);padding:2px 8px;border-radius:var(--radius-sm);font-weight:700;font-family:var(--font-mono)}
+  .clean-status.excellent{background:rgba(60,150,100,.15);color:var(--green);border:1px solid rgba(60,150,100,.3)}
+  .clean-status.good{background:rgba(60,150,100,.08);color:var(--green)}
+  .clean-status.warning{background:rgba(200,160,60,.1);color:var(--gold);border:1px solid rgba(200,160,60,.2)}
+  .clean-status.danger{background:rgba(180,50,50,.1);color:var(--red);border:1px solid rgba(180,50,50,.2)}
+  .clean-bar{width:100%;height:8px;background:var(--bg);border-radius:4px;overflow:hidden;margin:6px 0}
+  .clean-bar-fill{height:100%;border-radius:4px;transition:width .5s var(--ease)}
+  .clean-bar-fill.excellent{background:linear-gradient(90deg,#2a8a4a,#4aaa6a)}
+  .clean-bar-fill.good{background:linear-gradient(90deg,#3a9a5a,#5aba7a)}
+  .clean-bar-fill.warning{background:linear-gradient(90deg,#b88a30,#d4a843)}
+  .clean-bar-fill.danger{background:linear-gradient(90deg,#a03030,#c94040)}
+  .clean-info{font-size:var(--font-xs);color:var(--text2);margin-bottom:6px}
+  .clean-actions{display:flex;gap:4px;align-items:center}
+  .clean-progress{font-size:var(--font-xs);color:var(--blue);font-family:var(--font-mono);padding:3px 8px;background:rgba(64,128,184,.1);border-radius:var(--radius-sm);border:1px solid rgba(64,128,184,.2)}
+  .clean-log-item{font-size:var(--font-xs);padding:3px 0;border-bottom:1px solid rgba(255,255,255,.03);color:var(--text2);font-family:var(--font-mono)}
+  .hygiene-gauge{text-align:center;padding:12px;background:linear-gradient(135deg,var(--bg3),var(--bg4));border-radius:var(--radius-lg);margin-bottom:10px;border:1px solid var(--border)}
+  .hygiene-gauge .hg-score{font-family:var(--font-display);font-size:36px;font-weight:700;line-height:1}
+  .hygiene-gauge .hg-label{font-size:var(--font-xs);color:var(--text3);margin-top:2px;text-transform:uppercase;letter-spacing:2px;font-family:var(--font-mono)}
+
   /* RESERVATION/CUSTOMER/ACCOUNTING */
   .rsv-card{padding:6px;background:var(--bg3);border-radius:4px;margin-bottom:4px;border-left:3px solid var(--blue);font-size:10px}
   .rsv-card.vip{border-left-color:var(--gold)}
@@ -434,6 +459,7 @@
     <button class="tab-btn" data-tab="rival">ライバル</button>
     <button class="tab-btn" data-tab="upgrade">設備</button>
     <button class="tab-btn" data-tab="marketing">集客</button>
+    <button class="tab-btn" data-tab="cleaning">🧹清掃</button>
     <button class="tab-btn" data-tab="ops">運営</button>
     <button class="tab-btn" data-tab="layout">配置</button>
     <button class="tab-btn" data-tab="relocate">移転</button>

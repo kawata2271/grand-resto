@@ -1,9 +1,10 @@
 {
   "areas": [
-    { "id": "hall", "name": "ホール", "icon": "🪑", "decayRate": 3, "customerImpact": 0.15 },
-    { "id": "kitchen", "name": "キッチン", "icon": "🍳", "decayRate": 5, "customerImpact": 0.05 },
-    { "id": "toilet", "name": "トイレ", "icon": "🚻", "decayRate": 4, "customerImpact": 0.25 },
-    { "id": "exterior", "name": "外回り", "icon": "🏠", "decayRate": 1, "customerImpact": 0.10 }
+    { "id": "hall", "name": "客席フロア", "icon": "🪑", "decayRate": 15, "customerImpact": 0.15, "cleanTime": 3, "baseRecovery": 30, "customerDecayFactor": 0.3 },
+    { "id": "kitchen", "name": "キッチン", "icon": "🍳", "decayRate": 20, "customerImpact": 0.05, "cleanTime": 4, "baseRecovery": 35, "customerDecayFactor": 0.2 },
+    { "id": "toilet", "name": "トイレ", "icon": "🚻", "decayRate": 10, "customerImpact": 0.25, "cleanTime": 2, "baseRecovery": 40, "customerDecayFactor": 0.3 },
+    { "id": "entrance", "name": "エントランス", "icon": "🚪", "decayRate": 5, "customerImpact": 0.10, "cleanTime": 1, "baseRecovery": 25, "customerDecayFactor": 0 },
+    { "id": "backyard", "name": "バックヤード", "icon": "📦", "decayRate": 3, "customerImpact": 0.02, "cleanTime": 2, "baseRecovery": 20, "customerDecayFactor": 0 }
   ],
 
   "duringServiceTasks": [
